@@ -1,65 +1,48 @@
-#include <fmt/base.h>
 #include <vp/dependency_graph.hpp>
 
-#include <iostream>
-#include <ranges>
-#include <queue>
-#include <unordered_set>
-#include <algorithm>
-
-namespace vp::internal {
-
+namespace vp {
 bool DependencyGraph::isAcyclic() const {
-
-#warning "might be used"
-#if 0
-    std::queue<std::string> open;
-    {
-        std::set<std::string> hasIncomingEdge;
-        for (auto &kvp : m_edges) {
-            for (auto &node : kvp.second) {
-                hasIncomingEdge.insert(node);
-            }
-        }
-        std::vector<std::string> tmp;
-        std::ranges::set_symmetric_difference(
-            m_nodes,
-            hasIncomingEdge,
-            std::back_inserter(tmp)
-        );
-        std::ranges::for_each(tmp, [&open](auto &value) { open.push(value); });
+    if (m_isAcyclicityValid) {
+        return m_isAcyclic;
     }
-#endif
 
-    // 1. compose the list of nodes with no incoming edges
-    // 2. detect cycle with dfs for each of these nodes
+    DependencyGraph::ValueSet visited;
+    DependencyGraph::ValueSet recursionStack;
 
-    std::unordered_set<std::string> visited;
-
-    std::function<bool (const std::string &)> descent = [&](const std::string &key) -> bool {
-        visited.insert(key);
-
-        std::cout << "Adding to visited: " << key << std::endl;
-
-        bool isAcyclic = true;
-
-        if (not m_edges.contains(key)) {
-            return isAcyclic;
-        }
-
-        for (const auto &node : m_edges.at(key)) {
-            if (visited.contains(node) or descent(node)) {
-                std::cout << "Is something descending for: " << node << std::endl;
-                isAcyclic = false;
-                break;
+    for (const auto &node : m_nodes) {
+        if (not visited.contains(node)) {
+            if (descent(node, visited, recursionStack)) {
+                m_isAcyclic = false;
+                return m_isAcyclic;
             }
         }
+    }
 
-        visited.erase(key);
-        return isAcyclic;
-    };
-    
-    return descent(*m_nodes.begin());
+    m_isAcyclic = true;
+    return m_isAcyclic;
 }
 
+bool DependencyGraph::descent(
+    const DependencyGraph::ValueType &key,
+    DependencyGraph::ValueSet &visited,
+    DependencyGraph::ValueSet &recursionStack
+) const {
+    if (visited.contains(key)) {
+        return false;
+    }
+    visited.insert(key);
+    recursionStack.insert(key);
+
+    for (const auto &neighbor : m_edges.at(key)) {
+        if (not visited.contains(neighbor) and descent(neighbor, visited, recursionStack)) {
+            return true;
+        } 
+        if (recursionStack.contains(neighbor)) {
+            return true;
+        }
+    }
+    recursionStack.erase(key);
+    return false;
 }
+
+} // namespace vp
