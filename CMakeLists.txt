@@ -1,4 +1,13 @@
 cmake_minimum_required(VERSION 3.25...3.30 FATAL_ERROR)
+
+# Add custom modules to the CMake
+file(GLOB modules "${CMAKE_CURRENT_SOURCE_DIR}/cmake/*.cmake")
+foreach(cmake_module ${modules})
+    include(${cmake_module})
+endforeach()
+
+vp_download_vcpkg()
+
 project(
     VizualizationPrototyper
     DESCRIPTION "Tool for fast prototyping of GLSL-based vizualizations"
@@ -22,22 +31,16 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Dependencies setup
 find_package(fmt REQUIRED)
-find_package(glfw3 REQUIRED)
 find_package(spdlog REQUIRED)
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
+find_package(re2 REQUIRED)
+find_package(assimp REQUIRED)
+find_package(SDL3 REQUIRED)
+find_package(SDL3_image REQUIRED)
 find_package(glm REQUIRED)
+find_package(glad REQUIRED)
+find_package(imgui REQUIRED)
+find_package(glslang REQUIRED)
 
-# Add custom modules to the CMake
-file(GLOB modules "${CMAKE_CURRENT_SOURCE_DIR}/cmake/*.cmake")
-foreach(cmake_module ${modules})
-    include(${cmake_module})
-endforeach()
-
-set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
-
-vp_generate_glad(${generated_dir})
-vp_add_imgui(${generated_dir})
 vp_add_compiler_settings()
 
 # Project executable setup
@@ -48,17 +51,17 @@ file(GLOB hdr_files include/*.hpp/ include/**/*.hpp)
 add_executable(${main_target} ${src_files} ${hdr_files})
 target_link_libraries(
     ${main_target} PUBLIC 
-    vp::imgui
-    vp::glad
-    SDL2::SDL2
-    SDL2::SDL2main
-    SDL2_image::SDL2_image
-    spdlog::spdlog
+    imgui::imgui
+    glad::glad
+    glslang::glslang
+    SDL3::SDL3
+    SDL3_image::SDL3_image
+    re2::re2
+    assimp::assimp
     glm::glm
     fmt::fmt
-    glfw
 )
-
+ 
 set_target_properties(
     ${main_target} PROPERTIES
     CXX_STANDARD 20

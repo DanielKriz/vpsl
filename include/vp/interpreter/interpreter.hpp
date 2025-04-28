@@ -1,0 +1,36 @@
+#ifndef VP_INTERPRETER_INTERPRETER_HPP
+#define VP_INTERPRETER_INTERPRETER_HPP
+
+#include "vp/interpreter/parser_stages.hpp"
+#include <istream>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <stack>
+
+#include <vp/interpreter/lexer.hpp>
+#include <vp/interpreter/token.hpp>
+
+namespace vp {
+
+class Interpreter final {
+public:
+    explicit Interpreter(const std::string &src);
+    explicit Interpreter(std::ifstream &fin);
+
+    // TODO: return builder graph
+    void interpret();
+
+private:
+
+    inline void setCurrentStage(vp::ParserStage stage) { m_stage = stage; }
+
+    std::istringstream m_stringStream;
+    std::istream m_inputStream;
+    std::stack<vp::ParserStage> m_scope;
+    vp::ParserStage m_stage;
+};
+
+} // namespace vp
+
+#endif // VP_INTERPRETER_INTERPRETER_HPP

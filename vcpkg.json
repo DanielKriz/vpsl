@@ -1,0 +1,19 @@
+{
+  "dependencies": [
+    "doctest",
+    "fmt",
+    "re2",
+    "assimp",
+    "glm",
+    "glad",
+    {
+      "name": "imgui",
+      "features": [ "opengl3-binding", "sdl3-binding" ]
+    },
+    "glslang",
+    "sdl3",
+    {
+      "name": "sdl3-image"
+    }
+  ]
+}
