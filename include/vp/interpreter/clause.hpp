@@ -27,16 +27,32 @@ struct IClause {
     [[nodiscard]] virtual u64 getMinParameters() const noexcept = 0;
     [[nodiscard]] virtual u64 getMaxParameters() const noexcept = 0;
     [[nodiscard]] virtual bool isValidClause(const std::vector<Token> &tokens) const noexcept = 0;
-    [[nodiscard]] virtual bool isValidClause(TokenIterator &it, const TokenIterator &end) const noexcept = 0;
+    [[nodiscard]] virtual bool isValidClause(TokenIterator it, const TokenIterator &end) const noexcept = 0;
+    [[nodiscard]] virtual const std::vector<std::string_view> &getParameters() const noexcept = 0;
+    [[nodiscard]] virtual bool isPopulated() const noexcept = 0;
+    virtual void populate(const std::vector<Token> &tokens) = 0;
+    virtual void populate(TokenIterator it, const TokenIterator &end) = 0;
 };
 
-struct ClauseBase : public IClause {
+class ClauseBase : public IClause {
+public:
+    ~ClauseBase() override = default;
     [[nodiscard]] bool isValidClause(const std::vector<Token> &tokens) const noexcept override;
-    [[nodiscard]] bool isValidClause(TokenIterator &it, const TokenIterator &end) const noexcept override;
+    [[nodiscard]] bool isValidClause(TokenIterator it, const TokenIterator &end) const noexcept override;
+    [[nodiscard]] bool isPopulated() const noexcept override { return m_populated; }
+    [[nodiscard]] const std::vector<std::string_view> &getParameters() const noexcept override {
+        return m_parameters;
+    }
+    void populate(const std::vector<Token> &tokens) override;
+    void populate(TokenIterator it, const TokenIterator &end) override;
+protected:
+    std::vector<std::string_view> m_parameters;
+    bool m_populated { false };
 };
 
 template <ClauseKind Kind, u64 Min = 1, u64 Max = 1>
 struct Clause final : public ClauseBase {
+    ~Clause() override = default;
     [[nodiscard]] inline ClauseKind getKind() const noexcept override { return Kind; }
     [[nodiscard]] inline u64 getMinParameters() const noexcept override { return Min; }
     [[nodiscard]] inline u64 getMaxParameters() const noexcept override { return Max; }

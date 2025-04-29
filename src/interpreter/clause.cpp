@@ -5,7 +5,27 @@
 
 namespace vp {
 
-bool ClauseBase::isValidClause(TokenIterator &it, const TokenIterator &end) const noexcept {
+// There is no need to check whether the clauses is correct, because this
+// function shouldn't be called without the first call to the isValid function.
+void ClauseBase::populate(const std::vector<Token> &tokens) {
+    for (const auto &token : tokens) {
+        if (token.getTokenKind() == TokenKind::Identifier) {
+            m_parameters.push_back(token.getLexeme());
+        }
+    }
+}
+
+void ClauseBase::populate(TokenIterator it, const TokenIterator &end) {
+    while (it->getTokenKind() != TokenKind::RightParen or it != end) {
+        if (it->getTokenKind() == TokenKind::Identifier) {
+            m_parameters.push_back(it->getLexeme());
+        }
+        ++it;
+    }
+    m_populated = true;
+}
+
+bool ClauseBase::isValidClause(TokenIterator it, const TokenIterator &end) const noexcept {
     u64 parametersCount = 0;
 
     if (it->getTokenKind() != static_cast<TokenKind>(getKind())) {
