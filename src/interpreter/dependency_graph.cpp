@@ -2,6 +2,11 @@
 
 namespace vp {
 bool DependencyGraph::isAcyclic() const {
+    // Graph without nodes is implicitly acyclic
+    if (m_nodes.empty()) {
+        return true;
+    }
+
     if (m_isAcyclicityValid) {
         return m_isAcyclic;
     }
