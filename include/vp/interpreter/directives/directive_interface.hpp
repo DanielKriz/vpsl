@@ -20,6 +20,9 @@ public:
         TokenIterator &it,
         const TokenIterator &end
     ) = 0;
+
+    virtual void populate(const std::vector<Token> &tokens) = 0;
+    virtual bool populateClauses(const std::vector<Token> &tokens) = 0;
 };
 
 } // namespace vp

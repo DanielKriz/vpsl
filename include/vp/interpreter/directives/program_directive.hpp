@@ -9,6 +9,7 @@ class ProgramDirective : public DirectiveBase {
 public:
     ProgramDirective() : DirectiveBase {
         TokenKind::Name, TokenKind::Pre, TokenKind::Post, TokenKind::Shaders } {};
+    void populate(const std::vector<Token> &tokens) override {}
 };
 
 } // namespace vp

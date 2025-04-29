@@ -53,7 +53,7 @@ enum class TokenKind {
 };
 
 template <>
-inline utils::StringMap<TokenKind> utils::StringToEnumMap<TokenKind>::map = {
+inline utils::StringViewMap<TokenKind> utils::StringToEnumMap<TokenKind>::map = {
     { "#pragma" , TokenKind::Pragma },
     { "name" , TokenKind::Name },
     { "append" , TokenKind::Append },
@@ -74,7 +74,7 @@ inline utils::StringMap<TokenKind> utils::StringToEnumMap<TokenKind>::map = {
     { "format", TokenKind::Format },
     { "framebuffer", TokenKind::FrameBufferDirective },
     { "load", TokenKind::LoadDirective },
-    { "model", TokenKind::Mesh },
+    { "mesh", TokenKind::Mesh },
     { "material", TokenKind::Material },
 };
 

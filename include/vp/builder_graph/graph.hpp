@@ -6,9 +6,23 @@
 #include <memory>
 
 #include <vp/builder_graph/node.hpp>
+#include <vp/builder_graph/objects.hpp>
+#include <vp/context.hpp>
 
 namespace vp::build {
 
+struct Graph {
+
+
+ShaderObject m_globalShaderCode;
+Context m_globalContext;
+
+ProgramObject m_currentProgram;
+ShaderObject m_currentShader;
+
+std::vector<ProgramObject> m_programs;
+std::vector<ShaderObject> m_shaders;
+};
 
 class BuilderGraph {
 public:

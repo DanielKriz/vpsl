@@ -1,3 +1,4 @@
+#include "vp/dependency_graph.hpp"
 #include <vp/interpreter/interpreter.hpp>
 
 namespace vp {
@@ -17,6 +18,7 @@ void Interpreter::interpret() {
     std::string line{};
     bool isExpectingNewScope = false;
     bool startedANewScope = false;
+
     while (std::getline(m_inputStream, line)) {
         /// 1. Lexer tokenizes the line
         /// 2. Parser checks whether it is a valid directive and returns it
@@ -29,12 +31,15 @@ void Interpreter::interpret() {
             Lexer::joinLines(line, tmp);
         }
 
-        auto tokens = lexer.scan(line);
+        std::optional<std::vector<Token>> tokens = lexer.scan(line);
         if (not tokens.has_value() or tokens->empty()) {
             continue;
         }
 
-        auto it = tokens->cbegin();
+        const auto directiveToken = *tokens->cbegin();
+        // Remove the directive token, because it is not going to be needed further
+        tokens->erase(tokens->begin());
+        const auto &clauseTokens = *tokens;
 #if 0
         std::cout << "Begin -- List of current tokens:" << std::endl;
         for (const auto &token : *tokens) {
@@ -45,7 +50,7 @@ void Interpreter::interpret() {
 
         std::unique_ptr<IDirective> pDirective = nullptr;
 
-        switch (it->getTokenKind()) {
+        switch (directiveToken.getTokenKind()) {
         case vp::TokenKind::ShaderDirective:
             setCurrentStage(vp::ParserStage::ComposingShader);
             {
@@ -74,14 +79,18 @@ void Interpreter::interpret() {
             break;
         }
 
-        // if ((++it)->getTokenKind() != TokenKind::ShaderDirective) {
-        //     continue;
-        // }
-
-        ++it;
         if (pDirective != nullptr) {
-            auto ret = pDirective->areClausesCorrect(it, tokens->cend());
-            fmt::println("Clauses are correct: ({})", ret);
+            pDirective->populate(clauseTokens);
+            if (auto * pDir = dynamic_cast<ShaderDirective *>(pDirective.get())) {
+                fmt::println("name of shader is '{}'", pDir->getName());
+                fmt::println("type of shader is '{}'", static_cast<u32>(pDir->getType()));
+                for (const auto &dep : pDir->getPrependSet()) {
+                    fmt::println("\tPrepend dep: {}", dep);
+                }
+                for (const auto &dep : pDir->getAppendSet()) {
+                    fmt::println("\tAppend dep: {}", dep);
+                }
+            }
         }
     }
 

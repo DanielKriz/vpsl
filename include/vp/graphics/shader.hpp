@@ -1,7 +1,7 @@
 #ifndef VP_GRAPHICS_SHADER_HPP
 #define VP_GRAPHICS_SHADER_HPP
 
-#include <string>
+#include <string_view>
 #include <unordered_map>
 
 #include <vp/types.hpp>
@@ -28,7 +28,7 @@ private:
 namespace vp {
 
 template <>
-inline std::unordered_map<std::string, gl::ShaderKind> utils::StringToEnumMap<gl::ShaderKind>::map = {
+inline std::unordered_map<std::string_view, gl::ShaderKind> utils::StringToEnumMap<gl::ShaderKind>::map = {
     { "vertex", gl::ShaderKind::Vertex },
     { "fragment", gl::ShaderKind::Fragment },
     { "geometry", gl::ShaderKind::Geometry },

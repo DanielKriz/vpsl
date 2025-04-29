@@ -38,18 +38,27 @@ inline std::string trimCopy(const std::string &str) {
 }
 
 template <typename T>
-using StringMap = std::unordered_map<std::string, T>;
+using StringViewMap = std::unordered_map<std::string_view, T>;
 
 template <typename EnumKind>
 struct StringToEnumMap {
-    static std::unordered_map<std::string, EnumKind> map;
+    static std::unordered_map<std::string_view, EnumKind> map;
 };
 
 template <typename T>
-std::unordered_map<std::string, T> StringToEnumMap<T>::map = {};
+std::unordered_map<std::string_view, T> StringToEnumMap<T>::map = {};
 
 template <typename EnumKind>
 std::optional<EnumKind> mapStringToEnumKind(const std::string &input) {
+    const auto &map = StringToEnumMap<EnumKind>::map;
+    if (auto iter = map.find(input); iter != map.end()) {
+        return iter->second;
+    }
+    return {};
+}
+
+template <typename EnumKind>
+std::optional<EnumKind> mapStringToEnumKind(const std::string_view &input) {
     const auto &map = StringToEnumMap<EnumKind>::map;
     if (auto iter = map.find(input); iter != map.end()) {
         return iter->second;

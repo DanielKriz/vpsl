@@ -2,7 +2,11 @@
 #pragma vp program name(main)
 #pragma vp begin
 
-#pragma vp shader name(main_vs) type(vertex)
+#pragma vp shader name(included) type(generic)
+#pragma vp begin
+#pragma vp end
+
+#pragma vp shader name(main_vs) type(vertex) append(included)
 #pragma vp begin
 #version 450 core
 
@@ -16,7 +20,7 @@ void main() {
 }
 
 #pragma vp end // main_vs
-#pragma vp shader name(main_fs) type(fragment)
+#pragma vp shader name(main_fs) type(fragment) prepend(included)
 #pragma vp begin
 #version 450 core
 

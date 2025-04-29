@@ -6,6 +6,8 @@
 #include <unordered_set>
 #include <vector>
 
+#include <fmt/core.h>
+
 namespace vp {
 class DependencyGraph {
 public:
@@ -40,6 +42,18 @@ public:
     bool isAcyclic() const;
 
     [[nodiscard]] std::vector<std::string> topologySort() const noexcept;
+
+#if 1
+    void debugPrint() {
+        fmt::println("\nDependency Graph Debug Print:");
+        for (const auto &edge : m_edges) {
+            for (const auto &to : edge.second) {
+                fmt::println("\t{} -> {}", edge.first, to);
+            }
+        }
+        fmt::println("");
+    }
+#endif
 
 private:
     bool descent(
