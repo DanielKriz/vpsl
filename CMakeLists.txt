@@ -14,7 +14,8 @@ project(
     LANGUAGES CXX C
 )
 
-set(main_target ${PROJECT_NAME})
+# set(main_target ${PROJECT_NAME})
+set(main_target "exe")
 
 # Source: https://cliutils.gitlab.io/modern-cmake/chapters/features.html
 set(default_build_type "Release")
@@ -31,14 +32,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Dependencies setup
 find_package(fmt REQUIRED)
-find_package(spdlog REQUIRED)
 find_package(re2 REQUIRED)
 find_package(assimp REQUIRED)
-find_package(SDL3 REQUIRED)
-find_package(SDL3_image REQUIRED)
 find_package(glm REQUIRED)
 find_package(glad REQUIRED)
-find_package(imgui REQUIRED)
 find_package(glslang REQUIRED)
 
 vp_add_compiler_settings()
@@ -51,11 +48,8 @@ file(GLOB hdr_files include/*.hpp/ include/**/*.hpp)
 add_executable(${main_target} ${src_files} ${hdr_files})
 target_link_libraries(
     ${main_target} PUBLIC 
-    imgui::imgui
     glad::glad
     glslang::glslang
-    SDL3::SDL3
-    SDL3_image::SDL3_image
     re2::re2
     assimp::assimp
     glm::glm

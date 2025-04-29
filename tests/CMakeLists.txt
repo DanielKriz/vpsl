@@ -44,11 +44,8 @@ set_target_properties(
 target_include_directories(${test_exe_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(
     ${test_exe_name} PRIVATE 
-    imgui::imgui
     glad::glad
     glslang::glslang
-    SDL3::SDL3
-    SDL3_image::SDL3_image
     doctest::doctest
     glm::glm
     fmt::fmt

@@ -3,6 +3,7 @@
 namespace vp {
 
 enum class ParserStage {
+    ComposingGlobalScope,
     ComposingProgram,
     ComposingShader,
 };

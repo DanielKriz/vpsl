@@ -13,7 +13,9 @@ using ClauseSet = std::set<std::unique_ptr<IClause>>;
 class IDirective {
 public:
     virtual ~IDirective() = default;
+#if 0
     [[nodiscard]] virtual const ClauseSet &getClauses() const noexcept = 0;
+#endif
     [[nodiscard]] virtual bool areClausesCorrect(
         TokenIterator &it,
         const TokenIterator &end

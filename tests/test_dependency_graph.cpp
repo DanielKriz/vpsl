@@ -3,7 +3,7 @@
 
 using namespace vp;
 
-TEST_SUITE_BEGIN("Dependency Graph");
+TEST_SUITE("Dependency Graph") {
 
 TEST_CASE("insertion of a node") {
     DependencyGraph dp;
@@ -68,4 +68,4 @@ TEST_CASE("Graph that is acyclic should not be marked as cyclic") {
     CHECK(dp.isAcyclic());
 }
 
-TEST_SUITE_END;
+}

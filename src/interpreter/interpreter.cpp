@@ -1,8 +1,4 @@
-#include "vp/interpreter/clause.hpp"
-#include "vp/interpreter/directive.hpp"
-#include "vp/interpreter/directives/directive_interface.hpp"
 #include <vp/interpreter/interpreter.hpp>
-#include <span>
 
 namespace vp {
 
@@ -16,51 +12,52 @@ Interpreter::Interpreter(std::ifstream &fin)
 void Interpreter::interpret() {
     fmt::println("Starting the interpreter");
     Lexer lexer{};
+    Parser parser{};
 
     std::string line{};
+    bool isExpectingNewScope = false;
+    bool startedANewScope = false;
     while (std::getline(m_inputStream, line)) {
         /// 1. Lexer tokenizes the line
         /// 2. Parser checks whether it is a valid directive and returns it
         /// 3. Interpreter checks whether the GLSL code contains everything important
+
+        if (Lexer::isContinuous(line)) {
+            std::cout << "Line is in fact continuous" << std::endl;
+            std::string tmp;
+            std::getline(m_inputStream, tmp);
+            Lexer::joinLines(line, tmp);
+        }
 
         auto tokens = lexer.scan(line);
         if (not tokens.has_value() or tokens->empty()) {
             continue;
         }
 
-        if (auto firstToken = tokens.value()[0]; firstToken.getTokenKind() == TokenKind::SourceLine) {
-            fmt::println("Source line '{}' on line no. {}", firstToken.getLexeme(), firstToken.getLineNumber());
-            if (firstToken.getLexeme() == "") {
-                continue;
-            }
-        }
-
-        // Checking if correct start
-
         auto it = tokens->cbegin();
-
-        std::cout << *it << std::endl;
-        if (it->getTokenKind() != TokenKind::Pragma or (++it)->getTokenKind() != TokenKind::Namespace) {
-            throw std::runtime_error("Prefix is not valid");
-        }
-
-        std::cout << *it << std::endl;
-
+#if 0
+        std::cout << "Begin -- List of current tokens:" << std::endl;
         for (const auto &token : *tokens) {
             std::cout << token << std::endl;
         }
+        std::cout << "END -- List of current tokens:" << std::endl;
+#endif
 
-        std::unique_ptr<IDirective> pDirective;
+        std::unique_ptr<IDirective> pDirective = nullptr;
 
-        switch ((++it)->getTokenKind()) {
+        switch (it->getTokenKind()) {
         case vp::TokenKind::ShaderDirective:
             setCurrentStage(vp::ParserStage::ComposingShader);
             {
                 pDirective = std::make_unique<ShaderDirective>();
+                isExpectingNewScope = true;
             }
             break;
         case vp::TokenKind::ProgramDirective:
             setCurrentStage(vp::ParserStage::ComposingProgram);
+            {
+                pDirective = std::make_unique<ProgramDirective>();
+            }
             break;
         case vp::TokenKind::LoadDirective:
             break;
@@ -68,6 +65,9 @@ void Interpreter::interpret() {
             m_scope.push(m_stage);
             break;
         case vp::TokenKind::EndDirective:
+            if (m_scope.empty()) {
+                throw std::runtime_error("Out of scope");
+            }
             m_scope.pop();
             break;
         default:
@@ -79,16 +79,16 @@ void Interpreter::interpret() {
         // }
 
         ++it;
-        auto ret = pDirective->areClausesCorrect(it, tokens->cend());
-
-        std::cout << "Result of clause thingy" << std::endl;
-        std::cout << "Are clauses correct: " << std::boolalpha << ret << std::endl;
-        std::cout << *it << std::endl;
-
-        if (not m_scope.empty()) {
-            // there is some unfinished scope => Error
+        if (pDirective != nullptr) {
+            auto ret = pDirective->areClausesCorrect(it, tokens->cend());
+            fmt::println("Clauses are correct: ({})", ret);
         }
     }
+
+    if (not m_scope.empty()) {
+        ErrorHandler::report<std::runtime_error>(1, "Invalid scope");
+    }
+    std::cout << "interpretation is finished" << std::endl;
 }
 
 } // namespace vp

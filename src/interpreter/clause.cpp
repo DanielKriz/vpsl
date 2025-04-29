@@ -1,4 +1,7 @@
 #include <vp/interpreter/clause.hpp>
+#include <vp/error_handling.hpp>
+
+#include <iostream>
 
 namespace vp {
 
@@ -6,11 +9,13 @@ bool ClauseBase::isValidClause(TokenIterator &it, const TokenIterator &end) cons
     u64 parametersCount = 0;
 
     if (it->getTokenKind() != static_cast<TokenKind>(getKind())) {
+        ErrorHandler::warn(0, fmt::format("Wrong clause type: '{}'", it->getLexeme()));
         return false;
     }
     ++it;
 
     if (it->getTokenKind() != TokenKind::LeftParen) {
+        ErrorHandler::warn(0, "Missing left parenthesis for a clause");
         return false;
     }
     ++it;
@@ -26,16 +31,20 @@ bool ClauseBase::isValidClause(TokenIterator &it, const TokenIterator &end) cons
             isExpectingParameter = true;
             break;
         default:
+            std::cout << *it << std::endl;
+            ErrorHandler::warn(0, "Wrong type of token inside a clause");
             return false;
         }
         ++it;
     }
 
     if (isExpectingParameter) {
+        ErrorHandler::warn(0, "Missing parameter");
         return false;
     }
 
     if (parametersCount < getMinParameters() or parametersCount > getMaxParameters()) {
+        ErrorHandler::warn(0, "Unsupported number of arguments");
         return false;
     }
 

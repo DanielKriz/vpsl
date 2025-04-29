@@ -30,6 +30,7 @@ enum class TokenKind {
     ProgramDirective,
     Pre,
     Post,
+    Shaders,
 
     IncludeDirective,
     OptionDirective,
@@ -62,6 +63,7 @@ inline utils::StringMap<TokenKind> utils::StringToEnumMap<TokenKind>::map = {
     { "texture" , TokenKind::Texture },
     { "vp" , TokenKind::Namespace },
     { "shader", TokenKind::ShaderDirective },
+    { "shaders", TokenKind::Shaders },
     { "type", TokenKind::Type },
     { "program", TokenKind::ProgramDirective },
     { "copyin", TokenKind::CopyInDirective },
