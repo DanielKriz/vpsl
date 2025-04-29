@@ -23,9 +23,9 @@ bool DependencyGraph::isAcyclic() const {
 }
 
 bool DependencyGraph::descent(
-    const DependencyGraph::ValueType &key,
-    DependencyGraph::ValueSet &visited,
-    DependencyGraph::ValueSet &recursionStack
+    const std::string_view &key,
+    std::unordered_set<std::string_view> &visited,
+    std::unordered_set<std::string_view> &recursionStack
 ) const {
     if (visited.contains(key)) {
         return false;

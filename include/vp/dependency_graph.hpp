@@ -40,14 +40,14 @@ public:
 
 private:
     bool descent(
-        const ValueType &key,
-        ValueSet &visited,
-        ValueSet &recursionStack
+        const std::string_view &key,
+        std::unordered_set<std::string_view> &visited,
+        std::unordered_set<std::string_view> &recursionStack
     ) const;
 
     mutable bool m_isAcyclic;
     mutable bool m_isAcyclicityValid;
-    ValueSet m_nodes;
+    std::unordered_set<std::string_view> m_nodes;
     EdgeMap m_edges;
 };
 
