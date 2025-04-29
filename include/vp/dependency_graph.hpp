@@ -4,6 +4,7 @@
 #include <string_view>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 namespace vp {
 class DependencyGraph {
@@ -38,11 +39,19 @@ public:
 
     bool isAcyclic() const;
 
+    [[nodiscard]] std::vector<std::string> topologySort() const noexcept;
+
 private:
     bool descent(
         const std::string_view &key,
         std::unordered_set<std::string_view> &visited,
         std::unordered_set<std::string_view> &recursionStack
+    ) const;
+
+    void topologySortHelper(
+        const std::string_view &node,
+        std::unordered_set<std::string_view> &visited,
+        std::vector<std::string> &sorted
     ) const;
 
     mutable bool m_isAcyclic;

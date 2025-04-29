@@ -68,4 +68,48 @@ TEST_CASE("Graph that is acyclic should not be marked as cyclic") {
     CHECK(dp.isAcyclic());
 }
 
+TEST_CASE("Topology Sort of single node graph is said node") {
+    DependencyGraph dp;
+    dp.addNode("A");
+
+    auto sorted = dp.topologySort();
+    CHECK(sorted[0] == "A");
+}
+
+TEST_CASE("Simple topology Sort") {
+    DependencyGraph dp;
+    dp.addNode("A");
+    dp.addNode("B");
+    dp.addNode("C");
+    dp.addEdge("A", "B");
+    dp.addEdge("B", "C");
+    dp.addEdge("A", "C");
+
+    auto sorted = dp.topologySort();
+    CHECK(sorted[0] == "C");
+    CHECK(sorted[1] == "B");
+    CHECK(sorted[2] == "A");
+}
+
+TEST_CASE("Cannot topology sort a graph with a cycle") {
+    SUBCASE("Simplest case") {
+        DependencyGraph dp;
+        dp.addEdge("A", "A");
+        auto sorted = dp.topologySort();
+        CHECK(sorted.empty());
+    }
+    SUBCASE("Simple Graph") {
+        DependencyGraph dp;
+        dp.addNode("A");
+        dp.addNode("B");
+        dp.addNode("C");
+        dp.addEdge("A", "B");
+        dp.addEdge("B", "C");
+        dp.addEdge("C", "A");
+
+        auto sorted = dp.topologySort();
+        CHECK(sorted.empty());
+    }
+}
+
 }

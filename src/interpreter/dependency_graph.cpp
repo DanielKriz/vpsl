@@ -45,4 +45,40 @@ bool DependencyGraph::descent(
     return false;
 }
 
+void DependencyGraph::topologySortHelper(
+    const std::string_view &node,
+    std::unordered_set<std::string_view> &visited,
+    std::vector<std::string> &sorted
+) const {
+    visited.insert(node);
+
+    if (not m_edges.contains(node)) {
+        return;
+    }
+
+    for (const auto &neighbor : m_edges.at(node)) {
+        if (not visited.contains(neighbor)) {
+            topologySortHelper(neighbor, visited, sorted);
+        }
+    }
+    sorted.emplace_back(node);
+}
+
+std::vector<std::string> DependencyGraph::topologySort() const noexcept {
+    if (not isAcyclic()) {
+        return {};
+    }
+
+    std::unordered_set<std::string_view> visited;
+    std::vector<std::string> sorted;
+
+    for (const auto& node : m_nodes) {
+        if (not visited.contains(node)) {
+            topologySortHelper(node, visited, sorted);
+        }
+    }
+    return sorted;
+}
+
+
 } // namespace vp
