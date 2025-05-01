@@ -16,6 +16,7 @@ void Interpreter::interpret() {
 
     std::string line{};
 
+    ShaderObject globalShaderObject;
     ShaderObject currentShaderObject;
 
     while (std::getline(m_inputStream, line)) {
@@ -36,6 +37,16 @@ void Interpreter::interpret() {
         }
 
         const auto directiveToken = *tokens->cbegin();
+
+        if (directiveToken.getTokenKind() == TokenKind::SourceLine) {
+            if (m_stage == vp::ParserStage::ComposingShader) {
+                currentShaderObject.addLine(directiveToken.getLexeme());
+                continue;
+            }
+            globalShaderObject.addLine(directiveToken.getLexeme());
+            continue;
+        }
+
         // Remove the directive token, because it is not going to be needed further
         tokens->erase(tokens->begin());
         const auto &clauseTokens = *tokens;
