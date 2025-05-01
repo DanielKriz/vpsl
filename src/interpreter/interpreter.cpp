@@ -70,6 +70,11 @@ void Interpreter::interpret() {
                 throw std::runtime_error("Out of scope");
             }
             m_scope.pop();
+            if (m_stage == vp::ParserStage::ComposingShader) {
+                m_stage = vp::ParserStage::ComposingProgram;
+            } else if (m_stage == vp::ParserStage::ComposingProgram) {
+                m_stage = vp::ParserStage::ComposingGlobalScope;
+            }
             break;
         default:
             break;
