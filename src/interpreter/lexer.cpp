@@ -63,7 +63,6 @@ std::optional<std::vector<Token>> Lexer::scan(const std::string &input) {
         }
 
         tokens.emplace_back(m_buffer, mapTokenKind(m_buffer), m_currentLine);
-        std::cout << "Currently emplaced: " << tokens.back() << std::endl;
     }
     return tokens;
 }
