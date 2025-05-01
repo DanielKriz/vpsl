@@ -19,6 +19,7 @@ public:
 
     bool isInPrependSet(ShaderObject &other) const noexcept;
     bool isInAppendSet(ShaderObject &other) const noexcept;
+    [[nodiscard]] bool isEmpty() const noexcept { return m_lines.empty() and m_prependSet.empty() and m_appendSet.empty(); }
 
     void appendLines(const std::vector<std::string> &lines);
     void appendLines(const ShaderObject &other);
