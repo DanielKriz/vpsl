@@ -87,6 +87,9 @@ void Interpreter::interpret() {
                     fmt::println("\tAppend dep: {}", dep);
                 }
             }
+            else if (auto * pDir = dynamic_cast<ProgramDirective *>(pDirective.get())) {
+                fmt::println("name of the program is '{}'", pDir->getParameters(TokenKind::Name)->at(0));
+            }
         }
     }
 
