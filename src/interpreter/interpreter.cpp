@@ -1,4 +1,3 @@
-#include "vp/dependency_graph.hpp"
 #include <vp/interpreter/interpreter.hpp>
 
 namespace vp {
@@ -16,8 +15,6 @@ void Interpreter::interpret() {
     Parser parser{};
 
     std::string line{};
-    bool isExpectingNewScope = false;
-    bool startedANewScope = false;
 
     while (std::getline(m_inputStream, line)) {
         /// 1. Lexer tokenizes the line
@@ -55,7 +52,6 @@ void Interpreter::interpret() {
             setCurrentStage(vp::ParserStage::ComposingShader);
             {
                 pDirective = std::make_unique<ShaderDirective>();
-                isExpectingNewScope = true;
             }
             break;
         case vp::TokenKind::ProgramDirective:
