@@ -128,11 +128,12 @@ protected:
         }
     }
 
-private:
     IClause * getClause(TokenKind kind) {
         auto clause = clauses.find(kind);
         return clause == clauses.end() ? nullptr : clause->second.get();
     }
+
+private:
 
     std::map<TokenKind, std::unique_ptr<IClause>> clauses;
     std::unordered_set<TokenKind> m_closed;
