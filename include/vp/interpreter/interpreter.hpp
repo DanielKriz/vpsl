@@ -13,6 +13,8 @@
 #include <vp/interpreter/parser_stages.hpp>
 #include <vp/interpreter/directive.hpp>
 #include <vp/error_handling.hpp>
+#include <vp/shader_code_store.hpp>
+#include <vp/builder_graph/objects/shader_object.hpp>
 
 namespace vp {
 
@@ -27,8 +29,7 @@ public:
 private:
     inline void setCurrentStage(vp::ParserStage stage) { m_stage = stage; }
 
-    
-
+    ShaderCodeStore m_store;
     std::istringstream m_stringStream;
     std::istream m_inputStream;
     std::stack<vp::ParserStage> m_scope;
