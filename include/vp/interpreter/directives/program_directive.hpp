@@ -14,6 +14,15 @@ public:
             return;
         }
     }
+
+    // TODO: make this efficient
+    std::optional<std::vector<std::string>> getParameters(TokenKind kind) {
+        auto *pClause =  getClause(kind);
+        if (pClause == nullptr) {
+            return {};
+        }
+        return pClause->getParameters();
+    }
 };
 
 } // namespace vp
