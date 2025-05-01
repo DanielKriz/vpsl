@@ -19,6 +19,8 @@ void Interpreter::interpret() {
     ShaderObject globalShaderObject;
     ShaderObject currentShaderObject;
 
+    m_stage = vp::ParserStage::ComposingGlobalScope;
+
     while (std::getline(m_inputStream, line)) {
         /// 1. Lexer tokenizes the line
         /// 2. Parser checks whether it is a valid directive and returns it
