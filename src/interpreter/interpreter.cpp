@@ -16,6 +16,8 @@ void Interpreter::interpret() {
 
     std::string line{};
 
+    ShaderObject currentShaderObject;
+
     while (std::getline(m_inputStream, line)) {
         /// 1. Lexer tokenizes the line
         /// 2. Parser checks whether it is a valid directive and returns it
@@ -51,6 +53,8 @@ void Interpreter::interpret() {
         case vp::TokenKind::ShaderDirective:
             setCurrentStage(vp::ParserStage::ComposingShader);
             {
+                currentShaderObject = ShaderObject{};
+                currentShaderObject.appendLines(globalShaderObject);
                 pDirective = std::make_unique<ShaderDirective>();
             }
             break;
