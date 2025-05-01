@@ -66,6 +66,11 @@ void Interpreter::interpret() {
         case vp::TokenKind::ShaderDirective:
             setCurrentStage(vp::ParserStage::ComposingShader);
             {
+                if (not currentShaderObject.isEmpty()) {
+                    fmt::println("{}", fmt::styled("Current Shader Object:", fmt::fg(fmt::color::red)));
+                    fmt::println("{}", fmt::styled("----------------------", fmt::fg(fmt::color::red)));
+                    std::cout << currentShaderObject << std::endl;
+                }
                 currentShaderObject = ShaderObject{};
                 currentShaderObject.appendLines(globalShaderObject);
                 pDirective = std::make_unique<ShaderDirective>();
@@ -114,6 +119,14 @@ void Interpreter::interpret() {
             }
         }
     }
+
+    fmt::println("{}", fmt::styled("Global Shader Object:", fmt::fg(fmt::color::blue)));
+    fmt::println("{}", fmt::styled("---------------------", fmt::fg(fmt::color::blue)));
+    std::cout << globalShaderObject << std::endl;
+    fmt::println("");
+    fmt::println("{}", fmt::styled("Latest Shader Object:", fmt::fg(fmt::color::blue)));
+    fmt::println("{}", fmt::styled("---------------------", fmt::fg(fmt::color::blue)));
+    std::cout << currentShaderObject << std::endl;
 
     if (not m_scope.empty()) {
         ErrorHandler::report<std::runtime_error>(1, "Invalid scope");
