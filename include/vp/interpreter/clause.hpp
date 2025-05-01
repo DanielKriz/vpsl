@@ -28,7 +28,7 @@ struct IClause {
     [[nodiscard]] virtual u64 getMaxParameters() const noexcept = 0;
     [[nodiscard]] virtual bool isValidClause(const std::vector<Token> &tokens) const noexcept = 0;
     [[nodiscard]] virtual bool isValidClause(TokenIterator it, const TokenIterator &end) const noexcept = 0;
-    [[nodiscard]] virtual const std::vector<std::string_view> &getParameters() const noexcept = 0;
+    [[nodiscard]] virtual const std::vector<std::string> &getParameters() const noexcept = 0;
     [[nodiscard]] virtual bool isPopulated() const noexcept = 0;
     virtual void populate(const std::vector<Token> &tokens) = 0;
     virtual void populate(TokenIterator it, const TokenIterator &end) = 0;
@@ -40,13 +40,13 @@ public:
     [[nodiscard]] bool isValidClause(const std::vector<Token> &tokens) const noexcept override;
     [[nodiscard]] bool isValidClause(TokenIterator it, const TokenIterator &end) const noexcept override;
     [[nodiscard]] bool isPopulated() const noexcept override { return m_populated; }
-    [[nodiscard]] const std::vector<std::string_view> &getParameters() const noexcept override {
+    [[nodiscard]] const std::vector<std::string> &getParameters() const noexcept override {
         return m_parameters;
     }
     void populate(const std::vector<Token> &tokens) override;
     void populate(TokenIterator it, const TokenIterator &end) override;
 protected:
-    std::vector<std::string_view> m_parameters;
+    std::vector<std::string> m_parameters;
     bool m_populated { false };
 };
 
