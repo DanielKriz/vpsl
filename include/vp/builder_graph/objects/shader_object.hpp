@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include <fmt/core.h>
 
@@ -31,6 +32,11 @@ public:
 
     void compose();
     [[nodiscard]] std::string createSource() const;
+
+    friend std::ostream &operator<<(std::ostream &os, const ShaderObject &obj) {
+        return os << obj.createSource();
+    }
+
 private:
     std::vector<std::string> m_lines;
     std::vector<std::reference_wrapper<ShaderObject>> m_prependSet;
