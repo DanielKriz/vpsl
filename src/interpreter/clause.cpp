@@ -24,24 +24,35 @@ bool IClause::isClause(TokenKind kind) noexcept {
     }
 }
 
-// There is no need to check whether the clauses is correct, because this
-// function shouldn't be called without the first call to the isValid function.
-void ClauseBase::populate(const std::vector<Token> &tokens) {
+bool ClauseBase::populate(const std::vector<Token> &tokens) {
+    bool isValid = isValidClause(tokens);
+    if (not isValid) {
+        return false;
+    }
     for (const auto &token : tokens) {
         if (token.getTokenKind() == TokenKind::Identifier) {
             m_parameters.push_back(token.getLexeme());
         }
     }
+    return true;
 }
 
-void ClauseBase::populate(TokenIterator it, const TokenIterator &end) {
-    while (it->getTokenKind() != TokenKind::RightParen or it != end) {
+bool ClauseBase::populate(TokenIterator it, const TokenIterator &end) {
+    bool isValid = isValidClause(it, end);
+    if (not isValid) {
+        return false;
+    }
+    while (it != end) {
         if (it->getTokenKind() == TokenKind::Identifier) {
             m_parameters.push_back(it->getLexeme());
         }
         ++it;
+        if (it->getTokenKind() == TokenKind::RightParen) {
+            break;
+        }
     }
     m_populated = true;
+    return true;
 }
 
 bool ClauseBase::isValidClause(TokenIterator it, const TokenIterator &end) const {

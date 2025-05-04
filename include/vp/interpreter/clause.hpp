@@ -30,8 +30,8 @@ struct IClause {
     [[nodiscard]] virtual bool isValidClause(TokenIterator it, const TokenIterator &end) const = 0;
     [[nodiscard]] virtual const std::vector<std::string> &getParameters() const noexcept = 0;
     [[nodiscard]] virtual bool isPopulated() const noexcept = 0;
-    virtual void populate(const std::vector<Token> &tokens) = 0;
-    virtual void populate(TokenIterator it, const TokenIterator &end) = 0;
+    virtual bool populate(const std::vector<Token> &tokens) = 0;
+    virtual bool populate(TokenIterator it, const TokenIterator &end) = 0;
     static bool isClause(TokenKind kind) noexcept;
     static bool isClause(const Token &token) noexcept;
 };
@@ -45,8 +45,8 @@ public:
     [[nodiscard]] const std::vector<std::string> &getParameters() const noexcept override {
         return m_parameters;
     }
-    void populate(const std::vector<Token> &tokens) override;
-    void populate(TokenIterator it, const TokenIterator &end) override;
+    bool populate(const std::vector<Token> &tokens) override;
+    bool populate(TokenIterator it, const TokenIterator &end) override;
 protected:
     std::vector<std::string> m_parameters;
     bool m_populated { false };
