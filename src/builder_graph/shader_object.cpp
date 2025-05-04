@@ -15,9 +15,8 @@ void ShaderObject::addToAppendSet(ShaderObject &other) {
 }
 
 bool ShaderObject::isInPrependSet(ShaderObject &other) const noexcept {
-    auto item = std::find_if(
-        m_prependSet.cbegin(),
-        m_prependSet.cend(),
+    auto item = std::ranges::find_if(
+        m_prependSet,
         [&other](const std::reference_wrapper<ShaderObject> &ref) {
             return std::addressof(ref.get()) == std::addressof(other);
         });
@@ -25,9 +24,8 @@ bool ShaderObject::isInPrependSet(ShaderObject &other) const noexcept {
 }
 
 bool ShaderObject::isInAppendSet(ShaderObject &other) const noexcept {
-    auto item = std::find_if(
-        m_appendSet.cbegin(),
-        m_appendSet.cend(),
+    auto item = std::ranges::find_if(
+        m_appendSet,
         [&other](const std::reference_wrapper<ShaderObject> &ref) {
             return std::addressof(ref.get()) == std::addressof(other);
         });
@@ -39,7 +37,6 @@ void ShaderObject::appendLines(const ShaderObject &other) {
 }
 
 void ShaderObject::appendLines(const std::vector<std::string> &lines) {
-
     m_lines.insert(m_lines.end(), lines.cbegin(), lines.cend());
 }
 
