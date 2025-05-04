@@ -28,7 +28,7 @@ public:
     void prependLines(const std::vector<std::string> &lines);
     void prependLines(const ShaderObject &other);
 
-    const std::vector<std::string> &getLines() const noexcept { return m_lines; }
+    [[nodiscard]] const std::vector<std::string> &getLines() const noexcept { return m_lines; }
 
     void compose();
     [[nodiscard]] std::string createSource() const;
