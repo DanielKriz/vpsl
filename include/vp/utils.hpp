@@ -3,9 +3,17 @@
 
 #include <algorithm> 
 #include <cctype>
+#include <type_traits>
 #include <unordered_map>
 #include <string>
 #include <optional>
+
+namespace vp {
+
+template <typename T>
+concept EnumKind = std::is_enum_v<T>;
+
+} // namespace vp
 
 namespace vp::utils {
 
