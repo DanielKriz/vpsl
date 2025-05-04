@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <string>
 #include <optional>
+#include <vector>
+#include <iostream>
 
 namespace vp {
 
@@ -73,6 +75,18 @@ std::optional<EnumKind> mapStringToEnumKind(const std::string_view &input) {
     }
     return {};
 }
+
+namespace debug {
+
+template <typename T>
+void printVector(const std::vector<T> &vec, const std::string &sep = ", ") {
+    std::for_each(vec.begin(), vec.end() - 1, [&sep](const T &item) {
+        std::cout << item << sep;
+    });
+    std::cout << vec.back() << std::endl;
+}
+
+} // namespace debug
 
 } // namespace vp::utils
 
