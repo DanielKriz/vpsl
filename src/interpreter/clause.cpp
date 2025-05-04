@@ -70,7 +70,6 @@ bool ClauseBase::isValidClause(TokenIterator it, const TokenIterator &end) const
             isExpectingParameter = true;
             break;
         default:
-            std::cout << *it << std::endl;
             throw std::runtime_error("Wrong type of token inside a clause");
             return false;
         }
