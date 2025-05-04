@@ -53,6 +53,7 @@ protected:
 };
 
 template <ClauseKind Kind, u64 Min = 1, u64 Max = 1>
+requires (Max >= Min and Min > 0 and Max > 0)
 struct Clause final : public ClauseBase {
     ~Clause() override = default;
     [[nodiscard]] inline ClauseKind getKind() const noexcept override { return Kind; }
