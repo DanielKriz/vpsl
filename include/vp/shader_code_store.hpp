@@ -12,19 +12,29 @@ namespace vp {
 /// between them, because they are kept as lazy values, unless needed.
 class ShaderCodeStore {
 public:
-    ShaderObject &emplace(const std::string &nameOfShader);
-    ShaderObject &emplaceUnnamed();
+    ShaderObject *emplace(const std::string &nameOfShader);
+    ShaderObject *emplaceUnnamed();
+
     void addDependencies(const std::string &nameOfShader, const std::vector<std::string> &others);
     void insert(const std::string &nameOfShader, ShaderObject obj);
+    void insert(const std::string &nameOfShader, ShaderObject &&obj);
 
-    // TODO: rework to something, that can fail
-    const ShaderObject &getShaderObject(const std::string &nameOfShader);
+    bool contains(const std::string &nameOfShader) const noexcept;
+
+    ShaderObject *getShaderObject(const std::string &nameOfShader);
+    const ShaderObject *getShaderObject(const std::string &nameOfShader) const;
+    ShaderObject *operator[](const std::string &nameOfShader) {
+        return getShaderObject(nameOfShader);
+    }
+    const ShaderObject *operator[](const std::string &nameOfShader) const {
+        return getShaderObject(nameOfShader);
+    };
 
     void composeAllShaders();
 
 private:
 std::unordered_map<std::string, ShaderObject> m_shaderCodes;
-std::unordered_set<ShaderObject> m_unnamedShaderCodes;
+std::vector<ShaderObject> m_unnamedShaderCodes;
 DependencyGraph m_dependecies;
 }; 
 
