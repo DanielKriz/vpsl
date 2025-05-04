@@ -11,6 +11,8 @@
 namespace vp {
 
 enum class TokenKind {
+    Unknown,
+
     LeftBracket,
     RightBracket,
     LeftParen,
