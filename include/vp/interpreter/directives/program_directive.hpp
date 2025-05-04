@@ -7,13 +7,13 @@ namespace vp {
 
 class ProgramDirective : public DirectiveBase {
 public:
-    ProgramDirective() : DirectiveBase {
-        TokenKind::Name, TokenKind::Pre, TokenKind::Post, TokenKind::Shaders } {};
     void populate(const std::vector<Token> &tokens) override {
         if (populateClauses(tokens)) {
             return;
         }
     }
+    ProgramDirective() : DirectiveBase (DirectiveKind::Program, {
+        TokenKind::Name, TokenKind::Pre, TokenKind::Post, TokenKind::Shaders }) {};
 
     // TODO: make this efficient
     std::optional<std::vector<std::string>> getParameters(TokenKind kind) {

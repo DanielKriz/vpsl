@@ -13,8 +13,8 @@ namespace vp {
 
 class ShaderDirective : public DirectiveBase {
 public:
-    ShaderDirective() : DirectiveBase {
-        TokenKind::Name, TokenKind::Type, TokenKind::Prepend, TokenKind::Append } {};
+    ShaderDirective() : DirectiveBase (DirectiveKind::Shader, {
+        TokenKind::Name, TokenKind::Type, TokenKind::Prepend, TokenKind::Append }) {};
 
     void populate(const std::vector<Token> &tokens) override {
         if (populateClauses(tokens)) {
