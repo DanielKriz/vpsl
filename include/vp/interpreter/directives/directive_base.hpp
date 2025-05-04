@@ -12,7 +12,7 @@ namespace vp {
 
 class DirectiveBase : public IDirective {
 public:
-    DirectiveBase(std::initializer_list<TokenKind> kinds) {
+    DirectiveBase(DirectiveKind kind, std::initializer_list<TokenKind> kinds) : m_kind(kind) {
         for (const auto kind : kinds) {
             addClause(kind);
         }
@@ -65,7 +65,15 @@ public:
         return true;
     }
 
-    void populate(const std::vector<Token> &tokens) override = 0;
+    void populate(const std::vector<Token> &tokens) override {
+        if (populateClauses(tokens)) {
+            return;
+        }
+    }
+
+    [[nodiscard]] virtual DirectiveKind getDirectiveKind() const noexcept {
+        return m_kind;
+    }
 
 protected:
 
@@ -79,6 +87,15 @@ protected:
     }
 
     void populateData(TokenKind kind, std::unordered_set<std::string_view> &set) {
+        if (auto *clause = getClause(kind); clause != nullptr) {
+            if (clause->isPopulated()) {
+                std::ranges::for_each(clause->getParameters(), [&set](const auto &it) {
+                    set.insert(it);
+                });
+            }
+        }
+    }
+    void populateData(TokenKind kind, std::unordered_set<std::string> &set) {
         if (auto *clause = getClause(kind); clause != nullptr) {
             if (clause->isPopulated()) {
                 std::ranges::for_each(clause->getParameters(), [&set](const auto &it) {
@@ -134,10 +151,20 @@ protected:
     }
 
 private:
-
+    DirectiveKind m_kind;
     std::map<TokenKind, std::unique_ptr<IClause>> clauses;
     std::unordered_set<TokenKind> m_closed;
     std::unordered_set<TokenKind> m_clauseKinds;
+};
+
+struct BeginDirective : DirectiveBase {
+    BeginDirective() : DirectiveBase(DirectiveKind::Begin, {}) {};
+};
+struct EndDirective : DirectiveBase {
+    EndDirective() : DirectiveBase(DirectiveKind::End, {}) {};
+};
+struct LoadDirective : DirectiveBase {
+    LoadDirective() : DirectiveBase(DirectiveKind::End, {}) {};
 };
 
 } // namespace vp
