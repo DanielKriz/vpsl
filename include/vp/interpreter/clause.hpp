@@ -32,6 +32,8 @@ struct IClause {
     [[nodiscard]] virtual bool isPopulated() const noexcept = 0;
     virtual void populate(const std::vector<Token> &tokens) = 0;
     virtual void populate(TokenIterator it, const TokenIterator &end) = 0;
+    static bool isClause(TokenKind kind) noexcept;
+    static bool isClause(const Token &token) noexcept;
 };
 
 class ClauseBase : public IClause {

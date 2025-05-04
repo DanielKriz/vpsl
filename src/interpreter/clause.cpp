@@ -5,6 +5,25 @@
 
 namespace vp {
 
+bool IClause::isClause(const Token &token) noexcept {
+    return isClause(token.getTokenKind());
+}
+
+bool IClause::isClause(TokenKind kind) noexcept {
+    using enum TokenKind;
+    switch (kind) {
+    case Name:
+    case Type:
+    case Pre:
+    case Post:
+    case Prepend:
+    case Append:
+        return true;
+    default:
+        return false;
+    }
+}
+
 // There is no need to check whether the clauses is correct, because this
 // function shouldn't be called without the first call to the isValid function.
 void ClauseBase::populate(const std::vector<Token> &tokens) {
