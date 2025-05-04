@@ -49,6 +49,7 @@ public:
         case '(':
         case ')':
         case ' ':
+        case ',':
         case '\t':
         case '\n':
         case '\r':
