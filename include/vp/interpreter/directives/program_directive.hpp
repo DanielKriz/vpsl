@@ -7,11 +7,6 @@ namespace vp {
 
 class ProgramDirective : public DirectiveBase {
 public:
-    void populate(const std::vector<Token> &tokens) override {
-        if (populateClauses(tokens)) {
-            return;
-        }
-    }
     ProgramDirective() : DirectiveBase (DirectiveKind::Program, {
         TokenKind::Name, TokenKind::Pre, TokenKind::Post, TokenKind::Shaders }) {};
 
