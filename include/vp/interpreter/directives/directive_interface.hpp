@@ -10,6 +10,17 @@ namespace vp {
 
 using ClauseSet = std::set<std::unique_ptr<IClause>>;
 
+enum class DirectiveKind {
+    Unknown,
+    Shader,
+    Program,
+    Begin,
+    End,
+    Load,
+    Texture,
+    CopyIn,
+};
+
 class IDirective {
 public:
     virtual ~IDirective() = default;
@@ -23,6 +34,7 @@ public:
 
     virtual void populate(const std::vector<Token> &tokens) = 0;
     virtual bool populateClauses(const std::vector<Token> &tokens) = 0;
+    [[nodiscard]] virtual DirectiveKind getDirectiveKind() const noexcept = 0;
 };
 
 } // namespace vp
