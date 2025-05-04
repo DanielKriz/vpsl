@@ -92,10 +92,46 @@ public:
     [[nodiscard]] const std::string &getLexeme() const noexcept { return m_lexeme; }
 
     friend std::ostream &operator<<(std::ostream &os, const Token &token) {
-        const auto repr = fmt::format("({}) {}: '{}'", token.m_line, static_cast<enum32>(token.m_tokenKind), token.m_lexeme);
+        const auto repr = fmt::format("Token({}, {}, '{}')", token.m_line, enumToString(token.m_tokenKind), token.m_lexeme);
         return os << repr;
     }
 private:
+    static std::string_view enumToString(TokenKind kind) {
+        using enum TokenKind;
+        switch(kind) {
+        case LeftBracket: return "LeftBracket";
+        case RightBracket: return "RightBracket";
+        case LeftParen: return "LeftParen";
+        case RightParen: return "RightParen";
+        case Comma: return "Comman";
+        case Pragma: return "Pragma";
+        case Namespace: return "Namespace";
+        case Identifier: return "Identifier";
+        case ShaderDirective: return "ShaderDirective";
+        case Type: return "Type";
+        case Name: return "Name";
+        case Append: return "Append";
+        case Prepend: return "Prepend";
+        case ProgramDirective: return "ProgramDirective";
+        case Pre: return "Pre";
+        case Post: return "Post";
+        case Shaders: return "Shaders";
+        case IncludeDirective: return "IncludeDirective";
+        case OptionDirective: return "OptionDirective";
+        case TextureDirective: return "TextureDirective";
+        case Format: return "Format";
+        case LoadDirective: return "LoadDirective";
+        case Mesh: return "Mesh";
+        case Material: return "Material";
+        case Texture: return "Texture";
+        case FrameBufferDirective: return "FrameBufferDirective";
+        case CopyInDirective: return "CopyInDirective";
+        case BeginDirective: return "BeginDirective";
+        case EndDirective: return "EndDirective";
+        case SourceLine: return "SourceLine";
+        }
+    }
+
     std::string m_lexeme;
     TokenKind m_tokenKind;
     u64 m_line;
