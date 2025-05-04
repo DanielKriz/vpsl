@@ -30,18 +30,18 @@ public:
 
     const std::string &getName() const noexcept { return m_name; };
     const gl::ShaderKind &getType() const noexcept { return m_type; };
-    const std::unordered_set<std::string_view> &getPrependSet() const noexcept {
+    const std::unordered_set<std::string> &getPrependSet() const noexcept {
         return m_prependSet;
     };
-    const std::unordered_set<std::string_view> &getAppendSet() const noexcept {
+    const std::unordered_set<std::string> &getAppendSet() const noexcept {
         return m_appendSet;
     };
 
 private:
     std::string m_name;
     gl::ShaderKind m_type;
-    std::unordered_set<std::string_view> m_prependSet;
-    std::unordered_set<std::string_view> m_appendSet;
+    std::unordered_set<std::string> m_prependSet;
+    std::unordered_set<std::string> m_appendSet;
 };
 
 } // namespace vp
