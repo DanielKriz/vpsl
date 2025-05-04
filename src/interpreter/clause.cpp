@@ -44,17 +44,17 @@ void ClauseBase::populate(TokenIterator it, const TokenIterator &end) {
     m_populated = true;
 }
 
-bool ClauseBase::isValidClause(TokenIterator it, const TokenIterator &end) const noexcept {
+bool ClauseBase::isValidClause(TokenIterator it, const TokenIterator &end) const {
     u64 parametersCount = 0;
 
     if (it->getTokenKind() != static_cast<TokenKind>(getKind())) {
-        ErrorHandler::warn(0, fmt::format("Wrong clause type: '{}'", it->getLexeme()));
+        throw std::runtime_error(fmt::format("Wrong clause type: '{}'", it->getLexeme()));
         return false;
     }
     ++it;
 
     if (it->getTokenKind() != TokenKind::LeftParen) {
-        ErrorHandler::warn(0, "Missing left parenthesis for a clause");
+        throw std::runtime_error("Missing left parenthesis for a clause");
         return false;
     }
     ++it;
@@ -71,19 +71,19 @@ bool ClauseBase::isValidClause(TokenIterator it, const TokenIterator &end) const
             break;
         default:
             std::cout << *it << std::endl;
-            ErrorHandler::warn(0, "Wrong type of token inside a clause");
+            throw std::runtime_error("Wrong type of token inside a clause");
             return false;
         }
         ++it;
     }
 
     if (isExpectingParameter) {
-        ErrorHandler::warn(0, "Missing parameter");
+        throw std::runtime_error("Missing parameter");
         return false;
     }
 
     if (parametersCount < getMinParameters() or parametersCount > getMaxParameters()) {
-        ErrorHandler::warn(0, "Unsupported number of arguments");
+        throw std::runtime_error("Unsupported number of arguments");
         return false;
     }
 
@@ -94,7 +94,7 @@ bool ClauseBase::isValidClause(TokenIterator it, const TokenIterator &end) const
     return true;
 }
 
-bool ClauseBase::isValidClause(const std::vector<Token> &tokens) const noexcept {
+bool ClauseBase::isValidClause(const std::vector<Token> &tokens) const {
     u64 parametersCount = 0;
     auto it = tokens.cbegin();
 

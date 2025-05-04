@@ -26,8 +26,8 @@ struct IClause {
     [[nodiscard]] virtual ClauseKind getKind() const noexcept = 0;
     [[nodiscard]] virtual u64 getMinParameters() const noexcept = 0;
     [[nodiscard]] virtual u64 getMaxParameters() const noexcept = 0;
-    [[nodiscard]] virtual bool isValidClause(const std::vector<Token> &tokens) const noexcept = 0;
-    [[nodiscard]] virtual bool isValidClause(TokenIterator it, const TokenIterator &end) const noexcept = 0;
+    [[nodiscard]] virtual bool isValidClause(const std::vector<Token> &tokens) const = 0;
+    [[nodiscard]] virtual bool isValidClause(TokenIterator it, const TokenIterator &end) const = 0;
     [[nodiscard]] virtual const std::vector<std::string> &getParameters() const noexcept = 0;
     [[nodiscard]] virtual bool isPopulated() const noexcept = 0;
     virtual void populate(const std::vector<Token> &tokens) = 0;
@@ -39,8 +39,8 @@ struct IClause {
 class ClauseBase : public IClause {
 public:
     ~ClauseBase() override = default;
-    [[nodiscard]] bool isValidClause(const std::vector<Token> &tokens) const noexcept override;
-    [[nodiscard]] bool isValidClause(TokenIterator it, const TokenIterator &end) const noexcept override;
+    [[nodiscard]] bool isValidClause(const std::vector<Token> &tokens) const override;
+    [[nodiscard]] bool isValidClause(TokenIterator it, const TokenIterator &end) const override;
     [[nodiscard]] bool isPopulated() const noexcept override { return m_populated; }
     [[nodiscard]] const std::vector<std::string> &getParameters() const noexcept override {
         return m_parameters;
