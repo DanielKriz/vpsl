@@ -27,12 +27,16 @@ void ShaderCodeStore::insert(const std::string &nameOfShader, ShaderObject &&obj
     m_shaderCodes.insert({nameOfShader, std::move(obj)});
 }
 
-ShaderObject *ShaderCodeStore::getShaderObject(const std::string &nameOfShader) {
+ShaderObject *ShaderCodeStore::getShaderObject(const std::string &nameOfShader) try {
     return &m_shaderCodes.at(nameOfShader);
+} catch (std::exception &e) {
+    throw std::runtime_error(fmt::format("Could not find shader '{}' in the store", nameOfShader));
 }
 
-const ShaderObject *ShaderCodeStore::getShaderObject(const std::string &nameOfShader) const {
+const ShaderObject *ShaderCodeStore::getShaderObject(const std::string &nameOfShader) const try {
     return &m_shaderCodes.at(nameOfShader);
+} catch (std::exception &e) {
+    throw std::runtime_error(fmt::format("Could not find shader '{}' in the store", nameOfShader));
 }
 
 } // namespace vp

@@ -1,6 +1,8 @@
 #ifndef VP_SHADER_CODE_STORE_HPP
 #define VP_SHADER_CODE_STORE_HPP
 
+#include <exception>
+
 #include <vp/builder_graph/objects/shader_object.hpp>
 #include <vp/dependency_graph.hpp>
 
