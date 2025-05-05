@@ -54,8 +54,7 @@ void Directive::populateClauses(const std::vector<Token> &tokens) {
 }
 
 Directive Directive::clone() const {
-    return *this;
-    // return Directive { this };
+    return { *this };
 }
 
 template <>
