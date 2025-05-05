@@ -113,22 +113,22 @@ DirectiveBuilder &DirectiveBuilder::addClause(ClauseKind kind) {
     auto &clauses = m_directive.m_clauses;
     switch (kind) {
     case Name:
-        clauses.insert({Name, std::make_unique<NameClause>()});
+        clauses.insert({Name, std::make_shared<NameClause>()});
         break;
     case Type:
-        clauses.insert({Type, std::make_unique<TypeClause>()});
+        clauses.insert({Type, std::make_shared<TypeClause>()});
         break;
     case Prepend:
-        clauses.insert({Prepend, std::make_unique<PrependClause>()});
+        clauses.insert({Prepend, std::make_shared<PrependClause>()});
         break;
     case Append:
-        clauses.insert({Append, std::make_unique<AppendClause>()});
+        clauses.insert({Append, std::make_shared<AppendClause>()});
         break;
     case Pre:
-        clauses.insert({Pre, std::make_unique<PreClause>()});
+        clauses.insert({Pre, std::make_shared<PreClause>()});
         break;
     case Post:
-        clauses.insert({Post, std::make_unique<PostClause>()});
+        clauses.insert({Post, std::make_shared<PostClause>()});
         break;
     default:
         break;
