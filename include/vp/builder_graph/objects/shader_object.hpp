@@ -2,9 +2,11 @@
 #define VP_BUILDER_GRAPH_SHADER_OBJECT_HPP
 
 #include <algorithm>
+#include <functional>
 #include <string>
 #include <vector>
 #include <iostream>
+#include <ranges>
 
 #include <fmt/core.h>
 
