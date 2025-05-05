@@ -129,6 +129,8 @@ private:
         case BeginDirective: return "BeginDirective";
         case EndDirective: return "EndDirective";
         case SourceLine: return "SourceLine";
+        default:
+             throw std::runtime_error("Encountered Unknown Token!");
         }
     }
 
