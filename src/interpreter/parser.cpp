@@ -2,6 +2,25 @@
 
 namespace vp {
 
+std::optional<Directive> Parser::createDirectiveFromToken(const Token &token) {
+    TokenKind kind = token.getTokenKind();
+    switch (kind) {
+    case TokenKind::ShaderDirective:
+        return Directive::create<DirectiveKind::Shader>();
+    case TokenKind::ProgramDirective:
+        return Directive::create<DirectiveKind::Program>();
+    case TokenKind::LoadDirective:
+        return Directive::create<DirectiveKind::Load>();
+    case TokenKind::BeginDirective:
+        return Directive::create<DirectiveKind::Begin>();
+    case TokenKind::EndDirective:
+        return Directive::create<DirectiveKind::End>();
+    case TokenKind::TextureDirective:
+    default:
+        return {};
+    }
+}
+
 void Parser::setCurrentNode(vp::build::INode &pOther) {
 }
 

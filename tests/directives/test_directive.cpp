@@ -2,7 +2,7 @@
 #include "vp/interpreter/lexer.hpp"
 #include <doctest/doctest.h>
 
-#include <vp/interpreter/directives/directive.hpp>
+#include <vp/interpreter/directive.hpp>
 
 using namespace vp;
 

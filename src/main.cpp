@@ -11,7 +11,6 @@
 
 #include <vp/dependency_graph.hpp>
 
-#include <vp/interpreter/v2/directive_builder.hpp>
 
 using namespace vp::types;
 

@@ -56,46 +56,36 @@ void Interpreter::interpret() {
         tokens->erase(tokens->begin());
         const auto &clauseTokens = *tokens;
 
-        std::unique_ptr<IDirective> pDirective = nullptr;
-        pDirective = Parser::constructDirectiveFromToken(directiveToken);
-        pDirective->populate(clauseTokens);
-
-        if (pDirective == nullptr) {
-            throw std::runtime_error("There some problem with memory");
+        auto directive = Parser::createDirectiveFromToken(directiveToken);
+        if (not directive.has_value()) {
+            throw std::runtime_error("No directive was created");
         }
 
-        if (pDirective->getDirectiveKind() == DirectiveKind::Shader) {
-            auto * pDir = dynamic_cast<ShaderDirective *>(pDirective.get());
-            setCurrentStage(vp::ParserStage::ComposingShader);
-#if 1
+        directive->populateClauses(clauseTokens);
+
+        DirectiveKind directiveKind = directive->getDirectiveKind();
+        if (directiveKind == DirectiveKind::Shader) {
             if (not pCurrentShaderObject->isEmpty()) {
                 fmt::println("{}", fmt::styled("Current Shader Object:", fmt::fg(fmt::color::red)));
                 fmt::println("{}", fmt::styled("----------------------", fmt::fg(fmt::color::red)));
                 std::cout << *pCurrentShaderObject << std::endl;
             }
-#endif
-            std::cout << pDir->getName() << std::endl;
-            if (pDir->getName().empty()) {
-                pCurrentShaderObject = m_store.emplaceUnnamed();
-            } else {
-                pCurrentShaderObject = m_store.emplace(pDir->getName());
+
+            auto name = directive->getParameter<ClauseKind::Name>();
+            if (name.has_value()) {
+                if (m_stage == ParserStage::ComposingGlobalScope) {
+                    name = "global:" + *name;
+                }
+                pCurrentShaderObject = name->empty() ? m_store.emplaceUnnamed() : m_store.emplace(*name);
             }
             pCurrentShaderObject->appendLines(globalShaderObject);
-
-#if 1
-            for (const std::string &shader : pDir->getAppendSet()) {
-                pCurrentShaderObject->addToAppendSet(*(m_store[shader]));
-            }
-
-            for (const std::string &shader : pDir->getPrependSet()) {
-                pCurrentShaderObject->addToPrependSet(*(m_store[shader]));
-            }
-#endif
-        } else if (pDirective->getDirectiveKind() == DirectiveKind::Program) {
+            setCurrentStage(ParserStage::ComposingShader);
+        } else if (directiveKind == DirectiveKind::Program) {
             setCurrentStage(vp::ParserStage::ComposingProgram);
-        } else if (pDirective->getDirectiveKind() == DirectiveKind::Begin) {
+        } else if (directiveKind == DirectiveKind::Load) {
+        } else if (directiveKind == DirectiveKind::Begin) {
             m_scope.push(m_stage);
-        } else if (pDirective->getDirectiveKind() == DirectiveKind::End) {
+        } else if (directiveKind == DirectiveKind::End) {
             if (m_scope.empty()) {
                 throw std::runtime_error("Out of scope");
             }
@@ -105,10 +95,9 @@ void Interpreter::interpret() {
             } else if (m_stage == vp::ParserStage::ComposingProgram) {
                 m_stage = vp::ParserStage::ComposingGlobalScope;
             }
-        } else if (pDirective->getDirectiveKind() == DirectiveKind::Load) {
+        } else {
+            throw std::runtime_error("Unknown Directive kind!");
         }
-
-        fmt::println("End of iteration");
     }
 
 

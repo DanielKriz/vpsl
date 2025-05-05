@@ -1,4 +1,4 @@
-#include <vp/interpreter/directives/directive.hpp>
+#include <vp/interpreter/directive.hpp>
 #include <vp/graphics/shader.hpp>
 
 namespace vp {
