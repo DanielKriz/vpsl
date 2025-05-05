@@ -33,6 +33,6 @@ int main(i32 argc, char *argv[]) try {
 
     return 0;
 } catch (std::exception &e) {
-    fmt::println(stderr, "{}", e.what());
+    fmt::println(stderr, "{}: {}", fmt::styled("Error", fmt::fg(fmt::color::red)), e.what());
     return EXIT_FAILURE;
 }
