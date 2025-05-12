@@ -1,5 +1,5 @@
 #include <vp/interpreter/directive.hpp>
-#include <vp/graphics/shader.hpp>
+#include <vp/description/shader_code.hpp>
 
 namespace vp {
 
@@ -86,6 +86,41 @@ Directive Directive::create<DirectiveKind::Program>() {
         return builder.buildAndCopy();
     } 
     return builder.copy();
+}
+
+template <>
+Directive Directive::create<DirectiveKind::Load>() {
+    return { DirectiveKind::Load, TokenKind::LoadDirective };
+}
+
+template <>
+Directive Directive::create<DirectiveKind::Texture>() {
+    return { DirectiveKind::Texture, TokenKind::TextureDirective };
+}
+
+template <>
+Directive Directive::create<DirectiveKind::Include>() {
+    return { DirectiveKind::Include, TokenKind::IncludeDirective };
+}
+
+template <>
+Directive Directive::create<DirectiveKind::FrameBuffer>() {
+    return { DirectiveKind::FrameBuffer, TokenKind::FrameBufferDirective };
+}
+
+template <>
+Directive Directive::create<DirectiveKind::ResourceStore>() {
+    return { DirectiveKind::ResourceStore, TokenKind::ResourceStoreDirective };
+}
+
+template <>
+Directive Directive::create<DirectiveKind::CopyIn>() {
+    return { DirectiveKind::CopyIn, TokenKind::CopyInDirective };
+}
+
+template <>
+Directive Directive::create<DirectiveKind::Option>() {
+    return { DirectiveKind::Option, TokenKind::OptionDirective };
 }
 
 template <>
