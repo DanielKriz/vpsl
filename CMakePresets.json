@@ -2,7 +2,7 @@
   "version" : 6,
   "configurePresets": [
     {
-      "name": "debug",
+      "name": "Debug",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
@@ -11,7 +11,7 @@
       }
     },
     {
-      "name": "release",
+      "name": "Release",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
@@ -21,68 +21,68 @@
   ],
   "buildPresets": [
     {
-      "name": "debug",
-      "configurePreset": "debug",
+      "name": "Debug",
+      "configurePreset": "Debug",
       "configuration": "Debug"
     },
     {
-      "name": "release",
-      "configurePreset": "release",
+      "name": "Release",
+      "configurePreset": "Release",
       "configuration": "Release"
     }
   ],
   "testPresets": [
     {
-      "name": "default",
-      "configurePreset": "debug",
+      "name": "Default",
+      "configurePreset": "Debug",
       "output": {"outputOnFailure": false},
       "execution": {"noTestsAction": "error", "stopOnFailure": false}
     }
   ],
   "workflowPresets": [
     {
-      "name": "debug",
+      "name": "Debug",
       "displayName": "Debug Workflow",
       "steps" : [
         {
           "type": "configure",
-          "name": "debug"
+          "name": "Debug"
         },
         {
           "type": "build",
-          "name": "debug"
+          "name": "Debug"
         }
       ]
     },
     {
-      "name": "test",
+      "name": "Test",
       "displayName": "Test Runtime Workflow",
       "steps" : [
         {
           "type": "configure",
-          "name": "debug"
+          "name": "Debug"
         },
         {
           "type": "build",
-          "name": "debug"
+          "name": "Debug"
         },
         {
           "type": "test",
-          "name": "default"
+          "name": "Default"
         }
       ]
     },
     {
-      "name": "release",
+      "name": "Release",
       "displayName": "Release Workflow",
       "steps" : [
         {
           "type": "configure",
-          "name": "release"
+          "name": "Release"
         },
         {
           "type": "build",
-          "name": "release"
+          "name": "Release"
         }
       ]
     }
