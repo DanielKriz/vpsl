@@ -39,6 +39,8 @@ find_package(glad REQUIRED)
 find_package(glslang REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
+find_package(SPIRV-Tools REQUIRED)
+find_package(SPIRV-Tools-opt REQUIRED)
 
 vp_add_compiler_settings()
 
@@ -57,6 +59,10 @@ target_link_libraries(
     assimp::assimp
     glm::glm
     fmt::fmt
+    SPIRV-Tools
+    SPIRV-Tools-opt
+    glslang
+    glslang-default-resource-limits
     SDL2_image::SDL2_image
 )
  

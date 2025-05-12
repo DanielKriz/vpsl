@@ -51,6 +51,12 @@ target_link_libraries(
     fmt::fmt
     re2::re2
     assimp
+    SPIRV-Tools
+    SPIRV-Tools-opt
+    glslang
+    glslang-default-resource-limits
+    SDL2_image::SDL2_image
+    SDL2::SDL2
 )
 doctest_discover_tests(${test_exe_name})
 message(STATUS "Creating test executable '${test_exe_name}' - Done")
