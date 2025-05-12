@@ -2,10 +2,9 @@
 #define VP_INTERPRETER_CLAUSE_HPP
 
 #include <vector>
-#include <iterator>
 
-#include <vp/types.hpp>
 #include <vp/interpreter/token.hpp>
+#include <vp/types.hpp>
 
 namespace vp {
 
@@ -21,14 +20,23 @@ enum class ClauseKind : u8 {
 using TokenIterator = std::vector<Token>::const_iterator;
 
 struct IClause {
+    IClause() = default;
+    IClause(const IClause &) = default;
+    IClause(IClause &&) noexcept = default;
+    IClause &operator=(const IClause &) = default;
+    IClause &operator=(IClause &&) noexcept = default;
     virtual ~IClause() = default;
+
     static constexpr u64 PARAMETER_LIMIT = 256;
     [[nodiscard]] virtual ClauseKind getKind() const noexcept = 0;
     [[nodiscard]] virtual u64 getMinParameters() const noexcept = 0;
     [[nodiscard]] virtual u64 getMaxParameters() const noexcept = 0;
-    [[nodiscard]] virtual bool isValidClause(const std::vector<Token> &tokens) const = 0;
-    [[nodiscard]] virtual bool isValidClause(TokenIterator it, const TokenIterator &end) const = 0;
-    [[nodiscard]] virtual const std::vector<std::string> &getParameters() const noexcept = 0;
+    [[nodiscard]] virtual bool
+    isValidClause(const std::vector<Token> &tokens) const = 0;
+    [[nodiscard]] virtual bool isValidClause(TokenIterator it,
+                                             const TokenIterator &end) const = 0;
+    [[nodiscard]] virtual const std::vector<std::string> &
+    getParameters() const noexcept = 0;
     [[nodiscard]] virtual bool isPopulated() const noexcept = 0;
     virtual bool populate(const std::vector<Token> &tokens) = 0;
     virtual bool populate(TokenIterator it, const TokenIterator &end) = 0;
@@ -38,7 +46,13 @@ struct IClause {
 
 class ClauseBase : public IClause {
 public:
+    ClauseBase() = default;
+    ClauseBase(const ClauseBase &) = default;
+    ClauseBase(ClauseBase &&) noexcept = default;
+    ClauseBase &operator=(const ClauseBase &) = default;
+    ClauseBase &operator=(ClauseBase &&) noexcept = default;
     ~ClauseBase() override = default;
+
     [[nodiscard]] bool isValidClause(const std::vector<Token> &tokens) const override;
     [[nodiscard]] bool isValidClause(TokenIterator it, const TokenIterator &end) const override;
     [[nodiscard]] bool isPopulated() const noexcept override { return m_populated; }
@@ -55,10 +69,16 @@ protected:
 template <ClauseKind Kind, u64 Min = 1, u64 Max = 1>
 requires (Max >= Min and Min > 0 and Max > 0)
 struct Clause final : public ClauseBase {
+    Clause() = default;
+    Clause(const Clause &) = default;
+    Clause(Clause &&) noexcept = default;
+    Clause &operator=(const Clause &) = default;
+    Clause &operator=(Clause &&) noexcept = default;
     ~Clause() override = default;
-    [[nodiscard]] inline ClauseKind getKind() const noexcept override { return Kind; }
-    [[nodiscard]] inline u64 getMinParameters() const noexcept override { return Min; }
-    [[nodiscard]] inline u64 getMaxParameters() const noexcept override { return Max; }
+
+    [[nodiscard]] ClauseKind getKind() const noexcept override { return Kind; }
+    [[nodiscard]] u64 getMinParameters() const noexcept override { return Min; }
+    [[nodiscard]] u64 getMaxParameters() const noexcept override { return Max; }
 };
 
 template <ClauseKind Kind>
