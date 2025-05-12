@@ -95,6 +95,7 @@ public:
         const auto repr = fmt::format("Token({}, {}, '{}')", token.m_line, enumToString(token.m_tokenKind), token.m_lexeme);
         return os << repr;
     }
+
 private:
     static std::string_view enumToString(TokenKind kind) {
         using enum TokenKind;
