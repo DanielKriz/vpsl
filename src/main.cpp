@@ -8,9 +8,9 @@
 #include <vp/interpreter/lexer.hpp>
 #include <vp/interpreter/directive.hpp>
 #include <vp/types.hpp>
+#include <vp/engine/engine.hpp>
 
 #include <vp/dependency_graph.hpp>
-
 
 using namespace vp::types;
 
@@ -29,7 +29,11 @@ int main(i32 argc, char *argv[]) try {
     }
 
     auto interpreter = vp::Interpreter(fin);
-    interpreter.interpret();
+    const auto execeutionSequenceDescription = interpreter.interpret();
+
+    auto engine = vp::Engine();
+    engine.handleExecutionSequence(execeutionSequenceDescription);
+    engine.run();
 
     return 0;
 } catch (std::exception &e) {
