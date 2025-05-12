@@ -35,7 +35,7 @@ add_executable(
 set_target_properties(
     ${test_exe_name}
     PROPERTIES
-    CXX_STANDARD 20
+    CXX_STANDARD 23
     CXX_STANDARD_REQUIRED ON
     CXX_EXTENSIONS OFF
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
