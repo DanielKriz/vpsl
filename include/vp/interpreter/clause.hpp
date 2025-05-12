@@ -9,7 +9,7 @@
 
 namespace vp {
 
-enum class ClauseKind {
+enum class ClauseKind : u8 {
     Name = static_cast<enum32>(TokenKind::Name),
     Type = static_cast<enum32>(TokenKind::Type),
     Pre = static_cast<enum32>(TokenKind::Pre),

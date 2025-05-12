@@ -10,7 +10,7 @@
 
 namespace vp {
 
-enum class TokenKind {
+enum class TokenKind : u8 {
     Unknown,
 
     LeftBracket,
