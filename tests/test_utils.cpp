@@ -3,7 +3,7 @@
 
 using namespace vp;
 
-TEST_SUITE_BEGIN("Utils");
+TEST_SUITE("Utils") {
 
 TEST_CASE("left trim") {
     SUBCASE("does nothing on an empty string") {
@@ -132,4 +132,4 @@ TEST_CASE("both-way copy trim") {
     }
 }
 
-TEST_SUITE_END();
+}
