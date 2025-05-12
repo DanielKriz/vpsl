@@ -4,29 +4,31 @@ namespace vp {
 
 Interpreter::Interpreter(const std::string &src)
     : m_stringStream(src),
-    m_inputStream(m_stringStream.rdbuf()) { }
+    m_inputStream(m_stringStream.rdbuf()) {}
 
 Interpreter::Interpreter(std::ifstream &fin)
-    : m_inputStream(fin.rdbuf()) { }
+    : m_inputStream(fin.rdbuf()) {}
 
+#if 1
+std::vector<desc::ProgramDescription> Interpreter::interpret() {
+#else
 void Interpreter::interpret() {
+#endif
     fmt::println("Starting the interpreter");
     Lexer lexer{};
     Parser parser{};
 
     std::string line{};
 
-    ShaderObject globalShaderObject = ShaderObject{};
-    ShaderObject *pCurrentShaderObject = &globalShaderObject;
-    ProgramObject currentProgram;
+    desc::ShaderCodeStore &store = desc::ShaderCodeStore::getInstance();
 
-    m_stage = vp::ParserStage::ComposingGlobalScope;
+    ShaderCode globalShaderCode = ShaderCode{};
+    ShaderCode *pCurrentShaderCode = &globalShaderCode;
+    desc::ProgramDescriptionBuilder programBuilder;
+
+    bool isLastDirectiveShader = false;
 
     while (std::getline(m_inputStream, line)) {
-        /// 1. Lexer tokenizes the line
-        /// 2. Parser checks whether it is a valid directive and returns it
-        /// 3. Interpreter checks whether the GLSL code contains everything important
-
         if (Lexer::isContinuous(line)) {
             std::string tmp;
             std::getline(m_inputStream, tmp);
@@ -41,16 +43,15 @@ void Interpreter::interpret() {
         const auto directiveToken = *tokens->cbegin();
 
         if (directiveToken.getTokenKind() == TokenKind::SourceLine) {
-            if (m_stage == vp::ParserStage::ComposingShader) {
-                pCurrentShaderObject->addLine(directiveToken.getLexeme());
-                continue;
+            if (parser.peekScope() == ParserScope::Global) {
+                globalShaderCode.addLine(directiveToken.getLexeme());
+            } else if (parser.peekScope() == ParserScope::Program) {
+                throw std::runtime_error("There cannot be a lone statement in program scope");
+            } else {
+                pCurrentShaderCode->addLine(directiveToken.getLexeme());
             }
-            globalShaderObject.addLine(directiveToken.getLexeme());
             continue;
         }
-#if 0
-        utils::debug::printVector(*tokens, " -> ");
-#endif
 
         // Remove the directive token, because it is not going to be needed further
         tokens->erase(tokens->begin());
@@ -65,43 +66,92 @@ void Interpreter::interpret() {
 
         DirectiveKind directiveKind = directive->getDirectiveKind();
         if (directiveKind == DirectiveKind::Shader) {
+#if 0
             if (not pCurrentShaderObject->isEmpty()) {
                 fmt::println("{}", fmt::styled("Current Shader Object:", fmt::fg(fmt::color::red)));
                 fmt::println("{}", fmt::styled("----------------------", fmt::fg(fmt::color::red)));
                 std::cout << *pCurrentShaderObject << std::endl;
             }
+#endif
 
             auto name = directive->getParameter<ClauseKind::Name>();
-            if (name.has_value()) {
-                if (m_stage == ParserStage::ComposingGlobalScope) {
+            if (name.has_value() and not name->empty()) {
+                if (parser.peekScope() == ParserScope::Global) {
                     name = "global:" + *name;
+                } else {
+                    name = programBuilder.createShaderName(*name);
                 }
-                pCurrentShaderObject = name->empty() ? m_store.emplaceUnnamed() : m_store.emplace(*name);
+                pCurrentShaderCode = store.emplace(*name);
+            } else {
+                pCurrentShaderCode = store.emplaceUnnamed();
             }
-            pCurrentShaderObject->appendLines(globalShaderObject);
-            setCurrentStage(ParserStage::ComposingShader);
+
+            auto type = directive->getParameter<ShaderCodeKind>();
+            if (type.has_value()) {
+                pCurrentShaderCode->setKind(*type);
+            } else {
+                pCurrentShaderCode->setKind(ShaderCodeKind::Generic);
+            }
+
+            // add the shader to the program
+            if (parser.peekScope() != ParserScope::Global) {
+                programBuilder.addShaderCode(*pCurrentShaderCode);
+            }
+
+            // Do this later
+#if 0
+            auto prependSet = directive->getParameters<ClauseKind::Prepend>();
+            if (prependSet.has_value()) {
+                for (const auto &shader : *prependSet) {
+                    pCurrentShaderObject->addToPrependSet(*m_store[shader]);
+                }
+            }
+
+            auto appendSet = directive->getParameters<ClauseKind::Prepend>();
+            if (appendSet.has_value()) {
+                for (const auto &shader : *prependSet) {
+                    pCurrentShaderObject->addToAppendSet(*m_store[shader]);
+                }
+            }
+#endif
+
+            pCurrentShaderCode->appendLines(globalShaderCode);
+            isLastDirectiveShader = true;
         } else if (directiveKind == DirectiveKind::Program) {
-            setCurrentStage(vp::ParserStage::ComposingProgram);
+            auto name = directive->getParameter<ClauseKind::Name>();
+            if (name.has_value()) {
+                programBuilder.setName(*name);
+            } else {
+                programBuilder.setNameFromID();
+            }
+            isLastDirectiveShader = false;
         } else if (directiveKind == DirectiveKind::Load) {
+            isLastDirectiveShader = false;
         } else if (directiveKind == DirectiveKind::Begin) {
-            m_scope.push(m_stage);
+            if (isLastDirectiveShader and parser.peekScope() == ParserScope::Global) {
+                parser.pushGlobalShaderScope();
+            } else {
+                parser.pushScope();
+            }
+            isLastDirectiveShader = false;
         } else if (directiveKind == DirectiveKind::End) {
-            if (m_scope.empty()) {
-                throw std::runtime_error("Out of scope");
+            if (parser.peekScope() == ParserScope::Program) {
+                parser.addProgramDescription(programBuilder.build());
+                programBuilder.reset();
             }
-            m_scope.pop();
-            if (m_stage == vp::ParserStage::ComposingShader) {
-                m_stage = vp::ParserStage::ComposingProgram;
-            } else if (m_stage == vp::ParserStage::ComposingProgram) {
-                m_stage = vp::ParserStage::ComposingGlobalScope;
-            }
+            parser.popScope();
+            isLastDirectiveShader = false;
         } else {
             throw std::runtime_error("Unknown Directive kind!");
         }
+#if 0
+        fmt::println("finished iteration");
+#endif
     }
 
+    // std::cout << m_store << std::endl;
 
-#if 1
+#if 0
     fmt::println("{}", fmt::styled("Global Shader Object:", fmt::fg(fmt::color::blue)));
     fmt::println("{}", fmt::styled("---------------------", fmt::fg(fmt::color::blue)));
     std::cout << globalShaderObject << std::endl;
@@ -112,21 +162,37 @@ void Interpreter::interpret() {
 #endif
 
 #if 1
-    m_store.getShaderObject("main_vs")->compose();
-    m_store.getShaderObject("main_fs")->compose();
+    store.getShaderCode("main:main_vs")->compose();
+    store.getShaderCode("main:main_fs")->compose();
 
     fmt::println("{}", fmt::styled("Vertex Shader Object:", fmt::fg(fmt::color::purple)));
     fmt::println("{}", fmt::styled("---------------------", fmt::fg(fmt::color::purple)));
-    std::cout << *m_store.getShaderObject("main_vs") << std::endl;
+    std::cout << *store.getShaderCode("main:main_vs") << std::endl;
     fmt::println("{}", fmt::styled("Fragment Shader Object:", fmt::fg(fmt::color::purple)));
     fmt::println("{}", fmt::styled("-----------------------", fmt::fg(fmt::color::purple)));
-    std::cout << *m_store.getShaderObject("main_fs") << std::endl;
+    std::cout << *store.getShaderCode("main:main_fs") << std::endl;
+    fmt::println("{}", fmt::styled("Included Shader Object:", fmt::fg(fmt::color::purple)));
+    fmt::println("{}", fmt::styled("-----------------------", fmt::fg(fmt::color::purple)));
+    std::cout << *store.getShaderCode("global:included") << std::endl;
+    std::cout << std::endl;
+    fmt::println("{}", fmt::styled("Vertex Shader Object:", fmt::fg(fmt::color::purple)));
+    fmt::println("{}", fmt::styled("---------------------", fmt::fg(fmt::color::purple)));
+    std::cout << *store.getShaderCode("the_second:main_vs") << std::endl;
+    fmt::println("{}", fmt::styled("Fragment Shader Object:", fmt::fg(fmt::color::purple)));
+    fmt::println("{}", fmt::styled("-----------------------", fmt::fg(fmt::color::purple)));
+    std::cout << *store.getShaderCode("the_second:main_fs") << std::endl;
 #endif
 
-    if (not m_scope.empty()) {
-        ErrorHandler::report<std::runtime_error>(1, "Invalid scope");
-    }
+#if 0
+    fmt::println("{}", fmt::styled("Current Program Shaders:", fmt::fg(fmt::color::green)));
+    fmt::println("{}", fmt::styled("------------------------", fmt::fg(fmt::color::green)));
+    std::cout << currentProgram << std::endl;
+    fmt::println("{}", fmt::styled("------------------------", fmt::fg(fmt::color::green)));
+#endif
+
     std::cout << "interpretation is finished" << std::endl;
+
+    return parser.createExecutionSequenceDescription();
 }
 
 } // namespace vp

@@ -1,12 +1,9 @@
 #ifndef VP_INTERPRETER_PARSER_HPP
 #define VP_INTERPRETER_PARSER_HPP
 
-#include <stack>
-#include <memory>
-
-#include <vp/builder_graph/graph.hpp>
 #include <vp/dependency_graph.hpp>
-#include <vp/interpreter/parser_stages.hpp>
+#include <vp/description/program_description.hpp>
+#include <vp/description/shader_code_store.hpp>
 #include <vp/interpreter/directive.hpp>
 #include <vp/interpreter/token.hpp>
 
@@ -24,7 +21,7 @@ enum class ParserScope : u8 {
 
 class Parser final {
 public:
-    Parser() : m_CurrentNode(m_graph.getRoot()) {}
+    Parser() : m_store(desc::ShaderCodeStore::getInstance()) {};
     ~Parser() = default;
 
     void pushScope();
@@ -41,12 +38,15 @@ public:
 
     static std::optional<Directive> createDirectiveFromToken(const Token &token);
 
-private:
-    vp::DependencyGraph m_shaderDependencyGraph;
-    vp::DependencyGraph m_programDependencyGraph;
+    // std::vector<build::ProgramDescription> createExecutionSequence() { return m_programDescriptions; }
 
-    vp::build::BuilderGraph m_graph;
-    vp::build::INode &m_CurrentNode;
+    std::vector<desc::ProgramDescription> createExecutionSequenceDescription() { return m_programDescriptions; }
+
+    void addProgramDescription(desc::ProgramDescription &desc);
+    void addProgramDescription(desc::ProgramDescription &&desc);
+
+private:
+    vp::DependencyGraph m_programDependencyGraph;
 
     desc::ShaderCodeStore &m_store;
     std::vector<desc::ProgramDescription> m_programDescriptions;

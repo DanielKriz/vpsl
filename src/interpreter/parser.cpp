@@ -3,7 +3,7 @@
 namespace vp {
 
 std::optional<Directive> Parser::createDirectiveFromToken(const Token &token) {
-    TokenKind kind = token.getTokenKind();
+    const TokenKind kind = token.getTokenKind();
     switch (kind) {
     case TokenKind::ShaderDirective:
         return Directive::create<DirectiveKind::Shader>();
@@ -16,6 +16,17 @@ std::optional<Directive> Parser::createDirectiveFromToken(const Token &token) {
     case TokenKind::EndDirective:
         return Directive::create<DirectiveKind::End>();
     case TokenKind::TextureDirective:
+        return Directive::create<DirectiveKind::Texture>();
+    case TokenKind::FrameBufferDirective:
+        return Directive::create<DirectiveKind::FrameBuffer>();
+    case TokenKind::OptionDirective:
+        return Directive::create<DirectiveKind::Option>();
+    case TokenKind::CopyInDirective:
+        return Directive::create<DirectiveKind::CopyIn>();
+    case TokenKind::IncludeDirective:
+        return Directive::create<DirectiveKind::Include>();
+    case TokenKind::ResourceStoreDirective:
+        return Directive::create<DirectiveKind::ResourceStore>();
     default:
         return {};
     }
@@ -71,4 +82,11 @@ bool Parser::isScopeEmpty() const noexcept {
     return {};
 }
 
+void Parser::addProgramDescription(desc::ProgramDescription &desc) {
 }
+
+void Parser::addProgramDescription(desc::ProgramDescription &&desc) {
+    m_programDescriptions.emplace_back(std::move(desc));
+}
+
+} // namespace vp
