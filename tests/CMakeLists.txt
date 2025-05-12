@@ -10,11 +10,11 @@ set(root_dir "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
 message(STATUS "Creating test executable '${test_exe_name}'")
 message(STATUS "    Looking for test in ${test_dir}")
-file(GLOB test_src_files "${test_dir}/*.cpp" "${test_dir}/**/*.cpp")
-file(GLOB test_hdr_files "${test_dir}/*.hpp" "${test_dir}/**/*.hpp")
-file(GLOB src_files "${root_dir}/src/*.cpp" "${root_dir}/src/**/*.cpp")
-file(GLOB inl_files "${root_dir}/src/*.hpp" "${root_dir}/src/**/*.hpp")
-file(GLOB hdr_files "${root_dir}/include/*.hpp" "${test_dir}/include/**/*.hpp")
+file(GLOB_RECURSE test_src_files "${test_dir}/*.cpp" "${test_dir}/**/*.cpp")
+file(GLOB_RECURSE test_hdr_files "${test_dir}/*.hpp" "${test_dir}/**/*.hpp")
+file(GLOB_RECURSE src_files "${root_dir}/src/*.cpp" "${root_dir}/src/**/*.cpp")
+file(GLOB_RECURSE inl_files "${root_dir}/src/*.hpp" "${root_dir}/src/**/*.hpp")
+file(GLOB_RECURSE hdr_files "${root_dir}/include/*.hpp" "${test_dir}/include/**/*.hpp")
 
 list(FILTER src_files EXCLUDE REGEX ".*main\\.cpp$")
 

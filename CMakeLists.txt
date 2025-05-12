@@ -44,8 +44,8 @@ vp_add_compiler_settings()
 
 # Project executable setup
 
-file(GLOB src_files src/*.cpp/ src/**/*.cpp)
-file(GLOB hdr_files include/*.hpp/ include/**/*.hpp)
+file(GLOB_RECURSE src_files src/*.cpp/ src/**/*.cpp)
+file(GLOB_RECURSE hdr_files include/*.hpp/ include/**/*.hpp)
 
 add_executable(${main_target} ${src_files} ${hdr_files})
 target_link_libraries(
