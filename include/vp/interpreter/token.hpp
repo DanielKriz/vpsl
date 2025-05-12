@@ -50,6 +50,7 @@ enum class TokenKind : u8 {
     CopyInDirective,
     BeginDirective,
     EndDirective,
+    ResourceStoreDirective,
 
     SourceLine,
 };
