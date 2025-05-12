@@ -15,7 +15,7 @@ namespace vp {
 class ShaderObject;
 class ProgramObject;
 
-class Parser {
+class Parser final {
 public:
     Parser() : m_CurrentNode(m_graph.getRoot()) {}
     ~Parser() = default;

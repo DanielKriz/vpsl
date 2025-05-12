@@ -22,7 +22,7 @@ enum class DirectiveKind : u8 {
     CopyIn,
 };
 
-class Directive {
+class Directive final {
 public:
     /// @brief this class is constructible only by the provided builder.
     friend class DirectiveBuilder;
@@ -168,7 +168,7 @@ std::optional<E> Directive::getParameter() const noexcept {
 /// @brief Builder for the Directive class.
 ///
 /// This is the only approach to create a new instance of Directive class.
-class DirectiveBuilder {
+class DirectiveBuilder final {
 public:
     /// @brief Sets the directive kind of directive.
     DirectiveBuilder &setDirectiveKind(DirectiveKind kind);
