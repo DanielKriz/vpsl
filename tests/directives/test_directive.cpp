@@ -1,4 +1,4 @@
-#include "vp/graphics/shader.hpp"
+#include "vp/description/shader_code.hpp"
 #include "vp/interpreter/lexer.hpp"
 #include <doctest/doctest.h>
 
@@ -76,9 +76,9 @@ TEST_CASE("Shader Directive can provide shader kind") {
     const auto tokens = lex.scan("#pragma vp shader name(sh1) type(vertex)");
     Directive dir = Directive::create<DirectiveKind::Shader>();
     dir.populateClauses(*tokens);
-    const auto type = dir.getParameter<gl::ShaderKind>();
+    const auto type = dir.getParameter<ShaderCodeKind>();
     CHECK(type.has_value());
-    CHECK(type.value() == gl::ShaderKind::Vertex);
+    CHECK(type.value() == ShaderCodeKind::Vertex);
 }
 
 TEST_CASE("Program Directive create method") {
