@@ -20,6 +20,10 @@ enum class DirectiveKind : u8 {
     Load,
     Texture,
     CopyIn,
+    Option,
+    ResourceStore,
+    Include,
+    FrameBuffer,
 };
 
 class Directive final {
