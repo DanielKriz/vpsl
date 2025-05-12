@@ -37,6 +37,8 @@ find_package(assimp REQUIRED)
 find_package(glm REQUIRED)
 find_package(glad REQUIRED)
 find_package(glslang REQUIRED)
+find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
 
 vp_add_compiler_settings()
 
@@ -48,12 +50,14 @@ file(GLOB hdr_files include/*.hpp/ include/**/*.hpp)
 add_executable(${main_target} ${src_files} ${hdr_files})
 target_link_libraries(
     ${main_target} PUBLIC 
+    SDL2::SDL2
     glad::glad
     glslang::glslang
     re2::re2
     assimp::assimp
     glm::glm
     fmt::fmt
+    SDL2_image::SDL2_image
 )
  
 set_target_properties(
