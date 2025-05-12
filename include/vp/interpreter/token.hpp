@@ -99,6 +99,7 @@ private:
     static std::string_view enumToString(TokenKind kind) {
         using enum TokenKind;
         switch(kind) {
+        case Unknown: return "Unknown";
         case LeftBracket: return "LeftBracket";
         case RightBracket: return "RightBracket";
         case LeftParen: return "LeftParen";
@@ -135,8 +136,8 @@ private:
     }
 
     std::string m_lexeme;
-    TokenKind m_tokenKind;
-    u64 m_line;
+    TokenKind m_tokenKind { TokenKind::Unknown };
+    u64 m_line { 0 };
 };
 
 } // namespace vp
