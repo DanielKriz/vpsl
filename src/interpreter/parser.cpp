@@ -21,25 +21,50 @@ std::optional<Directive> Parser::createDirectiveFromToken(const Token &token) {
     }
 }
 
-void Parser::setCurrentNode(vp::build::INode &pOther) {
+void Parser::pushGlobalShaderScope() {
+    if (m_stage != ParserScope::Global) {
+        throw std::runtime_error("Cannot push to global shader from different than global scope");
+    }
+    m_stage = ParserScope::GlobalShader;
 }
 
-vp::build::INode &Parser::getCurrentNode() {
-    return m_CurrentNode;
+void Parser::pushScope() {
+    using enum ParserScope;
+    switch (m_stage) {
+    case Global:
+        m_stage = Program;
+        break;
+    case Program:
+        m_stage = Shader;
+        break;
+    case GlobalShader:
+    case Shader:
+        throw std::runtime_error("Invalid scope!");
+    }
 }
 
-bool Parser::isCurrentNodeRoot() const {
-    return {};
-}
-
-void Parser::pushScope(ParserStage stage) {
+void Parser::pushScope(ParserScope stage) {
 }
 
 void Parser::popScope() {
+    using enum ParserScope;
+    switch (m_stage) {
+    case GlobalShader:
+        m_stage = Global;
+        break;
+    case Shader:
+        m_stage = Program;
+        break;
+    case Program:
+        m_stage = Global;
+        break;
+    case Global:
+        throw std::runtime_error("Invalid scope!");
+    }
 }
 
-ParserStage Parser::peekScope() const {
-    return {};
+ParserScope Parser::peekScope() const {
+    return m_stage;
 }
 
 bool Parser::isScopeEmpty() const noexcept {

@@ -15,18 +15,23 @@ namespace vp {
 class ShaderObject;
 class ProgramObject;
 
+enum class ParserScope : u8 {
+    Global,
+    GlobalShader,
+    Program,
+    Shader
+};
+
 class Parser final {
 public:
     Parser() : m_CurrentNode(m_graph.getRoot()) {}
     ~Parser() = default;
 
-    void setCurrentNode(vp::build::INode &pOther);
-    vp::build::INode &getCurrentNode();
-    bool isCurrentNodeRoot() const;
-
-    void pushScope(ParserStage stage);
+    void pushScope();
+    void pushGlobalShaderScope();
+    void pushScope(ParserScope stage);
     void popScope();
-    ParserStage peekScope() const;
+    ParserScope peekScope() const;
     bool isScopeEmpty() const noexcept;
 
     Parser(const Parser &other) = delete;
@@ -43,7 +48,9 @@ private:
     vp::build::BuilderGraph m_graph;
     vp::build::INode &m_CurrentNode;
 
-    std::stack<ParserStage> m_scope;
+    desc::ShaderCodeStore &m_store;
+    std::vector<desc::ProgramDescription> m_programDescriptions;
+    ParserScope m_stage { ParserScope::Global };
 };
 
 } // namespace vp
