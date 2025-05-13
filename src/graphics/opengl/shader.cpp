@@ -1,6 +1,10 @@
 #include "vp/description/shader_code.hpp"
 #include <vp/graphics/opengl/shader.hpp>
 
+#include <stdexcept>
+
+#include <spdlog/spdlog.h>
+
 namespace vp::gl::opengl {
 
 #if 0
@@ -68,7 +72,12 @@ Shader::Shader(ShaderKind kind, const std::string &source, ShaderLanguageKind la
     shader.setEnvClient(glslang::EShClientOpenGL, glslang::EShTargetOpenGL_450);
     shader.setEnvTarget(glslang::EshTargetSpv, glslang::EShTargetSpv_1_1);
 
-    shader.parse(GetDefaultResources(), 450, false, EShMsgDefault);
+    auto isSuccess = shader.parse(GetDefaultResources(), 450, false, EShMsgDefault);
+
+    if (not isSuccess) {
+        spdlog::error("Cannot create shader due to syntax error");
+        throw std::runtime_error(shader.getInfoLog());
+    }
 
     glslang::TProgram program;
     program.addShader(&shader);
@@ -199,17 +208,6 @@ Shader::Shader(ShaderKind kind, const std::string &source, ShaderLanguageKind la
         GLint maxLength = 0;
     glGetShaderiv(m_descriptor, GL_INFO_LOG_LENGTH, &maxLength);
 
-    // The maxLength includes the NULL character
-    std::vector<GLchar> infoLog(maxLength);
-    glGetShaderInfoLog(m_descriptor, maxLength, &maxLength, &infoLog[0]);
-
-    std::string infoLogStr{infoLog.begin(), infoLog.end()};
-
-    for (auto c : infoLog) {
-        fmt::print("{}", c);
-    }
-    fmt::println("");
-    fmt::println("{}", infoLogStr);
 
     fmt::println("Shader was successfully created");
 #endif
