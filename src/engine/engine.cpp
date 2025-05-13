@@ -1,5 +1,7 @@
 #include <vp/engine/engine.hpp>
 
+#include <spdlog/spdlog.h>
+
 namespace vp {
 Engine::Engine() {
     m_device.init();
@@ -41,6 +43,7 @@ Engine::Engine() {
             m_device.getWindow().setFullscreen(isFullscreen);
         }
     });
+    spdlog::debug("engine initialized");
 }
 
 Engine::~Engine() {
@@ -93,6 +96,7 @@ void Engine::render(f32 deltaTime) {
 }
 
 void Engine::run() {
+    spdlog::info("starting engine runtime");
 
     u32 vao;
     glGenVertexArrays(1, &vao);

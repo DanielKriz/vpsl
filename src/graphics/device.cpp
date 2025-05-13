@@ -1,5 +1,7 @@
 #include <vp/graphics/device.hpp>
 
+#include <spdlog/spdlog.h>
+
 namespace vp::gl {
 
 GraphicsDevice::~GraphicsDevice() {
@@ -24,6 +26,7 @@ void GraphicsDevice::init() {
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
+    spdlog::debug("Graphic device SDL initialized");
 }
 
 void GraphicsDevice::createWindow(const std::string &title, u32 width, u32 height) {
@@ -41,10 +44,11 @@ void GraphicsDevice::setupRuntime() {
         throw std::runtime_error("Could not initialize Glad");
     }
 
-    fmt::println("Vendor: {}", reinterpret_cast<const char *>(glGetString(GL_VENDOR)));
-    fmt::println("Renderer: {}", reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
-    fmt::println("Version: {}", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+    spdlog::info("Vendor: {}", reinterpret_cast<const char *>(glGetString(GL_VENDOR)));
+    spdlog::info("Renderer: {}", reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    spdlog::info("Version: {}", reinterpret_cast<const char *>(glGetString(GL_VERSION)));
 
     SDL_GL_SetSwapInterval(1);
+    spdlog::debug("graphic device runtime is set up");
 }
 } // namespace vp::gl

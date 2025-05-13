@@ -32,6 +32,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Dependencies setup
 find_package(fmt REQUIRED)
+find_package(spdlog REQUIRED)
 find_package(re2 REQUIRED)
 find_package(assimp REQUIRED)
 find_package(glm REQUIRED)
@@ -43,6 +44,10 @@ find_package(SPIRV-Tools REQUIRED)
 find_package(SPIRV-Tools-opt REQUIRED)
 
 vp_add_compiler_settings()
+
+if (NOT CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DNDEBUG)
+endif()
 
 # Project executable setup
 
@@ -64,6 +69,7 @@ target_link_libraries(
     glslang
     glslang-default-resource-limits
     SDL2_image::SDL2_image
+    spdlog::spdlog
 )
  
 set_target_properties(
