@@ -144,7 +144,12 @@ Directive Directive::create<DirectiveKind::Texture>() {
 
 template <>
 Directive Directive::create<DirectiveKind::Include>() {
-    return { DirectiveKind::Include, TokenKind::IncludeDirective };
+    static DirectiveBuilder builder;
+    if (not builder.isFinished()) {
+        builder.setDirectiveKind(DirectiveKind::Include)
+               .addClause(ClauseKind::Path, true);
+        return builder.buildAndCopy();
+    } 
 }
 
 template <>
