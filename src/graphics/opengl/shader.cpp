@@ -1,4 +1,4 @@
-#include "vp/description/shader_code.hpp"
+#include <vp/description/shader_code.hpp>
 #include <vp/graphics/opengl/shader.hpp>
 
 #include <stdexcept>
