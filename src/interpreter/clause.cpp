@@ -1,5 +1,5 @@
-#include <vp/interpreter/clause.hpp>
 #include <vp/error_handling.hpp>
+#include <vp/interpreter/clause.hpp>
 
 #include <iostream>
 
