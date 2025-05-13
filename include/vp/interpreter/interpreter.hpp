@@ -22,8 +22,11 @@ public:
     std::vector<desc::ProgramDescription> interpret();
 
 private:
-    std::istringstream m_stringStream;
+    void resolveIncludes();
+
+    std::stringstream m_stringStream;
     std::istream m_inputStream;
+    std::unique_ptr<std::istream> m_pInputStream;
 };
 
 } // namespace vp

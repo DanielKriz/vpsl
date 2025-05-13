@@ -1,17 +1,72 @@
 #include <vp/interpreter/interpreter.hpp>
+#include <spdlog/spdlog.h>
+
+#include <filesystem>
 
 namespace vp {
 
 Interpreter::Interpreter(const std::string &src)
-    : m_stringStream(src),
+    : m_stringStream(src)
     , m_inputStream(m_stringStream.rdbuf()) 
+    , m_pInputStream(std::make_unique<std::istream>(m_stringStream.rdbuf()))
     {
     // So that the application is in defined state
     desc::ShaderCodeStore::getInstance().clear();
 }
 
 Interpreter::Interpreter(std::ifstream &fin)
-    : m_inputStream(fin.rdbuf()) {}
+    : m_inputStream(fin.rdbuf())
+    , m_pInputStream(std::make_unique<std::istream>(fin.rdbuf()))
+{
+    // So that the application is in defined state
+    desc::ShaderCodeStore::getInstance().clear();
+    resolveIncludes();
+}
+
+void Interpreter::resolveIncludes() {
+    Lexer lexer{};
+    std::string line{};
+
+    while (std::getline(m_inputStream, line)) {
+        if (Lexer::isContinuous(line)) {
+            std::string tmp;
+            std::getline(m_inputStream, tmp);
+            Lexer::joinLines(line, tmp);
+        }
+
+        std::optional<std::vector<Token>> tokens = lexer.scan(line);
+
+        if (not tokens.has_value() or tokens->empty()) {
+            break;
+        }
+
+        const auto directiveToken = *tokens->cbegin();
+        tokens->erase(tokens->begin());
+        const auto &clauseTokens = *tokens;
+
+        auto directive = Parser::createDirectiveFromToken(directiveToken);
+        if (directive->getDirectiveKind() != DirectiveKind::Include) {
+            break;
+        }
+
+        directive->areClausesCorrect(clauseTokens);
+
+        directive->populateClauses(clauseTokens);
+        auto pathValue = directive->getParameter<ClauseKind::Path>();
+        if (not pathValue.has_value()) {
+            throw std::runtime_error("Missing path for include directive");
+        }
+        const auto path = std::filesystem::path{ *pathValue };
+
+        std::ifstream fin { path };
+        if (not fin.is_open()) {
+            throw std::runtime_error(fmt::format("Could not open the file '{}'", path.string()));
+        }
+        m_stringStream << fin.rdbuf();
+    }
+    m_stringStream << m_inputStream.rdbuf();
+    m_pInputStream = std::make_unique<std::istream>(m_stringStream.rdbuf());
+}
 
 std::vector<desc::ProgramDescription> Interpreter::interpret() {
     Lexer lexer{};
@@ -27,10 +82,10 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
 
     bool isLastDirectiveShader = false;
 
-    while (std::getline(m_inputStream, line)) {
+    while (std::getline(*m_pInputStream, line)) {
         if (Lexer::isContinuous(line)) {
             std::string tmp;
-            std::getline(m_inputStream, tmp);
+            std::getline(*m_pInputStream, tmp);
             Lexer::joinLines(line, tmp);
         }
 
