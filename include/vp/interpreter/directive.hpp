@@ -7,6 +7,8 @@
 #include <unordered_set>
 #include <vector>
 
+#include <fmt/ostream.h>
+
 #include <vp/interpreter/clause.hpp>
 
 namespace vp {
@@ -25,6 +27,8 @@ enum class DirectiveKind : u8 {
     Include,
     FrameBuffer,
 };
+
+std::ostream &operator<<(std::ostream &os, const DirectiveKind &kind);
 
 class Directive final {
 public:
