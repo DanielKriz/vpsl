@@ -7,7 +7,7 @@
 
 using namespace vp;
 
-TEST_SUITE_BEGIN("Clause");
+TEST_SUITE("Clause") {
 
 TEST_CASE("Simple Matching") {
     std::vector<Token> tokens = {
@@ -45,4 +45,4 @@ TEST_CASE("Simple Missing Matching") {
     CHECK_FALSE(cls.isValidClause(tokens));
 }
 
-TEST_SUITE_END();
+}
