@@ -57,6 +57,10 @@ void ShaderCode::prependLines(const std::vector<std::string> &lines) {
 }
 
 void ShaderCode::compose() {
+    if (isComposed()) {
+        return;
+    }
+
     for (const auto &obj : m_prependSet) {
         if (not obj.get().isComposed()) {
             obj.get().compose();
