@@ -11,7 +11,7 @@
 namespace vp {
 class DependencyGraph {
 public:
-    using ValueType = std::string_view;
+    using ValueType = std::string;
     using ValueSet = std::unordered_set<ValueType>;
     using EdgeMap = std::unordered_map<ValueType, ValueSet>;
 
@@ -41,20 +41,20 @@ public:
 
 private:
     bool descent(
-        const std::string_view &key,
-        std::unordered_set<std::string_view> &visited,
-        std::unordered_set<std::string_view> &recursionStack
+        const ValueType &key,
+        ValueSet &visited,
+        ValueSet &recursionStack
     ) const;
 
     void topologySortHelper(
-        const std::string_view &node,
-        std::unordered_set<std::string_view> &visited,
+        const std::string&node,
+        ValueSet &visited,
         std::vector<std::string> &sorted
     ) const;
 
     mutable bool m_isAcyclic;
     mutable bool m_isAcyclicityValid;
-    std::unordered_set<std::string_view> m_nodes;
+    ValueSet m_nodes;
     EdgeMap m_edges;
 };
 

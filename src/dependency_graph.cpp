@@ -28,9 +28,9 @@ bool DependencyGraph::isAcyclic() const {
 }
 
 bool DependencyGraph::descent(
-    const std::string_view &key,
-    std::unordered_set<std::string_view> &visited,
-    std::unordered_set<std::string_view> &recursionStack
+    const std::string&key,
+    std::unordered_set<std::string> &visited,
+    std::unordered_set<std::string> &recursionStack
 ) const {
     if (visited.contains(key)) {
         return false;
@@ -51,8 +51,8 @@ bool DependencyGraph::descent(
 }
 
 void DependencyGraph::topologySortHelper(
-    const std::string_view &node,
-    std::unordered_set<std::string_view> &visited,
+    const std::string&node,
+    std::unordered_set<std::string> &visited,
     std::vector<std::string> &sorted
 ) const {
     visited.insert(node);
@@ -74,7 +74,7 @@ std::vector<std::string> DependencyGraph::topologySort() const noexcept {
         return {};
     }
 
-    std::unordered_set<std::string_view> visited;
+    std::unordered_set<std::string> visited;
     std::vector<std::string> sorted;
 
     for (const auto& node : m_nodes) {
