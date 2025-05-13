@@ -110,5 +110,10 @@ void DependencyGraph::addEdge(const ValueType &from, const ValueType &to) {
     m_isAcyclicityValid = false;
 }
 
+void DependencyGraph::clear() {
+    m_nodes.clear();
+    m_edges.clear();
+    m_isAcyclicityValid = false;
+}
 
 } // namespace vp

@@ -27,6 +27,8 @@ public:
 
     [[nodiscard]] std::vector<std::string> topologySort() const noexcept;
 
+    void clear();
+
 #if 1
     void debugPrint() {
         fmt::println("\nDependency Graph Debug Print:");

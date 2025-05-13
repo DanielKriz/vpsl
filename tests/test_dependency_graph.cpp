@@ -68,6 +68,23 @@ TEST_CASE("Graph that is acyclic should not be marked as cyclic") {
     CHECK(dp.isAcyclic());
 }
 
+TEST_CASE("Dependency Graph Cleaning") {
+    DependencyGraph dp;
+    dp.addNode("A");
+    dp.addNode("B");
+    dp.addNode("C");
+    dp.addEdge("A", "B");
+    dp.addEdge("B", "C");
+    dp.addEdge("A", "C");
+    dp.clear();
+    CHECK_FALSE(dp.containsNode("A"));
+    CHECK_FALSE(dp.containsNode("B"));
+    CHECK_FALSE(dp.containsNode("C"));
+    CHECK_FALSE(dp.containsEdge("A", "B"));
+    CHECK_FALSE(dp.containsEdge("B", "C"));
+    CHECK_FALSE(dp.containsEdge("A", "C"));
+}
+
 TEST_CASE("Topology Sort of single node graph is said node") {
     DependencyGraph dp;
     dp.addNode("A");
