@@ -71,6 +71,48 @@ TEST_CASE("Shader Directive is possible to populate with valid input") {
     }
 }
 
+TEST_CASE("Requested clauses that are not populated do not return a value") {
+    Lexer lex;
+    const auto tokens = lex.scan("#pragma vp shader name(sh1) type(vertex) prepend(A, B) append(C, D)");
+    Directive dir = Directive::create<DirectiveKind::Shader>();
+    CHECK_FALSE(dir.getParameter<ClauseKind::Name>().has_value());
+    CHECK_FALSE(dir.getParameter<ClauseKind::Type>().has_value());
+    CHECK_FALSE(dir.getParameters<ClauseKind::Prepend>().has_value());
+    CHECK_FALSE(dir.getParameters<ClauseKind::Append>().has_value());
+}
+
+TEST_CASE("Requested clauses that are not present do not return a value") {
+    Lexer lex;
+    const auto tokens = lex.scan("#pragma vp shader");
+    Directive dir = Directive::create<DirectiveKind::Shader>();
+    CHECK_FALSE(dir.getParameter<ClauseKind::Name>().has_value());
+    CHECK_FALSE(dir.getParameter<ClauseKind::Type>().has_value());
+    CHECK_FALSE(dir.getParameters<ClauseKind::Prepend>().has_value());
+    CHECK_FALSE(dir.getParameters<ClauseKind::Append>().has_value());
+}
+
+TEST_CASE("Requested clauses that are not present do not return a value even after populate") {
+    Lexer lex;
+    const auto tokens = lex.scan("#pragma vp shader").value();
+    Directive dir = Directive::create<DirectiveKind::Shader>();
+    dir.populateClauses(tokens);
+    CHECK_FALSE(dir.getParameter<ClauseKind::Name>().has_value());
+    CHECK_FALSE(dir.getParameter<ClauseKind::Type>().has_value());
+    CHECK_FALSE(dir.getParameters<ClauseKind::Prepend>().has_value());
+    CHECK_FALSE(dir.getParameters<ClauseKind::Append>().has_value());
+}
+
+TEST_CASE("It is possible to call getParameter on multiple parameter clauses and vice versa") {
+    Lexer lex;
+    const auto tokens = lex.scan("#pragma vp shader name(sh1) type(vertex) prepend(A, B) append(C, D)");
+    Directive dir = Directive::create<DirectiveKind::Shader>();
+    dir.populateClauses(*tokens);
+    CHECK(dir.getParameters<ClauseKind::Name>().value()[0] == "sh1");
+    CHECK(dir.getParameters<ClauseKind::Type>().value()[0] == "vertex");
+    CHECK(dir.getParameter<ClauseKind::Prepend>().value() == "A");
+    CHECK(dir.getParameter<ClauseKind::Append>().value() == "C");
+}
+
 TEST_CASE("Shader Directive can provide shader kind") {
     Lexer lex;
     const auto tokens = lex.scan("#pragma vp shader name(sh1) type(vertex)");
