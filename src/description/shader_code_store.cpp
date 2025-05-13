@@ -19,6 +19,9 @@ bool ShaderCodeStore::contains(const std::string &nameOfShader) const noexcept {
 }
 
 void ShaderCodeStore::addDependencies(const std::string &nameOfShader, const std::vector<std::string> &others) {
+    if (nameOfShader.empty()) {
+        return;
+    }
     if (not contains(nameOfShader)) {
         throw std::runtime_error("It is not possible to add dependency to non-existent shader");
     }
