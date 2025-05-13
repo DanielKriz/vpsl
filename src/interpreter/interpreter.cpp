@@ -40,6 +40,7 @@ void Interpreter::interpret() {
         }
 
         std::optional<std::vector<Token>> tokens = lexer.scan(line);
+        // Skip empty lines
         if (not tokens.has_value() or tokens->empty()) {
             continue;
         }
