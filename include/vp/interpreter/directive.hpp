@@ -106,6 +106,9 @@ private:
     /// the optional return value.
     template <ClauseKind K>
     [[nodiscard]] std::optional<const IClause *> getClause() const noexcept {
+        if (not m_populated.contains(K)) {
+            return {};
+        }
         if (auto it = m_clauses.find(K); it != m_clauses.end()) {
             return it->second.get();
         }
