@@ -1,0 +1,12 @@
+#pragma vp program name(main)
+#pragma vp begin
+
+#pragma vp shader name(main_vs) type(vertex) prepend(main:main_fs)
+#pragma vp begin
+// empty
+#pragma vp end // main_vs
+#pragma vp shader name(main_fs) type(fragment) append(main:main_vs)
+#pragma vp begin
+// empty
+#pragma vp end // main_fs
+#pragma vp end // main

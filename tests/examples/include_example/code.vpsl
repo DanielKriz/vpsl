@@ -1,0 +1,26 @@
+#version 450 core
+
+#pragma vp program name(main)
+#pragma vp begin
+
+#pragma vp shader name(main_vs) type(vertex)
+#pragma vp begin
+void main() {
+    const vec4 vertices[3] = vec4[3](
+        vec4(-0.5f, -0.5f, 0.0f, 1.0f),
+        vec4( 0.5f, -0.5f, 0.0f, 1.0f),
+        vec4( 0.0f,  0.5f, 0.0f, 1.0f)
+    );
+    gl_Position = vertices[gl_VertexID];
+}
+
+#pragma vp end // main_vs
+
+#pragma vp shader name(main_fs) type(fragment)
+#pragma vp begin
+layout (location = 0) out vec4 color;
+
+void main() { color = vec4(1.0f, 0.0f, 0.0f, 1.0f); }
+
+#pragma vp end // main_fs
+#pragma vp end // main

@@ -1,14 +1,9 @@
-#pragma vp shader name(included) type(generic)
-#pragma vp begin
-const int answer = 42;
-#pragma vp end
-
 #version 450 core
 
 #pragma vp program name(main)
 #pragma vp begin
 
-#pragma vp shader name(main_vs) type(vertex) append(global:included)
+#pragma vp shader name(main_vs) type(vertex)
 #pragma vp begin
 void main() {
     const vec4 vertices[3] = vec4[3](
@@ -20,7 +15,8 @@ void main() {
 }
 
 #pragma vp end // main_vs
-#pragma vp shader name(main_fs) type(fragment) prepend(included)
+
+#pragma vp shader name(main_fs) type(fragment)
 #pragma vp begin
 layout (location = 0) out vec4 color;
 

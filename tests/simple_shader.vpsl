@@ -1,1 +1,0 @@
-#pragma vp shader type(vertex) prepend(shd1) append(shd2) name(shd3)
