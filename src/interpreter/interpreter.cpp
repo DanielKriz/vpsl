@@ -63,7 +63,9 @@ void Interpreter::interpret() {
 
         auto directive = Parser::createDirectiveFromToken(directiveToken);
         if (not directive.has_value()) {
-            throw std::runtime_error("No directive was created");
+            throw std::runtime_error(
+                fmt::format("No directive was created from '{}'", directiveToken)
+            );
         }
 
         directive->populateClauses(clauseTokens);
