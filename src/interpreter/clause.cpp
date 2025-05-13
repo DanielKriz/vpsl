@@ -1,7 +1,9 @@
 #include <vp/error_handling.hpp>
 #include <vp/interpreter/clause.hpp>
 
-#include <iostream>
+#include <ostream>
+
+#include <fmt/ostream.h>
 
 namespace vp {
 
@@ -143,6 +145,23 @@ bool ClauseBase::isValidClause(const std::vector<Token> &tokens) const {
     }
 
     return true;
+}
+
+std::ostream &operator<<(std::ostream &os, const vp::ClauseKind &kind) {
+    const std::string_view repr = [kind]() {
+        using enum vp::ClauseKind;
+        switch (kind) {
+        case Name: return "Name";
+        case Type: return "Type";
+        case Pre: return "Pre";
+        case Post: return "Post";
+        case Prepend: return "Prepend";
+        case Append: return "Append";
+        default:
+            throw std::runtime_error("Unsupported clause kind for representation!");
+        }
+    }();
+    return os << repr;
 }
 
 } // namespace vp

@@ -1,10 +1,13 @@
 #ifndef VP_INTERPRETER_CLAUSE_HPP
 #define VP_INTERPRETER_CLAUSE_HPP
 
+#include <iosfwd>
 #include <vector>
 
 #include <vp/interpreter/token.hpp>
 #include <vp/types.hpp>
+
+#include <fmt/ostream.h>
 
 namespace vp {
 
@@ -91,6 +94,11 @@ using PostClause = ParameterClause<ClauseKind::Post>;
 using AppendClause = ParameterClause<ClauseKind::Append>;
 using PrependClause = ParameterClause<ClauseKind::Prepend>;
 
+std::ostream &operator<<(std::ostream &os, const vp::ClauseKind &kind);
+
 } // namespace vp
+
+template <>
+struct fmt::formatter<vp::ClauseKind> : ostream_formatter {};
 
 #endif // VP_INTERPRETER_CLAUSE_HPP

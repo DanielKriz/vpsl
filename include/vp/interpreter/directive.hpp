@@ -179,5 +179,7 @@ private:
 
 } // namespace vp
 
+template <>
+struct fmt::formatter<vp::DirectiveKind> : ostream_formatter {};
 
 #endif // VP_INTERPRETER_DIRECTIVE_HPP

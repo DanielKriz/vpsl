@@ -199,6 +199,28 @@ Directive DirectiveBuilder::copy() {
     return m_directive.clone();
 }
 
+std::ostream &operator<<(std::ostream &os, const DirectiveKind &kind) {
+    const std::string_view repr = [kind]() {
+        using enum DirectiveKind;
+        switch(kind) {
+            case Unknown: return "Unknown";
+            case Shader: return "Shader";
+            case Program: return "Program";
+            case Begin: return "Begin";
+            case End: return "End";
+            case Load: return "Load";
+            case Texture: return "Texture";
+            case CopyIn: return "CopyIn";
+            case Option: return "Option";
+            case ResourceStore: return "ResourceStore";
+            case Include: return "Include";
+            case FrameBuffer: return "FrameBuffer";
+            default:
+                 throw std::runtime_error("Encountered Unknown Token!");
+        }
+    }();
+    return os << repr;
 
+}
 
 } // namespace vp
