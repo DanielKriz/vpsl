@@ -80,11 +80,15 @@ public:
 
     void setKind(ShaderCodeKind kind) noexcept;
     [[nodiscard]] ShaderCodeKind getKind() const noexcept;
+
+    [[nodiscard]] bool isNamed() const noexcept { return !m_name.empty(); }
+    [[nodiscard]] const std::string &getName() const noexcept { return m_name; }
 private:
     ShaderCodeKind m_kind { ShaderCodeKind::Unkown };
     std::vector<std::string> m_lines;
     std::vector<std::reference_wrapper<ShaderCode>> m_prependSet;
     std::vector<std::reference_wrapper<ShaderCode>> m_appendSet;
+    std::string m_name;
     bool m_isComplete { false };
 };
 
