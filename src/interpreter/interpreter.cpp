@@ -26,8 +26,11 @@ Interpreter::Interpreter(std::ifstream &fin)
 void Interpreter::resolveIncludes() {
     Lexer lexer{};
     std::string line{};
+    std::streampos oldPos = m_inputStream.tellg();
 
-    while (std::getline(m_inputStream, line)) {
+    while (m_inputStream.peek() != EOF) {
+        oldPos = m_inputStream.tellg();
+        std::getline(m_inputStream, line);
         if (Lexer::isContinuous(line)) {
             std::string tmp;
             std::getline(m_inputStream, tmp);
@@ -64,6 +67,7 @@ void Interpreter::resolveIncludes() {
         }
         m_stringStream << fin.rdbuf();
     }
+    m_inputStream.seekg(oldPos);
     m_stringStream << m_inputStream.rdbuf();
     m_pInputStream = std::make_unique<std::istream>(m_stringStream.rdbuf());
 }
@@ -140,9 +144,7 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
             }
 
         } else if (directiveKind == DirectiveKind::Include) {
-            if (parser.peekScope() != ParserScope::Global) {
-                throw std::runtime_error("Cannot use include directive outside of global scope");
-            }
+            throw std::runtime_error("Include directive can exist only at the beggingin of the file");
 
         } else if (directiveKind == DirectiveKind::FrameBuffer) {
             if (parser.peekScope() == ParserScope::Shader) {
