@@ -13,12 +13,7 @@ Interpreter::Interpreter(const std::string &src)
 Interpreter::Interpreter(std::ifstream &fin)
     : m_inputStream(fin.rdbuf()) {}
 
-#if 1
 std::vector<desc::ProgramDescription> Interpreter::interpret() {
-#else
-void Interpreter::interpret() {
-#endif
-    fmt::println("Starting the interpreter");
     Lexer lexer{};
     Parser parser{};
 
