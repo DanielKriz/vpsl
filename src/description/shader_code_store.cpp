@@ -33,6 +33,20 @@ void ShaderCodeStore::addDependencies(const std::string &nameOfShader, const std
     }
 }
 
+void ShaderCodeStore::composeAllShaders() {
+    m_dependecies.debugPrint();
+    if (not m_dependecies.isAcyclic()) {
+        throw std::runtime_error("There is a cyclic dependency between shaders!");
+    }
+
+    for (auto &shaderCode : m_shaderCodes) {
+        shaderCode.second.compose();
+    }
+    for (auto &shaderCode : m_unnamedShaderCodes) {
+        shaderCode.compose();
+    }
+}
+
 void ShaderCodeStore::insert(const std::string &nameOfShader, ShaderCode obj) {
     m_shaderCodes.insert({nameOfShader, std::move(obj)});
 }
