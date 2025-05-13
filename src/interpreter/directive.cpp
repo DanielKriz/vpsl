@@ -34,20 +34,31 @@ void Directive::populateClauses(const std::vector<Token> &tokens) {
     for (auto &pos : clausePositions) {
         const auto kind = static_cast<ClauseKind>(pos->getTokenKind());
         if (m_populated.contains(kind)) {
-            // TODO
-            throw std::runtime_error(fmt::format("Clause {} is duplicit!", "A"));
+            throw std::runtime_error(fmt::format("Clause {} is duplicit!", kind));
         }
 
         std::shared_ptr<IClause> pClause = nullptr;
         try {
             pClause = m_clauses.at(kind);
-        } catch (std::runtime_error &e) {
-            throw std::runtime_error(fmt::format("Unsupported clause {} for directive {}", "A", "D"));
+        } catch (std::out_of_range &e) {
+            throw std::runtime_error(
+                fmt::format(
+                    "Unsupported clause {} for directive {}",
+                    kind,
+                    getDirectiveKind()
+                )
+            );
         }
 
         bool isValid = pClause->populate(pos, tokens.end());
         if (not isValid) {
-            throw std::runtime_error(fmt::format("clause {} of directive {} is ill-formed", "A", "D"));
+            throw std::runtime_error(
+                fmt::format(
+                    "clause '{}' of directive '{}' is ill-formed",
+                    pClause->getKind(),
+                    getDirectiveKind()
+                )
+            );
         }
         m_populated.insert(kind);
     }
