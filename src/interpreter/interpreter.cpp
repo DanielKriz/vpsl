@@ -4,7 +4,11 @@ namespace vp {
 
 Interpreter::Interpreter(const std::string &src)
     : m_stringStream(src),
-    m_inputStream(m_stringStream.rdbuf()) {}
+    , m_inputStream(m_stringStream.rdbuf()) 
+    {
+    // So that the application is in defined state
+    desc::ShaderCodeStore::getInstance().clear();
+}
 
 Interpreter::Interpreter(std::ifstream &fin)
     : m_inputStream(fin.rdbuf()) {}

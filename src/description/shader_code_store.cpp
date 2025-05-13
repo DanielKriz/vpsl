@@ -47,4 +47,10 @@ const ShaderCode *ShaderCodeStore::getShaderCode(const std::string &nameOfShader
     throw std::runtime_error(fmt::format("Could not find shader '{}' in the store", nameOfShader));
 }
 
+void ShaderCodeStore::clear() {
+    m_shaderCodes.clear();
+    m_unnamedShaderCodes.clear();
+    m_dependecies.clear();
+}
+
 } // namespace vp::desc

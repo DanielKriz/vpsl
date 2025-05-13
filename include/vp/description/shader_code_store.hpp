@@ -37,6 +37,8 @@ public:
 
     void composeAllShaders();
 
+    void clear();
+
     friend std::ostream &operator<<(std::ostream &os, const ShaderCodeStore &store);
 private:
 std::unordered_map<std::string, ShaderCode> m_shaderCodes;
