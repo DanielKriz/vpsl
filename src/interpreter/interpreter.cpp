@@ -70,57 +70,9 @@ void Interpreter::interpret() {
 
         DirectiveKind directiveKind = directive->getDirectiveKind();
         if (directiveKind == DirectiveKind::Shader) {
-#if 0
-            if (not pCurrentShaderObject->isEmpty()) {
-                fmt::println("{}", fmt::styled("Current Shader Object:", fmt::fg(fmt::color::red)));
-                fmt::println("{}", fmt::styled("----------------------", fmt::fg(fmt::color::red)));
-                std::cout << *pCurrentShaderObject << std::endl;
-            }
-#endif
-
-            auto name = directive->getParameter<ClauseKind::Name>();
-            if (name.has_value() and not name->empty()) {
-                if (parser.peekScope() == ParserScope::Global) {
-                    name = "global:" + *name;
-                } else {
-                    name = programBuilder.createShaderName(*name);
-                }
-                pCurrentShaderCode = store.emplace(*name);
-            } else {
-                pCurrentShaderCode = store.emplaceUnnamed();
-            }
-
-            auto type = directive->getParameter<ShaderCodeKind>();
-            if (type.has_value()) {
-                pCurrentShaderCode->setKind(*type);
-            } else {
-                pCurrentShaderCode->setKind(ShaderCodeKind::Generic);
-            }
-
-            // add the shader to the program
-            if (parser.peekScope() != ParserScope::Global) {
-                programBuilder.addShaderCode(*pCurrentShaderCode);
-            }
-
-            // Do this later
-#if 0
-            auto prependSet = directive->getParameters<ClauseKind::Prepend>();
-            if (prependSet.has_value()) {
-                for (const auto &shader : *prependSet) {
-                    pCurrentShaderObject->addToPrependSet(*m_store[shader]);
-                }
-            }
-
-            auto appendSet = directive->getParameters<ClauseKind::Prepend>();
-            if (appendSet.has_value()) {
-                for (const auto &shader : *prependSet) {
-                    pCurrentShaderObject->addToAppendSet(*m_store[shader]);
-                }
-            }
-#endif
-
+            pCurrentShaderCode = parser.shaderCodeFromDirective(*directive, programBuilder);
             pCurrentShaderCode->appendLines(globalShaderCode);
-            isLastDirectiveShader = true;
+
         } else if (directiveKind == DirectiveKind::Program) {
             auto name = directive->getParameter<ClauseKind::Name>();
             if (name.has_value()) {
@@ -128,74 +80,64 @@ void Interpreter::interpret() {
             } else {
                 programBuilder.setNameFromID();
             }
-            isLastDirectiveShader = false;
+
         } else if (directiveKind == DirectiveKind::Load) {
-            isLastDirectiveShader = false;
+            if (parser.peekScope() != ParserScope::Global) {
+                throw std::runtime_error("Cannot use load directive outside of global scope");
+            }
+
+        } else if (directiveKind == DirectiveKind::Include) {
+            if (parser.peekScope() != ParserScope::Global) {
+                throw std::runtime_error("Cannot use include directive outside of global scope");
+            }
+
+        } else if (directiveKind == DirectiveKind::FrameBuffer) {
+            if (parser.peekScope() == ParserScope::Shader) {
+                throw std::runtime_error("Cannot use frambuffer directive inside of shader scope");
+            }
+
+        } else if (directiveKind == DirectiveKind::ResourceStore) {
+            if (parser.peekScope() != ParserScope::Global) {
+                throw std::runtime_error("Cannot use resource_store directive outside of global scope");
+            }
+
+        } else if (directiveKind == DirectiveKind::CopyIn) {
+            if (parser.peekScope() != ParserScope::Shader) {
+                throw std::runtime_error("Cannot use copyin directive outside of shader scope");
+            }
+
+        } else if (directiveKind == DirectiveKind::Option) {
+            if (parser.peekScope() == ParserScope::Shader) {
+                throw std::runtime_error("Cannot use option directive inside of shader scope");
+            }
+
         } else if (directiveKind == DirectiveKind::Begin) {
             if (isLastDirectiveShader and parser.peekScope() == ParserScope::Global) {
                 parser.pushGlobalShaderScope();
             } else {
                 parser.pushScope();
             }
-            isLastDirectiveShader = false;
+
         } else if (directiveKind == DirectiveKind::End) {
             if (parser.peekScope() == ParserScope::Program) {
                 parser.addProgramDescription(programBuilder.build());
                 programBuilder.reset();
             }
             parser.popScope();
-            isLastDirectiveShader = false;
+
         } else {
             throw std::runtime_error("Unknown Directive kind!");
         }
+
+        isLastDirectiveShader = directiveKind == DirectiveKind::Shader;
 #if 0
         fmt::println("finished iteration");
 #endif
     }
 
-    // std::cout << m_store << std::endl;
+    store.composeAllShaders();
 
-#if 0
-    fmt::println("{}", fmt::styled("Global Shader Object:", fmt::fg(fmt::color::blue)));
-    fmt::println("{}", fmt::styled("---------------------", fmt::fg(fmt::color::blue)));
-    std::cout << globalShaderObject << std::endl;
-    fmt::println("");
-    fmt::println("{}", fmt::styled("Latest Shader Object:", fmt::fg(fmt::color::blue)));
-    fmt::println("{}", fmt::styled("---------------------", fmt::fg(fmt::color::blue)));
-    std::cout << *pCurrentShaderObject << std::endl;
-#endif
-
-#if 1
-    store.getShaderCode("main:main_vs")->compose();
-    store.getShaderCode("main:main_fs")->compose();
-
-    fmt::println("{}", fmt::styled("Vertex Shader Object:", fmt::fg(fmt::color::purple)));
-    fmt::println("{}", fmt::styled("---------------------", fmt::fg(fmt::color::purple)));
-    std::cout << *store.getShaderCode("main:main_vs") << std::endl;
-    fmt::println("{}", fmt::styled("Fragment Shader Object:", fmt::fg(fmt::color::purple)));
-    fmt::println("{}", fmt::styled("-----------------------", fmt::fg(fmt::color::purple)));
-    std::cout << *store.getShaderCode("main:main_fs") << std::endl;
-    fmt::println("{}", fmt::styled("Included Shader Object:", fmt::fg(fmt::color::purple)));
-    fmt::println("{}", fmt::styled("-----------------------", fmt::fg(fmt::color::purple)));
-    std::cout << *store.getShaderCode("global:included") << std::endl;
-    std::cout << std::endl;
-    fmt::println("{}", fmt::styled("Vertex Shader Object:", fmt::fg(fmt::color::purple)));
-    fmt::println("{}", fmt::styled("---------------------", fmt::fg(fmt::color::purple)));
-    std::cout << *store.getShaderCode("the_second:main_vs") << std::endl;
-    fmt::println("{}", fmt::styled("Fragment Shader Object:", fmt::fg(fmt::color::purple)));
-    fmt::println("{}", fmt::styled("-----------------------", fmt::fg(fmt::color::purple)));
-    std::cout << *store.getShaderCode("the_second:main_fs") << std::endl;
-#endif
-
-#if 0
-    fmt::println("{}", fmt::styled("Current Program Shaders:", fmt::fg(fmt::color::green)));
-    fmt::println("{}", fmt::styled("------------------------", fmt::fg(fmt::color::green)));
-    std::cout << currentProgram << std::endl;
-    fmt::println("{}", fmt::styled("------------------------", fmt::fg(fmt::color::green)));
-#endif
-
-    std::cout << "interpretation is finished" << std::endl;
-
+    spdlog::debug("Interpretation finished");
     return parser.createExecutionSequenceDescription();
 }
 

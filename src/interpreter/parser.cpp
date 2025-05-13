@@ -89,4 +89,53 @@ void Parser::addProgramDescription(desc::ProgramDescription &&desc) {
     m_programDescriptions.emplace_back(std::move(desc));
 }
 
+ShaderCode *Parser::shaderCodeFromDirective(Directive &dir, desc::ProgramDescriptionBuilder &builder) {
+    auto name = dir.getParameter<ClauseKind::Name>();
+    ShaderCode *pShaderCode {};
+    if (name.has_value() and not name->empty()) {
+        if (peekScope() == ParserScope::Global) {
+            name = "global:" + *name;
+        } else {
+            name = builder.createShaderName(*name);
+        }
+        pShaderCode = m_store.emplace(*name);
+    } else {
+        pShaderCode = m_store.emplaceUnnamed();
+    }
+
+    auto type = dir.getParameter<ShaderCodeKind>();
+    if (type.has_value()) {
+        pShaderCode->setKind(*type);
+    } else {
+        pShaderCode->setKind(ShaderCodeKind::Generic);
+    }
+
+    // add the shader to the program
+    if (peekScope() != ParserScope::Global) {
+        builder.addShaderCode(*pShaderCode);
+    }
+
+    auto prependSet = dir.getParameters<ClauseKind::Prepend>();
+    if (prependSet.has_value()) {
+        for (const auto &shader : *prependSet) {
+            fmt::println("Prepending {}", shader);
+            auto *code = m_store.emplace(shader);
+            pShaderCode->addToPrependSet(*code);
+        }
+        m_store.addDependencies(pShaderCode->getName(), *prependSet);
+    }
+
+    auto appendSet = dir.getParameters<ClauseKind::Append>();
+    if (appendSet.has_value()) {
+        for (const auto &shader : *appendSet) {
+            fmt::println("Append {}", shader);
+            auto *code = m_store.emplace(shader);
+            pShaderCode->addToAppendSet(*code);
+        }
+        m_store.addDependencies(pShaderCode->getName(), *appendSet);
+    }
+
+    return pShaderCode;
+}
+
 } // namespace vp
