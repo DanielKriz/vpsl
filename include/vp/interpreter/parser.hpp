@@ -38,6 +38,8 @@ public:
 
     static std::optional<Directive> createDirectiveFromToken(const Token &token);
 
+    ShaderCode *shaderCodeFromDirective(Directive &dir, desc::ProgramDescriptionBuilder &builder);
+
     // std::vector<build::ProgramDescription> createExecutionSequence() { return m_programDescriptions; }
 
     std::vector<desc::ProgramDescription> createExecutionSequenceDescription() { return m_programDescriptions; }
