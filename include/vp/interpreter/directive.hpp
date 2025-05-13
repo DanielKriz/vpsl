@@ -122,6 +122,7 @@ private:
     /// It is used for checking whether some clause is already closed, multiple definition of
     /// one particular clause results in an error.
     std::unordered_set<ClauseKind> m_populated;
+    std::unordered_set<ClauseKind> m_required;
 };
 
 template <ClauseKind K, typename T>
@@ -159,7 +160,7 @@ public:
     /// @brief Sets the token kind of directive that shall be searched during scanning.
     DirectiveBuilder &setDirectiveToken(TokenKind kind);
     /// @brief Adds clause to the directive.
-    DirectiveBuilder &addClause(ClauseKind kind);
+    DirectiveBuilder &addClause(ClauseKind kind, bool isRequired = false);
     /// @brief Copies already built (by this particular builder) directive.
     /// @throws runtime_error if the directive is not build.
     Directive copy();

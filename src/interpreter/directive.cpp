@@ -171,11 +171,15 @@ DirectiveBuilder &DirectiveBuilder::setDirectiveToken(TokenKind kind) {
     return *this;
 }
 
-DirectiveBuilder &DirectiveBuilder::addClause(ClauseKind kind) {
+DirectiveBuilder &DirectiveBuilder::addClause(ClauseKind kind, bool isRequired) {
     using enum ClauseKind;
     auto &clauses = m_directive.m_clauses;
     clauses.emplace(Directive::createEntry(kind));
+
+    if (isRequired) {
+        m_directive.m_required.insert(kind);
     }
+
     return *this;
 }
 
