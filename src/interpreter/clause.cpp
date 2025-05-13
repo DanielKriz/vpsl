@@ -20,6 +20,10 @@ bool IClause::isClause(TokenKind kind) noexcept {
     case Post:
     case Prepend:
     case Append:
+    case Path:
+    case Mesh:
+    case Shaders:
+    case Draw:
         return true;
     default:
         return false;
@@ -157,6 +161,10 @@ std::ostream &operator<<(std::ostream &os, const vp::ClauseKind &kind) {
         case Post: return "Post";
         case Prepend: return "Prepend";
         case Append: return "Append";
+        case Path: return "Path";
+        case Draw: return "Draw";
+        case Mesh: return "Mesh";
+        case Shaders: return "Shaders";
         default:
             throw std::runtime_error("Unsupported clause kind for representation!");
         }

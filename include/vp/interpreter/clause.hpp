@@ -16,6 +16,10 @@ enum class ClauseKind : u8 {
     Type = static_cast<enum32>(TokenKind::Type),
     Pre = static_cast<enum32>(TokenKind::Pre),
     Post = static_cast<enum32>(TokenKind::Post),
+    Draw = static_cast<enum32>(TokenKind::Draw),
+    Path = static_cast<enum32>(TokenKind::Path),
+    Shaders = static_cast<enum32>(TokenKind::Shaders),
+    Mesh = static_cast<enum32>(TokenKind::Mesh),
     Prepend = static_cast<enum32>(TokenKind::Prepend),
     Append = static_cast<enum32>(TokenKind::Append),
 };
@@ -88,11 +92,15 @@ template <ClauseKind Kind>
 using ParameterClause = Clause<Kind, 1, IClause::PARAMETER_LIMIT>;
 
 using NameClause = Clause<ClauseKind::Name>;
+using PathClause = Clause<ClauseKind::Path>;
 using TypeClause = Clause<ClauseKind::Type>;
+using MeshClause = Clause<ClauseKind::Mesh>;
+using DrawClause = Clause<ClauseKind::Draw, 2, 2>;
 using PreClause = ParameterClause<ClauseKind::Pre>;
 using PostClause = ParameterClause<ClauseKind::Post>;
 using AppendClause = ParameterClause<ClauseKind::Append>;
 using PrependClause = ParameterClause<ClauseKind::Prepend>;
+using ShadersClause = ParameterClause<ClauseKind::Prepend>;
 
 std::ostream &operator<<(std::ostream &os, const vp::ClauseKind &kind);
 
