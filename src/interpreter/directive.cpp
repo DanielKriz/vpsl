@@ -57,6 +57,34 @@ Directive Directive::clone() const {
     return { *this };
 }
 
+std::pair<ClauseKind, std::shared_ptr<IClause>> Directive::createEntry(ClauseKind kind) {
+using enum ClauseKind;
+    switch (kind) {
+    case Name:
+        return { Name, std::make_shared<NameClause>() };
+    case Type:
+        return { Type, std::make_shared<TypeClause>() };
+    case Prepend:
+        return { Prepend, std::make_shared<PrependClause>() };
+    case Append:
+        return { Append, std::make_shared<AppendClause>() };
+    case Pre:
+        return { Pre, std::make_shared<PreClause>() };
+    case Post:
+        return { Post, std::make_shared<PostClause>() };
+    case Mesh:
+        return { Mesh, std::make_shared<MeshClause>() };
+    case Shaders:
+        return { Shaders, std::make_shared<ShadersClause>() };
+    case Draw:
+        return { Draw, std::make_shared<DrawClause>() };
+    case Path:
+        return { Path, std::make_shared<PathClause>() };
+    default:
+        throw std::runtime_error(fmt::format("Unsupported clause kind: {}", kind));
+    }
+}
+
 template <>
 Directive Directive::create<DirectiveKind::Shader>() {
     static DirectiveBuilder builder;
@@ -146,27 +174,7 @@ DirectiveBuilder &DirectiveBuilder::setDirectiveToken(TokenKind kind) {
 DirectiveBuilder &DirectiveBuilder::addClause(ClauseKind kind) {
     using enum ClauseKind;
     auto &clauses = m_directive.m_clauses;
-    switch (kind) {
-    case Name:
-        clauses.insert({Name, std::make_shared<NameClause>()});
-        break;
-    case Type:
-        clauses.insert({Type, std::make_shared<TypeClause>()});
-        break;
-    case Prepend:
-        clauses.insert({Prepend, std::make_shared<PrependClause>()});
-        break;
-    case Append:
-        clauses.insert({Append, std::make_shared<AppendClause>()});
-        break;
-    case Pre:
-        clauses.insert({Pre, std::make_shared<PreClause>()});
-        break;
-    case Post:
-        clauses.insert({Post, std::make_shared<PostClause>()});
-        break;
-    default:
-        break;
+    clauses.emplace(Directive::createEntry(kind));
     }
     return *this;
 }

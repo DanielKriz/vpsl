@@ -50,32 +50,9 @@ public:
     /// @brief Clone method that provides unified interface over the copy ctor.
     Directive clone() const;
 
-    // TODO: this needs clean up
-    Directive(const Directive &other) : m_kind(other.m_kind), m_tokenKind(other.m_tokenKind) {
+    Directive(const Directive &other) : m_kind(other.m_kind) {
         for (const auto clauseKind : other.getClauseKinds()) {
-            using enum ClauseKind;
-            switch (clauseKind) {
-            case Name:
-                m_clauses.insert({Name, std::make_shared<NameClause>()});
-                break;
-            case Type:
-                m_clauses.insert({Type, std::make_shared<TypeClause>()});
-                break;
-            case Prepend:
-                m_clauses.insert({Prepend, std::make_shared<PrependClause>()});
-                break;
-            case Append:
-                m_clauses.insert({Append, std::make_shared<AppendClause>()});
-                break;
-            case Pre:
-                m_clauses.insert({Pre, std::make_shared<PreClause>()});
-                break;
-            case Post:
-                m_clauses.insert({Post, std::make_shared<PostClause>()});
-                break;
-            default:
-                break;
-            }
+            m_clauses.insert(Directive::createEntry(clauseKind));
         }
     }
 
@@ -112,6 +89,9 @@ public:
     std::optional<E> getParameter() const noexcept;
 
 private:
+
+    static std::pair<ClauseKind, std::shared_ptr<IClause>> createEntry(ClauseKind kind);
+
     /// This class is constructible only by the provided builder type.
     Directive() = default;
 
