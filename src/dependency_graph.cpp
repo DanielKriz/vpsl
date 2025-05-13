@@ -106,6 +106,7 @@ void DependencyGraph::addEdge(const ValueType &from, const ValueType &to) {
     m_nodes.insert(from);
     m_nodes.insert(to);
     m_edges[from].insert(to);
+    m_edges[to];
     m_isAcyclicityValid = false;
 }
 
