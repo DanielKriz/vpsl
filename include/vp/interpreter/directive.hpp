@@ -98,7 +98,7 @@ private:
     /// @brief Constructor for simple directives without any clauses
     /// This is a simple optimization, so that we do not have to initialize a whole new builder
     /// for a directive that does not have, not should have, any clauses.
-    Directive(DirectiveKind kind, TokenKind tokenKind) : m_kind(kind), m_tokenKind(tokenKind) {}
+    Directive(DirectiveKind kind) : m_kind(kind) {}
 
     /// @brief Getter for a pointer to some particular clause.
     ///
@@ -114,8 +114,6 @@ private:
 
     /// @brief Kind of the directive. It is used as a direct identifier.
     DirectiveKind m_kind { DirectiveKind::Unknown };
-    /// @brief Kind of the token that denotes this directive.
-    TokenKind m_tokenKind { TokenKind::Unknown };
     /// @brief Map of clauses that are held by this directive instance.
     std::unordered_map<ClauseKind, std::shared_ptr<IClause>> m_clauses;
     /// @brief Set of clauses that are already populated.
@@ -157,8 +155,6 @@ class DirectiveBuilder final {
 public:
     /// @brief Sets the directive kind of directive.
     DirectiveBuilder &setDirectiveKind(DirectiveKind kind);
-    /// @brief Sets the token kind of directive that shall be searched during scanning.
-    DirectiveBuilder &setDirectiveToken(TokenKind kind);
     /// @brief Adds clause to the directive.
     DirectiveBuilder &addClause(ClauseKind kind, bool isRequired = false);
     /// @brief Copies already built (by this particular builder) directive.

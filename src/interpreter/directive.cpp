@@ -106,7 +106,6 @@ Directive Directive::create<DirectiveKind::Shader>() {
     static DirectiveBuilder builder;
     if (not builder.isFinished()) {
         builder.setDirectiveKind(DirectiveKind::Shader)
-               .setDirectiveToken(TokenKind::ShaderDirective)
                .addClause(ClauseKind::Name)
                .addClause(ClauseKind::Type)
                .addClause(ClauseKind::Prepend)
@@ -121,7 +120,6 @@ Directive Directive::create<DirectiveKind::Program>() {
     static DirectiveBuilder builder;
     if (not builder.isFinished()) {
         builder.setDirectiveKind(DirectiveKind::Program)
-               .setDirectiveToken(TokenKind::ProgramDirective)
                .addClause(ClauseKind::Name)
                // TODO
                // .addClause(ClauseKind::Shaders)
@@ -134,12 +132,12 @@ Directive Directive::create<DirectiveKind::Program>() {
 
 template <>
 Directive Directive::create<DirectiveKind::Load>() {
-    return { DirectiveKind::Load, TokenKind::LoadDirective };
+    return { DirectiveKind::Load };
 }
 
 template <>
 Directive Directive::create<DirectiveKind::Texture>() {
-    return { DirectiveKind::Texture, TokenKind::TextureDirective };
+    return { DirectiveKind::Texture };
 }
 
 template <>
@@ -150,45 +148,41 @@ Directive Directive::create<DirectiveKind::Include>() {
                .addClause(ClauseKind::Path, true);
         return builder.buildAndCopy();
     } 
+    return builder.copy();
 }
 
 template <>
 Directive Directive::create<DirectiveKind::FrameBuffer>() {
-    return { DirectiveKind::FrameBuffer, TokenKind::FrameBufferDirective };
+    return { DirectiveKind::FrameBuffer };
 }
 
 template <>
 Directive Directive::create<DirectiveKind::ResourceStore>() {
-    return { DirectiveKind::ResourceStore, TokenKind::ResourceStoreDirective };
+    return { DirectiveKind::ResourceStore };
 }
 
 template <>
 Directive Directive::create<DirectiveKind::CopyIn>() {
-    return { DirectiveKind::CopyIn, TokenKind::CopyInDirective };
+    return { DirectiveKind::CopyIn };
 }
 
 template <>
 Directive Directive::create<DirectiveKind::Option>() {
-    return { DirectiveKind::Option, TokenKind::OptionDirective };
+    return { DirectiveKind::Option };
 }
 
 template <>
 Directive Directive::create<DirectiveKind::Begin>() {
-    return { DirectiveKind::Begin, TokenKind::BeginDirective };
+    return { DirectiveKind::Begin };
 }
 
 template <>
 Directive Directive::create<DirectiveKind::End>() {
-    return { DirectiveKind::End, TokenKind::EndDirective };
+    return { DirectiveKind::End };
 }
 
 DirectiveBuilder &DirectiveBuilder::setDirectiveKind(DirectiveKind kind) {
     m_directive.m_kind = kind;
-    return *this;
-}
-
-DirectiveBuilder &DirectiveBuilder::setDirectiveToken(TokenKind kind) {
-    m_directive.m_tokenKind = kind;
     return *this;
 }
 
