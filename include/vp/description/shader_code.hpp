@@ -55,6 +55,8 @@ inline std::unordered_map<std::string_view, ShaderCodeKind> utils::StringToEnumM
 
 class ShaderCode final {
 public:
+    ShaderCode() = default;
+    explicit ShaderCode(std::string name) : m_name(std::move(name)) {};
 
     void addLine(std::string line) { m_lines.emplace_back(std::move(line)); }
     void addToPrependSet(ShaderCode &other);
