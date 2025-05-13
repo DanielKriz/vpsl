@@ -81,4 +81,10 @@ TEST_CASE("Adding dependencies to a shader add them to the store") {
     CHECK(store.contains("B"));
 }
 
+TEST_CASE("Insertion of already present shader does nothing") {
+    auto store = ShaderCodeStore{};
+    auto *code = store.emplace("shader");
+    CHECK(store.emplace("shader") == code);
+}
+
 }
