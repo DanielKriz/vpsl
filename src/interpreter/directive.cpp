@@ -62,6 +62,11 @@ void Directive::populateClauses(const std::vector<Token> &tokens) {
         }
         m_populated.insert(kind);
     }
+    for (const ClauseKind clause : m_required) {
+        if (not m_populated.contains(clause)) {
+            throw std::runtime_error(fmt::format("Required clause {} is not populated!", clause));
+        }
+    }
 }
 
 Directive Directive::clone() const {
