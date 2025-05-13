@@ -57,6 +57,7 @@ target_link_libraries(
     glslang-default-resource-limits
     SDL2_image::SDL2_image
     SDL2::SDL2
+    spdlog::spdlog
 )
 doctest_discover_tests(${test_exe_name})
 message(STATUS "Creating test executable '${test_exe_name}' - Done")
