@@ -3,7 +3,10 @@
 namespace vp::desc {
 
 ShaderCode *ShaderCodeStore::emplace(const std::string &nameOfShader) {
-    auto retval = m_shaderCodes.insert({nameOfShader, {}});
+    if (auto shaderCode = m_shaderCodes.find(nameOfShader); shaderCode != m_shaderCodes.end()) {
+        return &shaderCode->second;
+    }
+    auto retval = m_shaderCodes.insert({nameOfShader, ShaderCode{nameOfShader}});
     return &retval.first->second;
 }
 
