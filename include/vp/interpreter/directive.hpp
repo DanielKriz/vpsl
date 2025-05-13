@@ -35,7 +35,7 @@ public:
     /// By default it only throws an error, because it should be implemented with template
     /// specialization.
     template <DirectiveKind K>
-    [[nodiscard]] static Directive create() { throw std::runtime_error("not implemented!"); }
+    [[nodiscard]] static Directive create();
 
     /// @brief Getter for directive's kind
     [[nodiscard]] DirectiveKind getDirectiveKind() const noexcept;
