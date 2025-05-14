@@ -61,6 +61,14 @@ Shader::Shader(ShaderKind kind, const std::string &source, ShaderLanguageKind la
             return EShLangVertex;
         case Fragment:
             return EShLangFragment;
+        case Geometry:
+            return EShLangGeometry;
+        case TesselationControl:
+            return EShLangTessControl;
+        case TesselationEvaluation:
+            return EShLangTessEvaluation;
+        case Compute:
+            return EShLangCompute;
         default:
             throw std::runtime_error("Unknown shader type found");
         }
