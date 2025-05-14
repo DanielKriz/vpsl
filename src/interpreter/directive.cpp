@@ -96,6 +96,12 @@ using enum ClauseKind;
         return { Draw, std::make_shared<DrawClause>() };
     case Path:
         return { Path, std::make_shared<PathClause>() };
+    case Enable:
+        return { Enable, std::make_shared<EnableClause>() };
+    case Persistent:
+        return { Persistent, std::make_shared<PersistentClause>() };
+    case Value:
+        return { Value, std::make_shared<ValueClause>() };
     default:
         throw std::runtime_error(fmt::format("Unsupported clause kind: {}", kind));
     }
@@ -168,7 +174,16 @@ Directive Directive::create<DirectiveKind::CopyIn>() {
 
 template <>
 Directive Directive::create<DirectiveKind::Option>() {
-    return { DirectiveKind::Option };
+    static DirectiveBuilder builder;
+    if (not builder.isFinished()) {
+        builder.setDirectiveKind(DirectiveKind::Option)
+               .addClause(ClauseKind::Type, true)
+               .addClause(ClauseKind::Enable)
+               .addClause(ClauseKind::Value)
+               .addClause(ClauseKind::Persistent);
+        return builder.buildAndCopy();
+    }
+    return builder.copy();
 }
 
 template <>

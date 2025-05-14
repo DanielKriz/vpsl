@@ -24,6 +24,9 @@ bool IClause::isClause(TokenKind kind) noexcept {
     case Mesh:
     case Shaders:
     case Draw:
+    case Persistent:
+    case Value:
+    case Enable:
         return true;
     default:
         return false;
@@ -68,6 +71,7 @@ bool ClauseBase::isValidClause(TokenIterator it, const TokenIterator &end) const
         throw std::runtime_error(fmt::format("Wrong clause type: '{}'", it->getLexeme()));
         return false;
     }
+
     ++it;
 
     if (it->getTokenKind() != TokenKind::LeftParen) {
@@ -165,6 +169,9 @@ std::ostream &operator<<(std::ostream &os, const vp::ClauseKind &kind) {
         case Draw: return "Draw";
         case Mesh: return "Mesh";
         case Shaders: return "Shaders";
+        case Persistent: return "Persistent";
+        case Value: return "Value";
+        case Enable: return "Enable";
         default:
             throw std::runtime_error("Unsupported clause kind for representation!");
         }

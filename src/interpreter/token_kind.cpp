@@ -28,6 +28,8 @@ std::ostream &operator<<(std::ostream &os, const TokenKind &kind) {
             case IncludeDirective: return "IncludeDirective";
             case Path: return "Path";
             case OptionDirective: return "OptionDirective";
+            case Enable: return "Enable";
+            case Persistent: return "Persistent";
             case TextureDirective: return "TextureDirective";
             case Format: return "Format";
             case LoadDirective: return "LoadDirective";

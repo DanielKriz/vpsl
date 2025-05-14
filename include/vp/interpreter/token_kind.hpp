@@ -37,7 +37,11 @@ enum class TokenKind : u8 {
     
     IncludeDirective,
     Path,
+
     OptionDirective,
+    Enable,
+    Persistent,
+    Value,
 
     TextureDirective,
     Format,
@@ -76,6 +80,9 @@ inline utils::StringViewMap<TokenKind> utils::StringToEnumMap<TokenKind>::map = 
     { "end", TokenKind::EndDirective },
     { "begin", TokenKind::BeginDirective },
     { "option", TokenKind::OptionDirective },
+    { "enable", TokenKind::Enable },
+    { "persistent", TokenKind::Persistent },
+    { "value", TokenKind::Value },
     { "format", TokenKind::Format },
     { "path", TokenKind::Path },
     { "draw", TokenKind::Draw },
