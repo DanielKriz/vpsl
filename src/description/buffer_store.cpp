@@ -23,4 +23,7 @@ BufferDescription &BufferStore::operator[](const std::string &nameOfBuffer) {
 bool BufferStore::contains(const std::string &nameOfBuffer) const noexcept {
 }
 
+void BufferStore::clear() {
+}
+
 } // namespace vp::desc

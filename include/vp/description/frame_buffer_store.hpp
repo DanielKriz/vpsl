@@ -30,6 +30,7 @@ public:
     FrameBufferDescription &operator[](const std::string &nameOfFrameBuffer);
 
     [[nodiscard]] bool contains(const std::string &nameOfFrameBuffer) const noexcept;
+    void clear();
 private:
     FrameBufferStore() = default;
 

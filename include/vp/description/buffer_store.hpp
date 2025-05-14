@@ -30,6 +30,8 @@ public:
     BufferDescription &operator[](const std::string &nameOfBuffer);
 
     [[nodiscard]] bool contains(const std::string &nameOfBuffer) const noexcept;
+
+    void clear();
 private:
     BufferStore() = default;
 

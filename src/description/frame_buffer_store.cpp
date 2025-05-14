@@ -32,4 +32,7 @@ bool FrameBufferStore::contains(const std::string &nameOfFrameBuffer) const noex
 
 }
 
+void FrameBufferStore::clear() {
+}
+
 } // namespace vp::desc
