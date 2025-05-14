@@ -36,8 +36,9 @@ inline std::ostream &operator<<(std::ostream &os, const ShaderCodeKind kind) {
         case TesselationEvaluation: return "Tessellation Evaluation";
         case Geometry: return "Geometry";
         case Compute: return "Compute";
+        default:
+            throw std::runtime_error("Unknown shader kind for string repr");
         }
-        return "";
     }();
     return os << shaderRepr;
 }
