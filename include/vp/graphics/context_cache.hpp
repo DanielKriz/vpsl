@@ -53,6 +53,8 @@ public:
     /// @brief Enables blend test
     void setDstBlendFactor(BlendingFactor factor) noexcept;
 
+    [[nodiscard]] Options copyState() const noexcept;
+
 private:
     ContextCache() = default;
 
