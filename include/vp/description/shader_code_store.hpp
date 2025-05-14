@@ -49,10 +49,11 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const ShaderCodeStore &store);
 private:
-std::unordered_map<std::string, ShaderCode> m_shaderCodes;
-std::vector<ShaderCode> m_unnamedShaderCodes;
-DependencyGraph m_dependecies;
     ShaderCodeStore() = default;
+
+    std::unordered_map<std::string, ShaderCode> m_shaderCodes;
+    std::vector<ShaderCode> m_unnamedShaderCodes;
+    DependencyGraph m_dependecies;
 }; 
 
 } // namespace vp::desc
