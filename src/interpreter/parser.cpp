@@ -89,6 +89,10 @@ void Parser::addProgramDescription(desc::ProgramDescription &&desc) {
     m_programDescriptions.emplace_back(std::move(desc));
 }
 
+std::vector<desc::ProgramDescription> Parser::createExecutionSequenceDescription() {
+    return m_programDescriptions;
+}
+
 ShaderCode *Parser::shaderCodeFromDirective(Directive &dir, desc::ProgramDescriptionBuilder &builder) {
     auto name = dir.getParameter<ClauseKind::Name>();
     ShaderCode *pShaderCode {};
