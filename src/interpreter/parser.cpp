@@ -107,9 +107,10 @@ ShaderCode *Parser::shaderCodeFromDirective(Directive &dir, desc::ProgramDescrip
         pShaderCode = m_store.emplaceUnnamed();
     }
 
-    auto type = dir.getParameter<ShaderCodeKind>();
-    if (type.has_value()) {
-        pShaderCode->setKind(*type);
+    auto typeParam = dir.getParameter<ClauseKind::Type>();
+    if (typeParam.has_value()) {
+        auto type = *utils::mapStringToEnumKind<ShaderCodeKind>(*typeParam);
+        pShaderCode->setKind(type);
     } else {
         pShaderCode->setKind(ShaderCodeKind::Generic);
     }
