@@ -5,6 +5,7 @@
 
 #include <vp/description/options.hpp>
 #include <vp/graphics/context_options.hpp>
+#include <vp/singleton.hpp>
 #include <vp/types.hpp>
 #include <vp/utils.hpp>
 
@@ -19,8 +20,16 @@ namespace vp::gl {
 /// Otherwise, it simply does nothing.
 ///
 /// The default values of options come from OpenGL documentation.
-class ContextCache {
+class ContextCache : public Singleton<ContextCache> {
 public:
+    friend Singleton<ContextCache>;
+
+    ContextCache(const ContextCache &other) = delete;
+    ContextCache(ContextCache &&other) noexcept = delete;
+    ContextCache& operator=(const ContextCache &other) = delete;
+    ContextCache& operator=(ContextCache &&other) = delete;
+    ~ContextCache() = default;
+
     /// @brief Enables blend test
     void enableDepthTest(bool enable) noexcept;
     /// @brief Enables blend test
@@ -46,6 +55,7 @@ public:
 
 private:
     std::unique_ptr<Options> m_pCurrentOptions;
+    ContextCache() = default;
 };
 
 } // namespace vp::gl

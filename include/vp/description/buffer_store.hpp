@@ -12,6 +12,14 @@ namespace vp::desc {
 
 class BufferStore final : public Singleton<BufferStore> {
 public:
+    friend Singleton<BufferStore>;
+
+    BufferStore(const BufferStore &other) = delete;
+    BufferStore(BufferStore &&other) noexcept = delete;
+    BufferStore& operator=(const BufferStore &other) = delete;
+    BufferStore& operator=(BufferStore &&other) = delete;
+    ~BufferStore() = default;
+
     BufferDescription *emplace(const std::string &nameOfBuffer);
     void insert(const std::string &nameOfBuffer, BufferDescription &desc);
 
@@ -23,6 +31,8 @@ public:
 
     [[nodiscard]] bool contains(const std::string &nameOfBuffer) const noexcept;
 private:
+    BufferStore() = default;
+
     std::unordered_map<std::string, BufferDescription> m_descriptions;
 };
 

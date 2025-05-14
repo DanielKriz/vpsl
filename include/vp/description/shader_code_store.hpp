@@ -15,6 +15,14 @@ namespace vp::desc {
 /// between them, because they are kept as lazy values, unless needed.
 class ShaderCodeStore : public Singleton<ShaderCodeStore> {
 public:
+    friend Singleton<ShaderCodeStore>;
+
+    ShaderCodeStore(const ShaderCodeStore &other) = delete;
+    ShaderCodeStore(ShaderCodeStore &&other) noexcept = delete;
+    ShaderCodeStore& operator=(const ShaderCodeStore &other) = delete;
+    ShaderCodeStore& operator=(ShaderCodeStore &&other) = delete;
+    ~ShaderCodeStore() = default;
+
     ShaderCode *emplace(const std::string &nameOfShader);
     ShaderCode *emplaceUnnamed();
 
@@ -44,6 +52,7 @@ private:
 std::unordered_map<std::string, ShaderCode> m_shaderCodes;
 std::vector<ShaderCode> m_unnamedShaderCodes;
 DependencyGraph m_dependecies;
+    ShaderCodeStore() = default;
 }; 
 
 } // namespace vp::desc

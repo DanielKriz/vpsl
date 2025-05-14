@@ -12,6 +12,14 @@ namespace vp::desc {
 
 class FrameBufferStore final : public Singleton<FrameBufferStore> {
 public:
+    friend Singleton<FrameBufferStore>;
+
+    FrameBufferStore(const FrameBufferStore &other) = delete;
+    FrameBufferStore(FrameBufferStore &&other) noexcept = delete;
+    FrameBufferStore& operator=(const FrameBufferStore &other) = delete;
+    FrameBufferStore& operator=(FrameBufferStore &&other) = delete;
+    ~FrameBufferStore() = default;
+
     FrameBufferDescription *emplace(const std::string &nameOfFrameBuffer);
     void insert(const std::string &nameOfFrameBuffer, FrameBufferDescription &desc);
 
@@ -23,6 +31,8 @@ public:
 
     [[nodiscard]] bool contains(const std::string &nameOfFrameBuffer) const noexcept;
 private:
+    FrameBufferStore() = default;
+
     std::unordered_map<std::string, FrameBufferDescription> m_descriptions;
 };
 
