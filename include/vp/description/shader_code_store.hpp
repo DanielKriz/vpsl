@@ -51,8 +51,10 @@ public:
 private:
     ShaderCodeStore() = default;
 
+    static constexpr u64 DEFAULT_NUMBER_OF_SHADERS = 256;
+
     std::unordered_map<std::string, ShaderCode> m_shaderCodes;
-    std::vector<ShaderCode> m_unnamedShaderCodes;
+    std::vector<ShaderCode> m_unnamedShaderCodes { DEFAULT_NUMBER_OF_SHADERS };
     DependencyGraph m_dependecies;
 }; 
 
