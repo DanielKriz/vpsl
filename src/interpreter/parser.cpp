@@ -123,7 +123,6 @@ ShaderCode *Parser::shaderCodeFromDirective(Directive &dir, desc::ProgramDescrip
     auto prependSet = dir.getParameters<ClauseKind::Prepend>();
     if (prependSet.has_value()) {
         for (const auto &shader : *prependSet) {
-            fmt::println("Prepending {}", shader);
             auto *code = m_store.emplace(shader);
             pShaderCode->addToPrependSet(*code);
         }
@@ -133,7 +132,6 @@ ShaderCode *Parser::shaderCodeFromDirective(Directive &dir, desc::ProgramDescrip
     auto appendSet = dir.getParameters<ClauseKind::Append>();
     if (appendSet.has_value()) {
         for (const auto &shader : *appendSet) {
-            fmt::println("Append {}", shader);
             auto *code = m_store.emplace(shader);
             pShaderCode->addToAppendSet(*code);
         }
