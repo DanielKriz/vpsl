@@ -38,4 +38,54 @@ void Program::populateUniforms() {
 
 }
 
+void Program::setDrawCommand(const DrawCommand &command) {
+    m_drawCommand = command;
+}
+
+void Program::draw() const {
+    // IF MESH
+    // IF DRAW
+    const auto &command = *m_drawCommand;
+    const i32 count = static_cast<i32>(command.count);
+    using enum DrawMode;
+    switch (command.mode) {
+    case Points:
+        glDrawArrays(GL_POINTS, 0, count);
+        break;
+    case LineStrip:
+        glDrawArrays(GL_LINE_STRIP, 0, count);
+        break;
+    case LineLoop:
+        glDrawArrays(GL_LINE_LOOP, 0, count);
+        break;
+    case Lines:
+        glDrawArrays(GL_LINES, 0, count);
+        break;
+    case LineStripAdjacency:
+        glDrawArrays(GL_LINE_STRIP_ADJACENCY, 0, count);
+        break;
+    case LinesAdjacency:
+        glDrawArrays(GL_LINES_ADJACENCY, 0, count);
+        break;
+    case TriangleStrip:
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, count);
+        break;
+    case TriangleFan:
+        glDrawArrays(GL_TRIANGLE_FAN, 0, count);
+        break;
+    case Triangles:
+        glDrawArrays(GL_TRIANGLES, 0, count);
+        break;
+    case TriangleStripAdjacency:
+        glDrawArrays(GL_TRIANGLE_STRIP_ADJACENCY, 0, count);
+        break;
+    case TrianglesAdjacency:
+        glDrawArrays(GL_TRIANGLES_ADJACENCY, 0, count);
+        break;
+    case Patches:
+        glDrawArrays(GL_PATCHES, 0, count);
+        break;
+    }
+}
+
 } // namespace vp::gl::opengl

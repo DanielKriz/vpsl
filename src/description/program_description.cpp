@@ -51,4 +51,15 @@ const MeshDescription &ProgramDescription::getMeshDescription() const {
     return *m_pMesh;
 }
 
+const DrawCommand &ProgramDescription::getDrawCommand() const {
+    if (hasDrawCommand()) {
+        return *m_drawCommand;
+    }
+    throw std::runtime_error("Draw command is not defined for this program!");
+}
+
+bool ProgramDescription::hasDrawCommand() const noexcept {
+    return m_drawCommand.has_value();
+}
+
 } // namespace vp::desc

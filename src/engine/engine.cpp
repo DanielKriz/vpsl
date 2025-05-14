@@ -61,6 +61,7 @@ void Engine::handleExecutionSequence(const std::vector<desc::ProgramDescription>
         auto &currentNode = m_executionSequence.emplace_back();
         currentNode.setOptions(desc.getOptions());
         auto &currentProgram = currentNode.getProgram();
+        currentProgram.setDrawCommand(desc.getDrawCommand());
         std::vector<Shader> attachedShaders;
         for (auto *shaderCode : desc.getShaderCodes()) {
             attachedShaders.emplace_back(Shader::initFromShaderCode(*shaderCode));

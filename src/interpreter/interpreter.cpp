@@ -139,6 +139,26 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
                 programBuilder.setNameFromID();
             }
 
+            auto drawParam = directive->getParameters<ClauseKind::Draw>();
+            auto meshParam = directive->getParameter<ClauseKind::Mesh>();
+
+            if (not drawParam.has_value() and not meshParam.has_value()) {
+                throw std::runtime_error(
+                    "Each program has to have either draw or mesh clause defined"
+                );
+            }
+
+            if (drawParam.has_value()) {
+                const auto drawMode = utils::mapStringToEnumKind<DrawMode>((*drawParam)[0]);
+                const auto count = std::stoi((*drawParam)[1]);
+                if (not drawMode.has_value()) {
+                    throw std::runtime_error(
+                        fmt::format("Unknown draw mode: '{}'!", (*drawParam)[0])
+                    );
+                }
+                programBuilder.setDrawCommand(*drawMode, static_cast<u64>(count));
+            }
+
         } else if (directiveKind == DirectiveKind::Load) {
             if (parser.peekScope() != ParserScope::Global) {
                 throw std::runtime_error("Cannot use load directive outside of global scope");

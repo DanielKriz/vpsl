@@ -19,6 +19,11 @@ ProgramDescriptionBuilder &ProgramDescriptionBuilder::setNameFromID() {
     return *this;
 }
 
+ProgramDescriptionBuilder &ProgramDescriptionBuilder::setDrawCommand(DrawMode mode, u64 count) {
+    m_programDesc.m_drawCommand = { .mode = mode, .count = count };
+    return *this;
+}
+
 std::string ProgramDescriptionBuilder::createShaderName(const std::string &originalName) const {
     if (not m_isNameSet) {
         throw std::runtime_error(

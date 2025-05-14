@@ -11,6 +11,7 @@
 #include <vp/description/options.hpp>
 #include <vp/description/shader_code.hpp>
 #include <vp/graphics/context_options.hpp>
+#include <vp/graphics/draw_modes.hpp>
 #include <vp/resources/material_description.hpp>
 #include <vp/resources/mesh_description.hpp>
 #include <vp/resources/texture_description.hpp>
@@ -61,6 +62,9 @@ public:
     /// @returns A name of the program.
     [[nodiscard]] const MeshDescription &getMeshDescription() const;
 
+    [[nodiscard]] const DrawCommand &getDrawCommand() const;
+    [[nodiscard]] bool hasDrawCommand() const noexcept;
+
 private:
     /// @brief Name of the program.
     std::string m_name;
@@ -78,6 +82,8 @@ private:
     MeshDescription *m_pMesh;
     /// @brief Options that shall be applied to this program.
     Options m_options;
+
+    std::optional<DrawCommand> m_drawCommand;
 };
 
 /// @brief Builder for the ProgramDescription class.
@@ -130,6 +136,8 @@ public:
     ProgramDescriptionBuilder &addShaderCode(ShaderCode &code);
 
     ProgramDescriptionBuilder &setOptions(const Options &opts);
+
+    ProgramDescriptionBuilder &setDrawCommand(DrawMode mode, u64 count);
 
     /// @brief Sets the polygon mode to program's context.
     /// @param mode Polygon mode value.

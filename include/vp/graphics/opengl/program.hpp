@@ -15,6 +15,7 @@
 #include <vp/graphics/opengl/shader.hpp>
 #include <vp/graphics/opengl/uniform.hpp>
 #include <vp/graphics/opengl/texture.hpp>
+#include <vp/graphics/draw_modes.hpp>
 
 namespace vp::gl::opengl {
 
@@ -41,6 +42,7 @@ public:
         m_textures.emplace_back(textureName, texture);
     }
 
+#if 0
     void draw() {
 #if 0
         static enum32 textureUnits[] = { GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2 };
@@ -53,6 +55,9 @@ public:
 #endif
         glDrawArrays(GL_TRIANGLES, 0, 3);
     }
+#else
+    void draw() const;
+#endif
 
     Program &attachShader(Shader &shader);
     Program &detachShader(Shader &shader);
@@ -62,9 +67,12 @@ public:
     void populateAttributes();
     void populateUniforms();
 
+    void setDrawCommand(const DrawCommand &command);
+
 private:
     std::unordered_map<std::string, Uniform> m_uniformCache;
     std::vector<std::pair<std::string, Texture>> m_textures;
+    std::optional<DrawCommand> m_drawCommand;
 };
 
 } // namespace vp::gl::opengl

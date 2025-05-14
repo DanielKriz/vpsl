@@ -128,7 +128,9 @@ Directive Directive::create<DirectiveKind::Program>() {
         builder.setDirectiveKind(DirectiveKind::Program)
                .addClause(ClauseKind::Name)
                // TODO
-               // .addClause(ClauseKind::Shaders)
+               .addClause(ClauseKind::Shaders)
+               .addClause(ClauseKind::Draw)
+               .addClause(ClauseKind::Mesh)
                .addClause(ClauseKind::Pre)
                .addClause(ClauseKind::Post);
         return builder.buildAndCopy();
