@@ -83,6 +83,7 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
     ShaderCode globalShaderCode = ShaderCode{};
     ShaderCode *pCurrentShaderCode = &globalShaderCode;
     desc::ProgramDescriptionBuilder programBuilder;
+    Options localOptions = parser.getGlobalOptions();
 
     bool isLastDirectiveShader = false;
 
@@ -165,6 +166,7 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
             if (parser.peekScope() == ParserScope::Shader) {
                 throw std::runtime_error("Cannot use option directive inside of shader scope");
             }
+            parser.applyOptionDirective(*directive, localOptions);
 
         } else if (directiveKind == DirectiveKind::Begin) {
             if (isLastDirectiveShader and parser.peekScope() == ParserScope::Global) {
@@ -175,7 +177,9 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
 
         } else if (directiveKind == DirectiveKind::End) {
             if (parser.peekScope() == ParserScope::Program) {
+                programBuilder.setOptions(localOptions);
                 parser.addProgramDescription(programBuilder.build());
+                localOptions = parser.getGlobalOptions();
                 programBuilder.reset();
             }
             parser.popScope();

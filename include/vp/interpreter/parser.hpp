@@ -40,15 +40,23 @@ public:
 
     ShaderCode *shaderCodeFromDirective(Directive &dir, desc::ProgramDescriptionBuilder &builder);
 
+    Options &getGlobalOptions() noexcept { return m_globalOptions; }
 
     std::vector<desc::ProgramDescription> createExecutionSequenceDescription();
 
     void addProgramDescription(desc::ProgramDescription &desc);
     void addProgramDescription(desc::ProgramDescription &&desc);
 
+    void applyOptionDirective(Directive &dir, Options &localOpts);
+
 private:
+    static bool isOptionPersistent(Directive &dir);
+    void handleValueOption(Directive &dir, Options &localOpts);
+    void handleEnableOption(Directive &dir, Options &localOpts);
+
     vp::DependencyGraph m_programDependencyGraph;
 
+    Options m_globalOptions;
     desc::ShaderCodeStore &m_store;
     std::vector<desc::ProgramDescription> m_programDescriptions;
     ParserScope m_stage { ParserScope::Global };

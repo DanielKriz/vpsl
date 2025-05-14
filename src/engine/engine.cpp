@@ -59,6 +59,7 @@ void Engine::handleExecutionSequence(const std::vector<desc::ProgramDescription>
 
     for (const auto &desc : descs) {
         auto &currentNode = m_executionSequence.emplace_back();
+        currentNode.setOptions(desc.getOptions());
         auto &currentProgram = currentNode.getProgram();
         std::vector<Shader> attachedShaders;
         for (auto *shaderCode : desc.getShaderCodes()) {
@@ -90,6 +91,7 @@ void Engine::render(f32 deltaTime) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     for (auto &node : m_executionSequence) {
+        node.applyContext();
         node.getProgram().use();
         node.getProgram().draw();
     }

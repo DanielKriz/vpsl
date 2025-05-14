@@ -142,4 +142,176 @@ ShaderCode *Parser::shaderCodeFromDirective(Directive &dir, desc::ProgramDescrip
     return pShaderCode;
 }
 
+void Parser::applyOptionDirective(Directive &dir, Options &localOpts) {
+    auto type = *dir.getParameter<ClauseKind::Type>();
+    auto enabledParam = dir.getParameter<ClauseKind::Enable>();
+    auto valueParam = dir.getParameter<ClauseKind::Value>();
+
+    if (enabledParam.has_value() and valueParam.has_value()) {
+        throw std::runtime_error(
+            "Only one of value or enable clauses can be defined at the same time"
+        );
+    }
+
+    if (enabledParam.has_value()) {
+        handleEnableOption(dir, localOpts);
+    } else if (valueParam.has_value()) {
+        handleValueOption(dir, localOpts);
+    } else {
+        throw std::runtime_error("Either value or enabled has to be defined for option!");
+    }
+}
+
+bool Parser::isOptionPersistent(Directive &dir) {
+    auto persistenParam = dir.getParameter<ClauseKind::Persistent>();
+    bool isPersistent = false;
+    if (persistenParam.has_value()) {
+        isPersistent = utils::stringToBool(
+            *dir.getParameter<ClauseKind::Persistent>()
+        );
+    }
+    return isPersistent;
+}
+
+void Parser::handleValueOption(Directive &dir, Options &localOpts) {
+    auto type = *dir.getParameter<ClauseKind::Type>();
+    auto enabledParam = dir.getParameter<ClauseKind::Enable>();
+    auto valueParam = dir.getParameter<ClauseKind::Value>();
+
+    const bool isPersistent = isOptionPersistent(dir);
+
+    if (type == "front_polygon_mode") {
+        const auto value = utils::mapStringToEnumKind<gl::PolygonMode>(*valueParam);
+        if (not value.has_value()) {
+            throw std::runtime_error(
+                fmt::format("Not supported option '{}' for front polygon mode",
+                *valueParam)
+            );
+        }
+        localOpts.frontFacePolygonMode = *value;
+        if (isPersistent) {
+            getGlobalOptions().frontFacePolygonMode = *value;
+        }
+    } else if (type == "back_polygon_mode") {
+        const auto value = utils::mapStringToEnumKind<gl::PolygonMode>(*valueParam);
+        if (not value.has_value()) {
+            throw std::runtime_error(
+                fmt::format("Not supported option '{}' for back polygon mode",
+                *valueParam)
+            );
+        }
+        localOpts.backFacePolygonMode = *value;
+        if (isPersistent) {
+            getGlobalOptions().backFacePolygonMode = *value;
+        }
+    } else if (type == "polygon_mode") {
+        const auto value = utils::mapStringToEnumKind<gl::PolygonMode>(*valueParam);
+        if (not value.has_value()) {
+            throw std::runtime_error(
+                fmt::format("Not supported option '{}' for back polygon mode",
+                *valueParam)
+            );
+        }
+        localOpts.backFacePolygonMode = *value;
+        localOpts.frontFacePolygonMode = *value;
+        if (isPersistent) {
+            getGlobalOptions().backFacePolygonMode = *value;
+        }
+    } else if (type == "culling_mode") {
+        const auto value = utils::mapStringToEnumKind<gl::CullingMode>(*valueParam);
+        if (not value.has_value()) {
+            throw std::runtime_error(
+                fmt::format("Not supported option '{}' for culling mode",
+                *valueParam)
+            );
+        }
+        localOpts.cullingMode = *value;
+        if (isPersistent) {
+            getGlobalOptions().cullingMode = *value;
+        }
+    } else if (type == "front_face_mode") {
+        const auto value = utils::mapStringToEnumKind<gl::FrontFaceMode>(*valueParam);
+        if (not value.has_value()) {
+            throw std::runtime_error(
+                fmt::format("Not supported option '{}' for front face mode",
+                *valueParam)
+            );
+        }
+        localOpts.frontFaceMode = *value;
+        if (isPersistent) {
+            getGlobalOptions().frontFaceMode = *value;
+        }
+    } else if (type == "src_blending_factor") {
+        const auto value = utils::mapStringToEnumKind<gl::BlendingFactor>(*valueParam);
+        if (not value.has_value()) {
+            throw std::runtime_error(
+                fmt::format("Not supported option '{}' for source blending mode",
+                *valueParam)
+            );
+        }
+        localOpts.srcBlendFactor = *value;
+        if (isPersistent) {
+            getGlobalOptions().srcBlendFactor = *value;
+        }
+    } else if (type == "dst_blending_factor") {
+        const auto value = utils::mapStringToEnumKind<gl::BlendingFactor>(*valueParam);
+        if (not value.has_value()) {
+            throw std::runtime_error(
+                fmt::format("Not supported option '{}' for destination blending mode",
+                *valueParam)
+            );
+        }
+        localOpts.dstBlendFactor = *value;
+        if (isPersistent) {
+            getGlobalOptions().dstBlendFactor = *value;
+        }
+    } else if (type == "depth_function") {
+        const auto value = utils::mapStringToEnumKind<gl::DepthFunction>(*valueParam);
+        if (not value.has_value()) {
+            throw std::runtime_error(
+                fmt::format("Not supported option '{}' for depth function",
+                *valueParam)
+            );
+        }
+        localOpts.depthFunction = *value;
+        if (isPersistent) {
+            getGlobalOptions().depthFunction = *value;
+        }
+    } else {
+        throw std::runtime_error("For this option the value clause is not defined");
+    }
+
+}
+
+void Parser::handleEnableOption(Directive &dir, Options &localOpts) {
+    auto type = *dir.getParameter<ClauseKind::Type>();
+    auto enabledParam = dir.getParameter<ClauseKind::Enable>();
+    auto valueParam = dir.getParameter<ClauseKind::Value>();
+
+    const bool isPersistent = isOptionPersistent(dir);
+
+    const auto isEnabled = utils::stringToBool(
+        *dir.getParameter<ClauseKind::Enable>()
+    );
+
+    if (type == "depth_test") {
+        localOpts.isDepthTestEnabled = isEnabled;
+        if (isPersistent) {
+            getGlobalOptions().isDepthTestEnabled = isEnabled;
+        }
+    } else if ( type != "blending") {
+        localOpts.isBlendingEnabled = isEnabled;
+        if (isPersistent) {
+            getGlobalOptions().isBlendingEnabled = isEnabled;
+        }
+    } else if (type != "face_culling") {
+        localOpts.isFaceCullingEnabled = isEnabled;
+        if (isPersistent) {
+            getGlobalOptions().isFaceCullingEnabled = isEnabled;
+        }
+    } else {
+        throw std::runtime_error("For this option the enabled clause is not defined");
+    }
+}
+
 } // namespace vp
