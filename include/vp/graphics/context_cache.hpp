@@ -40,7 +40,7 @@ public:
     /// @brief Enables blend test
     void setPolygonMode(PolygonMode mode) noexcept;
     /// @brief Enables blend test
-    void setPolygonMode(FrontFaceMode face, PolygonMode mode) noexcept;
+    void setPolygonMode(Face face, PolygonMode mode) noexcept;
 
     /// @brief Enables blend test
     void setCullingMode(CullingMode mode) noexcept;
