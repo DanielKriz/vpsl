@@ -129,6 +129,8 @@ public:
     /// @returns A reference to this builder.
     ProgramDescriptionBuilder &addShaderCode(ShaderCode &code);
 
+    ProgramDescriptionBuilder &setOptions(const Options &opts);
+
     /// @brief Sets the polygon mode to program's context.
     /// @param mode Polygon mode value.
     /// @returns A reference to this builder.

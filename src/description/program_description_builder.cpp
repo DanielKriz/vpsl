@@ -38,6 +38,11 @@ ProgramDescriptionBuilder &ProgramDescriptionBuilder::addShaderCode(ShaderCode &
     return *this;
 }
 
+ProgramDescriptionBuilder &ProgramDescriptionBuilder::setOptions(const Options &opts) {
+    m_programDesc.m_options = opts;
+    return *this;
+}
+
 ProgramDescriptionBuilder &ProgramDescriptionBuilder::setOption(gl::PolygonMode mode) {
     m_programDesc.m_options.frontFacePolygonMode = mode;
     m_programDesc.m_options.backFacePolygonMode = mode;
