@@ -54,8 +54,9 @@ public:
     void setDstBlendFactor(BlendingFactor factor) noexcept;
 
 private:
-    std::unique_ptr<Options> m_pCurrentOptions;
     ContextCache() = default;
+
+    std::unique_ptr<Options> m_pCurrentOptions { std::make_unique<Options>() };
 };
 
 } // namespace vp::gl
