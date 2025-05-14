@@ -10,6 +10,8 @@
 #include <vector>
 #include <iostream>
 
+#include <fmt/core.h>
+
 namespace vp {
 
 template <typename T>
@@ -74,6 +76,16 @@ std::optional<EnumKind> mapStringToEnumKind(const std::string_view &input) {
         return iter->second;
     }
     return {};
+}
+
+inline bool stringToBool(const std::string &str) {
+    if (str == "true") {
+        return true;
+    }
+    if (str == "false") {
+        return false;
+    }
+    throw std::runtime_error(fmt::format("Could not cast '{}' to boolean", str));
 }
 
 namespace debug {
