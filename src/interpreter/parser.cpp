@@ -95,7 +95,7 @@ std::vector<desc::ProgramDescription> Parser::createExecutionSequenceDescription
 
 ShaderCode *Parser::shaderCodeFromDirective(Directive &dir, desc::ProgramDescriptionBuilder &builder) {
     auto name = dir.getParameter<ClauseKind::Name>();
-    ShaderCode *pShaderCode {};
+    ShaderCode *pShaderCode { nullptr };
     if (name.has_value() and not name->empty()) {
         if (peekScope() == ParserScope::Global) {
             name = "global:" + *name;
