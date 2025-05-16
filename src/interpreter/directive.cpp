@@ -182,12 +182,28 @@ Directive Directive::create<DirectiveKind::Program>() {
 
 template <>
 Directive Directive::create<DirectiveKind::Load>() {
-    return { DirectiveKind::Load };
+    static DirectiveBuilder builder;
+    if (not builder.isFinished()) {
+        builder.setDirectiveKind(DirectiveKind::Load)
+               .addSubCommand(TokenKind::Texture)
+               .addSubCommand(TokenKind::Material)
+               .addSubCommand(TokenKind::Mesh)
+               .addClause(ClauseKind::Name, true)
+               .addClause(ClauseKind::Path, true);
+        return builder.buildAndCopy();
+    }
+    return builder.copy();
 }
 
 template <>
 Directive Directive::create<DirectiveKind::Texture>() {
-    return { DirectiveKind::Texture };
+    static DirectiveBuilder builder;
+    if (not builder.isFinished()) {
+        builder.setDirectiveKind(DirectiveKind::Texture)
+               .addClause(ClauseKind::Name, true);
+        return builder.buildAndCopy();
+    }
+    return builder.copy();
 }
 
 template <>
@@ -208,7 +224,13 @@ Directive Directive::create<DirectiveKind::FrameBuffer>() {
 
 template <>
 Directive Directive::create<DirectiveKind::ResourceStore>() {
-    return { DirectiveKind::ResourceStore };
+    static DirectiveBuilder builder;
+    if (not builder.isFinished()) {
+        builder.setDirectiveKind(DirectiveKind::ResourceStore)
+               .addClause(ClauseKind::Path, true);
+        return builder.buildAndCopy();
+    }
+    return builder.copy();
 }
 
 template <>

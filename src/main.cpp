@@ -12,6 +12,7 @@
 #include <vp/engine/engine.hpp>
 
 #include <vp/dependency_graph.hpp>
+#include <vp/resources/resource_loader.hpp>
 
 using namespace vp::types;
 
@@ -44,6 +45,7 @@ int main(i32 argc, char *argv[]) try {
     spdlog::info("Starting the engine phase");
     auto engine = vp::Engine();
     engine.handleExecutionSequence(execeutionSequenceDescription);
+    vp::ResourceStore::getInstance().waitForFinish();
     engine.run();
 
     spdlog::info("Exiting correctly");

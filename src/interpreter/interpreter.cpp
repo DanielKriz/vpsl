@@ -168,6 +168,61 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
                 throw std::runtime_error("Cannot use load directive outside of global scope");
             }
 
+            const auto name = *directive->getParameter<ClauseKind::Name>();
+            const auto subcommand = directive->getSubCommand();
+            const auto path = *directive->getParameter<ClauseKind::Path>();
+
+            spdlog::debug("Encountered loading with: {}, {}, {}", name, subcommand, path);
+
+            if (subcommand == TokenKind::Texture) {
+                ResourceStore::getInstance().addTexture(name, path);
+            } else if (subcommand == TokenKind::Material) {
+                ResourceStore::getInstance().addMaterial(name, path);
+            } else if (subcommand == TokenKind::Mesh) {
+                ResourceStore::getInstance().addMesh(name, path);
+            } else {
+                throw std::runtime_error(
+                    fmt::format("Unhandled load subcommand: '{}'", subcommand)
+                );
+            }
+
+        } else if (directiveKind == DirectiveKind::Texture) {
+            spdlog::debug("found texture, bruh");
+
+            static auto textureUniformRe = utils::compileRegularExpression(
+                R"(\s*layout\(\a*binding\s*=\s*(\d+)\a*\))"
+            );
+
+            u32 location {};
+            std::getline(*m_pInputStream, line);
+            if (RE2::PartialMatch(line, *textureUniformRe, &location)) {
+                spdlog::info("Got uniform with location {}", location);
+                const auto name = *directive->getParameter<ClauseKind::Name>();
+                auto type = directive->getParameter<ClauseKind::Type>();
+                auto format = directive->getParameter<ClauseKind::Format>();
+                desc::TextureDescription desc;
+                desc.location = location;
+                if (type.has_value()) {
+                    desc.kind = *utils::mapStringToEnumKind<TextureKind>(*type);
+                }
+                if (format.has_value()) {
+                    desc.format = *utils::mapStringToEnumKind<TextureFormat>(*format);
+                }
+                desc.pTexture = &ResourceStore::getInstance().getTexture(name);
+                programBuilder.addTexture(desc);
+            } else {
+                throw std::runtime_error("Could not match location for texture uniform");
+            }
+
+            // line has to be then added to the correct shader
+            if (parser.peekScope() == ParserScope::Global) {
+                globalShaderCode.addLine(line);
+            } else if (parser.peekScope() == ParserScope::Program) {
+                throw std::runtime_error("There cannot be a lone statement in program scope");
+            } else {
+                pCurrentShaderCode->addLine(line);
+            }
+
         } else if (directiveKind == DirectiveKind::Include) {
             throw std::runtime_error("Include directive can exist only at the beggingin of the file");
 
@@ -180,6 +235,9 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
             if (parser.peekScope() != ParserScope::Global) {
                 throw std::runtime_error("Cannot use resource_store directive outside of global scope");
             }
+
+            const auto path = *directive->getParameter<ClauseKind::Path>();
+            ResourceStore::getInstance().addSearchPath(path);
 
         } else if (directiveKind == DirectiveKind::CopyIn) {
             if (parser.peekScope() != ParserScope::Shader) {
@@ -219,6 +277,8 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
     }
 
     store.composeAllShaders();
+
+    ResourceStore::getInstance().evaluateLazyResources();
 
     spdlog::debug("Interpretation finished");
     return parser.createExecutionSequenceDescription();
