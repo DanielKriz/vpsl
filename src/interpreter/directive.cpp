@@ -102,6 +102,8 @@ using enum ClauseKind;
         return { Persistent, std::make_shared<PersistentClause>() };
     case Value:
         return { Value, std::make_shared<ValueClause>() };
+    case Format:
+        return { Format, std::make_shared<FormatClause>() };
     default:
         throw std::runtime_error(fmt::format("Unsupported clause kind: {}", kind));
     }

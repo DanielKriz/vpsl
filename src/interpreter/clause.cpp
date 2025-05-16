@@ -27,6 +27,7 @@ bool IClause::isClause(TokenKind kind) noexcept {
     case Persistent:
     case Value:
     case Enable:
+    case Format:
         return true;
     default:
         return false;
@@ -172,6 +173,7 @@ std::ostream &operator<<(std::ostream &os, const vp::ClauseKind &kind) {
         case Persistent: return "Persistent";
         case Value: return "Value";
         case Enable: return "Enable";
+        case Format: return "Format";
         default:
             throw std::runtime_error("Unsupported clause kind for representation!");
         }

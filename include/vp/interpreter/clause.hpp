@@ -25,6 +25,7 @@ enum class ClauseKind : u8 {
     Enable = static_cast<enum32>(TokenKind::Enable),
     Persistent = static_cast<enum32>(TokenKind::Persistent),
     Value = static_cast<enum32>(TokenKind::Value),
+    Format = static_cast<enum32>(TokenKind::Format),
 };
 
 using TokenIterator = std::vector<Token>::const_iterator;
@@ -98,6 +99,7 @@ using NameClause = Clause<ClauseKind::Name>;
 using PathClause = Clause<ClauseKind::Path>;
 using TypeClause = Clause<ClauseKind::Type>;
 using MeshClause = Clause<ClauseKind::Mesh>;
+using FormatClause = Clause<ClauseKind::Format>;
 using EnableClause = Clause<ClauseKind::Enable>;
 using PersistentClause = Clause<ClauseKind::Persistent>;
 using ValueClause = Clause<ClauseKind::Value>;
