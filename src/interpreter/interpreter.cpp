@@ -1,7 +1,11 @@
-#include <vp/interpreter/interpreter.hpp>
-#include <spdlog/spdlog.h>
-
 #include <filesystem>
+
+#include <vp/interpreter/interpreter.hpp>
+#include <vp/resources/resource_kind.hpp>
+#include <vp/resources/resource_loader.hpp>
+#include <vp/resources/resource_store.hpp>
+
+#include <spdlog/spdlog.h>
 
 namespace vp {
 
