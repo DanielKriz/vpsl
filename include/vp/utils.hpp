@@ -3,12 +3,12 @@
 
 #include <algorithm> 
 #include <cctype>
+#include <iostream>
+#include <optional>
+#include <string>
 #include <type_traits>
 #include <unordered_map>
-#include <string>
-#include <optional>
 #include <vector>
-#include <iostream>
 
 #include <fmt/core.h>
 
