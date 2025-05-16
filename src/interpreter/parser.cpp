@@ -15,7 +15,7 @@ std::optional<Directive> Parser::createDirectiveFromToken(const Token &token) {
         return Directive::create<DirectiveKind::Begin>();
     case TokenKind::EndDirective:
         return Directive::create<DirectiveKind::End>();
-    case TokenKind::TextureDirective:
+    case TokenKind::Texture:
         return Directive::create<DirectiveKind::Texture>();
     case TokenKind::FrameBufferDirective:
         return Directive::create<DirectiveKind::FrameBuffer>();

@@ -43,7 +43,6 @@ enum class TokenKind : u8 {
     Persistent,
     Value,
 
-    TextureDirective,
     Format,
 
     LoadDirective,

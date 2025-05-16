@@ -105,7 +105,7 @@ TEST_CASE("Parser can create directives from tokens") {
         CHECK(dir->getDirectiveKind() == DirectiveKind::Load);
     }
     SUBCASE("Texture Directive") {
-        auto dir = Parser::createDirectiveFromToken(Token("", TokenKind::TextureDirective, 0));
+        auto dir = Parser::createDirectiveFromToken(Token("", TokenKind::Texture, 0));
         CHECK(dir->getDirectiveKind() == DirectiveKind::Texture);
     }
     SUBCASE("ResourceStore Directive") {
