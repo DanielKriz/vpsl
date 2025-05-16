@@ -85,6 +85,11 @@ TEST_CASE("Dependency Graph Cleaning") {
     CHECK_FALSE(dp.containsEdge("A", "C"));
 }
 
+TEST_CASE("Empty graph is implicitly acyclic") {
+    DependencyGraph dp;
+    CHECK(dp.isAcyclic());
+}
+
 TEST_CASE("Topology Sort of single node graph is said node") {
     DependencyGraph dp;
     dp.addNode("A");
