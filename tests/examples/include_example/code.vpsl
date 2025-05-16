@@ -1,6 +1,6 @@
 #version 450 core
 
-#pragma vp program name(main)
+#pragma vp program name(main) draw(triangles, 3)
 #pragma vp begin
 
 #pragma vp shader name(main_vs) type(vertex)

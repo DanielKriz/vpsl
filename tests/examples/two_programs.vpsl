@@ -11,7 +11,7 @@ float double_it(float val) { return val * 2.0f; }
 
 float h() { return 0.5f; }
 
-#pragma vp program name(main)
+#pragma vp program name(main) draw(triangles, 3)
 #pragma vp begin
 
 #pragma vp shader name(main_vs) type(vertex) prepend(global:other)
@@ -35,7 +35,7 @@ void main() { color = vec4(1.0f, 0.0f, 0.0f, 1.0f); }
 #pragma vp end // main_fs
 #pragma vp end // main
 
-#pragma vp program name(the_second)
+#pragma vp program name(the_second) draw(line_loop, 3)
 #pragma vp begin
 
 #pragma vp shader name(main_vs) type(vertex) prepend(global:included)
