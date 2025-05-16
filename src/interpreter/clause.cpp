@@ -92,7 +92,9 @@ bool ClauseBase::isValidClause(TokenIterator it, const TokenIterator &end) const
             isExpectingParameter = true;
             break;
         default:
-            throw std::runtime_error("Wrong type of token inside a clause");
+            throw std::runtime_error(
+                fmt::format("Wrong type of token '{}' inside a clause", it->getTokenKind())
+            );
             return false;
         }
         ++it;
