@@ -1,4 +1,6 @@
 #include <vp/graphics/opengl/program.hpp>
+#include <vp/graphics/opengl/uniform.hpp>
+
 #include <fmt/core.h>
 
 namespace vp::gl::opengl {
@@ -38,11 +40,26 @@ void Program::populateUniforms() {
 
 }
 
+void Program::addTextureFromDescription(const desc::TextureDescription &desc) {
+    m_textures.emplace_back(Texture::createFromDescription(desc));
+}
+
+void Program::addTexture(Texture &texture) {
+    m_textures.push_back(texture);
+}
+
 void Program::setDrawCommand(const DrawCommand &command) {
     m_drawCommand = command;
 }
 
 void Program::draw() const {
+
+    for (u32 i = 0u; i < m_textures.size(); ++i) {
+        glBindTextureUnit(m_textures[i].getLocation(), m_textures[i].getDescriptor());
+        auto uniform = Uniform("", m_textures[i].getLocation());
+        uniform.set<i32>(m_textures[i].getDescriptor());
+    }
+
     // IF MESH
     // IF DRAW
     const auto &command = *m_drawCommand;

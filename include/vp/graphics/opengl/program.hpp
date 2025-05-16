@@ -38,10 +38,6 @@ public:
         return *this;
     }
 
-    void addTexture(std::string textureName, Texture texture) {
-        m_textures.emplace_back(textureName, texture);
-    }
-
 #if 0
     void draw() {
 #if 0
@@ -67,11 +63,14 @@ public:
     void populateAttributes();
     void populateUniforms();
 
+    void addTextureFromDescription(const desc::TextureDescription &desc);
+    void addTexture(Texture &texture);
+
     void setDrawCommand(const DrawCommand &command);
 
 private:
     std::unordered_map<std::string, Uniform> m_uniformCache;
-    std::vector<std::pair<std::string, Texture>> m_textures;
+    std::vector<Texture> m_textures;
     std::optional<DrawCommand> m_drawCommand;
 };
 

@@ -63,6 +63,7 @@ void Engine::handleExecutionSequence(const std::vector<desc::ProgramDescription>
         auto &currentProgram = currentNode.getProgram();
         currentProgram.setDrawCommand(desc.getDrawCommand());
         std::vector<Shader> attachedShaders;
+
         for (auto *shaderCode : desc.getShaderCodes()) {
             attachedShaders.emplace_back(Shader::initFromShaderCode(*shaderCode));
             currentProgram.attachShader(attachedShaders.back());
@@ -72,6 +73,10 @@ void Engine::handleExecutionSequence(const std::vector<desc::ProgramDescription>
 
         for (auto &shader : attachedShaders) {
             currentProgram.detachShader(shader);
+        }
+
+        for (const auto &textureDesc : desc.getTextures()) {
+            currentProgram.addTextureFromDescription(textureDesc);
         }
     }
 }
