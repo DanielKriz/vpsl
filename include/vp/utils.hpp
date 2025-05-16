@@ -11,6 +11,7 @@
 #include <vector>
 
 #include <fmt/core.h>
+#include <re2/re2.h>
 
 namespace vp {
 
@@ -87,6 +88,19 @@ inline bool stringToBool(const std::string &str) {
     }
     throw std::runtime_error(fmt::format("Could not cast '{}' to boolean", str));
 }
+
+[[nodiscard]] inline std::unique_ptr<RE2> compileRegularExpression(
+    const std::string &exprString,
+    RE2::CannedOptions opts = RE2::CannedOptions::DefaultOptions
+) {
+    auto pRe = std::make_unique<RE2>(exprString, opts);
+    if (not pRe->ok()) {
+        throw std::runtime_error(
+            fmt::format("Could not create regular expression because of: '{}'", pRe->error())
+        );
+    }
+    return pRe;
+};
 
 namespace debug {
 
