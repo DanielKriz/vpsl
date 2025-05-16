@@ -160,7 +160,7 @@ Directive Directive::create<DirectiveKind::Shader>() {
                .addClause(ClauseKind::Prepend)
                .addClause(ClauseKind::Append);
         return builder.buildAndCopy();
-    } 
+    }
     return builder.copy();
 }
 
@@ -170,14 +170,13 @@ Directive Directive::create<DirectiveKind::Program>() {
     if (not builder.isFinished()) {
         builder.setDirectiveKind(DirectiveKind::Program)
                .addClause(ClauseKind::Name)
-               // TODO
                .addClause(ClauseKind::Shaders)
                .addClause(ClauseKind::Draw)
                .addClause(ClauseKind::Mesh)
                .addClause(ClauseKind::Pre)
                .addClause(ClauseKind::Post);
         return builder.buildAndCopy();
-    } 
+    }
     return builder.copy();
 }
 
@@ -198,7 +197,7 @@ Directive Directive::create<DirectiveKind::Include>() {
         builder.setDirectiveKind(DirectiveKind::Include)
                .addClause(ClauseKind::Path, true);
         return builder.buildAndCopy();
-    } 
+    }
     return builder.copy();
 }
 
