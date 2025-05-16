@@ -3,8 +3,23 @@
 namespace vp::desc {
 
 ProgramDescriptionBuilder &ProgramDescriptionBuilder::addTexture(TextureDescription &desc) {
-    m_programDesc.m_textures.push_back(&desc);
+    m_programDesc.m_textures.push_back(desc);
     return *this;
+}
+
+ProgramDescriptionBuilder &ProgramDescriptionBuilder::addTexture(
+    u32 location,
+    Texture *pTexture
+) {
+    m_programDesc.m_textures.emplace_back(location, pTexture);
+    return *this;
+}
+
+ProgramDescriptionBuilder &ProgramDescriptionBuilder::addTexture(
+    u32 location,
+    Texture &texture
+) {
+    return addTexture(location, &texture);
 }
 
 ProgramDescriptionBuilder &ProgramDescriptionBuilder::setName(const std::string &name) {

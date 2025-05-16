@@ -6,8 +6,8 @@ const std::string &ProgramDescription::getName() const noexcept {
     return m_name;
 }
 
-const std::vector<TextureDescription *> &
-ProgramDescription::getTextureDescriptions() const noexcept {
+const std::vector<TextureDescription> &
+ProgramDescription::getTextures() const noexcept {
     return m_textures;
 }
 

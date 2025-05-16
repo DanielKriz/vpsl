@@ -44,7 +44,7 @@ TEST_CASE("After construction the name attribute is empty") {
 
 TEST_CASE("After construction the textures attribute is empty") {
     const auto desc = ProgramDescription{};
-    CHECK(desc.getTextureDescriptions().empty());
+    CHECK(desc.getTextures().empty());
 }
 
 TEST_CASE("After construction the materials attribute is empty") {

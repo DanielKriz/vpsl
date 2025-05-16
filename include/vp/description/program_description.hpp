@@ -10,11 +10,12 @@
 #include <vp/description/frame_buffer_store.hpp>
 #include <vp/description/options.hpp>
 #include <vp/description/shader_code.hpp>
+#include <vp/description/texture_description.hpp>
 #include <vp/graphics/context_options.hpp>
 #include <vp/graphics/draw_modes.hpp>
 #include <vp/resources/material_description.hpp>
 #include <vp/resources/mesh_description.hpp>
-#include <vp/resources/texture_description.hpp>
+#include <vp/resources/texture.hpp>
 #include <vp/types.hpp>
 
 namespace vp::desc {
@@ -36,7 +37,7 @@ public:
     [[nodiscard]] const std::string &getName() const noexcept;
     /// @brief Getter for the name of a program.
     /// @returns A name of the program.
-    [[nodiscard]] const std::vector<TextureDescription *> &getTextureDescriptions() const noexcept;
+    [[nodiscard]] const std::vector<TextureDescription> &getTextures() const noexcept;
     /// @brief Getter for the name of a program.
     /// @returns A name of the program.
     [[nodiscard]] const std::vector<MaterialDescription *> &getMaterialDescriptions() const noexcept;
@@ -69,7 +70,7 @@ private:
     /// @brief Name of the program.
     std::string m_name;
     /// @brief A vector of pointer to textures that shall be stored in texture store
-    std::vector<TextureDescription *> m_textures;
+    std::vector<TextureDescription> m_textures;
     /// @brief A vector of pointers to materials that shall be stored in material store
     std::vector<MaterialDescription *> m_materials;
     /// @brief A vector of pointers to buffers that shall be stored in buffer store
@@ -95,6 +96,8 @@ public:
     /// @param desc Texture description that should be added to the program
     /// @returns A reference to this builder.
     ProgramDescriptionBuilder &addTexture(TextureDescription &desc);
+    ProgramDescriptionBuilder &addTexture(u32 location, Texture *pTexture);
+    ProgramDescriptionBuilder &addTexture(u32 location, Texture &texture);
 
     /// @brief Sets name of the program.
     /// @param name A name that should be set as the name of the program.

@@ -4,7 +4,7 @@
 #include <vp/description/buffer_description.hpp>
 #include <vp/description/frame_buffer_description.hpp>
 #include <vp/description/shader_code.hpp>
-#include <vp/resources/texture_description.hpp>
+#include <vp/resources/texture.hpp>
 #include <vp/resources/material_description.hpp>
 #include <vp/resources/mesh_description.hpp>
 
@@ -22,7 +22,7 @@ TEST_CASE("It is possible to build program description with the builder") {
     auto programDesc = builder.build();
     auto defaultOpts = Options{};
     CHECK(programDesc.getBufferDescriptions().empty());
-    CHECK(programDesc.getTextureDescriptions().empty());
+    CHECK(programDesc.getTextures().empty());
     CHECK(programDesc.getMaterialDescriptions().empty());
     CHECK(programDesc.getShaderCodes().empty());
     CHECK(programDesc.getOptions() == defaultOpts);
@@ -57,10 +57,26 @@ TEST_CASE("Creating a shader name with ID name") {
 
 TEST_CASE("Adding textures") {
     auto builder = ProgramDescriptionBuilder{};
-    auto desc = TextureDescription{};
-    CHECK_NOTHROW(builder.addTexture(desc));
-    auto programDesc = builder.build();
-    CHECK(programDesc.getTextureDescriptions()[0] == &desc);
+    SUBCASE("From Description") {
+        auto desc = TextureDescription {};
+        CHECK_NOTHROW(builder.addTexture(desc));
+        auto programDesc = builder.build();
+        CHECK(programDesc.getTextures()[0] == desc);
+    }
+    SUBCASE("From location and pointer") {
+        Texture tex { nullptr };
+        CHECK_NOTHROW(builder.addTexture(42, &tex));
+        auto programDesc = builder.build();
+        CHECK(programDesc.getTextures()[0].location == 42);
+        CHECK(programDesc.getTextures()[0].pTexture == &tex);
+    }
+    SUBCASE("From location and reference") {
+        Texture tex { nullptr };
+        CHECK_NOTHROW(builder.addTexture(42, tex));
+        auto programDesc = builder.build();
+        CHECK(programDesc.getTextures()[0].location == 42);
+        CHECK(programDesc.getTextures()[0].pTexture == &tex);
+    }
 }
 
 TEST_CASE("Adding Materials") {

@@ -10,6 +10,7 @@
 
 #include <vp/types.hpp>
 #include <vp/graphics/opengl/object.hpp>
+#include <vp/description/texture_description.hpp>
 
 namespace vp::gl::opengl {
 
@@ -31,36 +32,21 @@ enum class TextureKind : enum32 {
 // We need some kind of conversion from SDL
 // https://wiki.libsdl.org/SDL2/SDL_PixelFormatEnum
 
-class Texture : public opengl::Object {
+class Texture {
 public:
-    Texture() = default;
-    Texture(std::filesystem::path path) {
-        glGenTextures(1, &m_descriptor);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+#if 0
+    [[nodiscard]] const u8 *getData() const noexcept { return m_dataBuffer.data(); };
+#endif
+    [[nodiscard]] u32 getDescriptor() const noexcept;
+    [[nodiscard]] u32 getLocation() const noexcept;
 
-        glBindTexture(GL_TEXTURE_2D, m_descriptor);
-
-        SDL_Surface *tex_surface = IMG_Load(path.c_str());
-        if (tex_surface == nullptr) {
-            throw std::runtime_error("Could not load texture");
-        }
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex_surface->w, tex_surface->h, 0, GL_RGB, GL_UNSIGNED_BYTE, tex_surface->pixels);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        SDL_FreeSurface(tex_surface);
-        tex_surface = nullptr;
-    }
-    // [[nodiscard]] inline const TextureKind &getKind() const noexcept { return m_kind ; }
-    [[nodiscard]] inline const u8 *getData() const noexcept { return m_dataBuffer.data(); };
-    [[nodiscard]] const std::string &getName() const { return m_name; }
+    static Texture createFromDescription(const desc::TextureDescription &desc);
 private:
-    std::vector<u8> m_dataBuffer;
-    // TextureKind m_kind;
-    std::string m_name;
+    Texture();
+    u32 m_location { 0 };
+    std::shared_ptr<u32> m_pDescriptor;
 };
 
-} // namespace vp::gl
+} // namespace vp::gl::opengl
 
 #endif // VP_TEXTURE_OPENGL_HPP
