@@ -3,6 +3,18 @@
 
 namespace vp {
 
+Directive::Directive(const Directive &other)
+    : m_kind(other.m_kind), m_hasSubCommand(other.m_hasSubCommand)
+    , m_subCommand(other.m_subCommand) {
+    for (const auto clauseKind : other.getClauseKinds()) {
+        m_clauses.insert(Directive::createEntry(clauseKind));
+    }
+
+    for (const auto subcommandKind : other.getSubCommandTokens()) {
+        m_subCommandTokens.insert(subcommandKind);
+    }
+}
+
 DirectiveKind Directive::getDirectiveKind() const noexcept {
     return m_kind;
 }
@@ -22,10 +34,39 @@ bool Directive::areClausesCorrect(const std::vector<Token> &tokens) const noexce
     return {};
 }
 
+bool Directive::hasSubCommand() const noexcept {
+    return m_hasSubCommand;
+}
+
+TokenKind Directive::getSubCommand() const noexcept {
+    return m_subCommand;
+}
+
+const std::unordered_set<TokenKind> &Directive::getSubCommandTokens() const noexcept {
+    return m_subCommandTokens;
+}
+
 void Directive::populateClauses(const std::vector<Token> &tokens) {
     std::vector<TokenIterator> clausePositions;
 
-    for (auto it = tokens.begin(); it != tokens.end(); ++it) {
+    auto it = tokens.cbegin();
+
+    if (hasSubCommand()) {
+        if (m_subCommandTokens.contains(it->getTokenKind())) {
+            m_subCommand = it->getTokenKind();
+        } else {
+            throw std::runtime_error(
+                fmt::format(
+                    "Token '{}' is not a valid subcommand for directive '{}'",
+                    it->getTokenKind(),
+                    m_kind
+                )
+            );
+        }
+        ++it;
+    }
+
+    for (; it != tokens.cend(); ++it) {
         if (IClause::isClause(it->getTokenKind())) {
             clausePositions.push_back(it);
         }
@@ -202,6 +243,12 @@ Directive Directive::create<DirectiveKind::End>() {
 
 DirectiveBuilder &DirectiveBuilder::setDirectiveKind(DirectiveKind kind) {
     m_directive.m_kind = kind;
+    return *this;
+}
+
+DirectiveBuilder &DirectiveBuilder::addSubCommand(TokenKind kind) {
+    m_directive.m_hasSubCommand = true;
+    m_directive.m_subCommandTokens.insert(kind);
     return *this;
 }
 

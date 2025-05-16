@@ -54,12 +54,11 @@ public:
     /// @brief Clone method that provides unified interface over the copy ctor.
     Directive clone() const;
 
-    Directive(const Directive &other) : m_kind(other.m_kind) {
-        for (const auto clauseKind : other.getClauseKinds()) {
-            m_clauses.insert(Directive::createEntry(clauseKind));
-        }
-    }
+    [[nodiscard]] bool hasSubCommand() const noexcept;
+    [[nodiscard]] TokenKind getSubCommand() const noexcept;
+    [[nodiscard]] const std::unordered_set<TokenKind> &getSubCommandTokens() const noexcept;
 
+    Directive(const Directive &other);
     Directive(Directive &&other) noexcept = default;
     Directive &operator=(const Directive &other) = default;
     Directive &operator=(Directive &&other) noexcept = default;
@@ -128,6 +127,9 @@ private:
     /// one particular clause results in an error.
     std::unordered_set<ClauseKind> m_populated;
     std::unordered_set<ClauseKind> m_required;
+    bool m_hasSubCommand { false };
+    TokenKind m_subCommand { TokenKind::Unknown };
+    std::unordered_set<TokenKind> m_subCommandTokens;
 };
 
 template <ClauseKind K, typename T>
@@ -162,6 +164,8 @@ class DirectiveBuilder final {
 public:
     /// @brief Sets the directive kind of directive.
     DirectiveBuilder &setDirectiveKind(DirectiveKind kind);
+    /// @brief Sets the directive kind of directive.
+    DirectiveBuilder &addSubCommand(TokenKind kind);
     /// @brief Adds clause to the directive.
     DirectiveBuilder &addClause(ClauseKind kind, bool isRequired = false);
     /// @brief Copies already built (by this particular builder) directive.
