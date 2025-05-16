@@ -1,0 +1,2 @@
+#pragma vp resource_store path(./tests/examples)
+#pragma vp load texture name(example) path(wall.jpg)
