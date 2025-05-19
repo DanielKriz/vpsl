@@ -42,6 +42,8 @@ set_target_properties(
 )
 
 target_include_directories(${test_exe_name} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_compile_options(${test_exe_name} PRIVATE -coverage)
+target_link_options(${test_exe_name} PRIVATE -coverage)
 target_link_libraries(
     ${test_exe_name} PRIVATE 
     glad::glad
@@ -58,6 +60,7 @@ target_link_libraries(
     SDL2_image::SDL2_image
     SDL2::SDL2
     spdlog::spdlog
+    --coverage
 )
 doctest_discover_tests(${test_exe_name})
 message(STATUS "Creating test executable '${test_exe_name}' - Done")
