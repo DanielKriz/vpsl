@@ -5,6 +5,7 @@
 #include <vp/singleton.hpp>
 #include <vp/resources/load_request.hpp>
 #include <vp/resources/material_data.hpp>
+#include <vp/resources/mesh_data.hpp>
 #include <vp/resources/texture.hpp>
 
 #include <mutex>
@@ -14,8 +15,6 @@
 #include <queue>
 
 namespace vp {
-
-class Mesh{};
 
 class ResourceLoader;
 
@@ -41,7 +40,7 @@ public:
     [[nodiscard]] bool containsTexture(const std::string &name) const noexcept;
     [[nodiscard]] bool containsMaterial(const std::string &name) const noexcept;
 
-    Mesh &getMesh(const std::string &name);
+    MeshData &getMesh(const std::string &name);
     Texture &getTexture(const std::string &name);
     MaterialData &getMaterial(const std::string &name);
 
@@ -55,12 +54,12 @@ public:
 private:
     ResourceStore();
 
-    void storeMesh(const std::string &name, Mesh &&mesh);
+    void storeMesh(const std::string &name, MeshData &&mesh);
     void storeMaterial(const std::string &name, MaterialData &&material);
     void storeTexture(const std::string &name, Texture &&texture);
 
     std::unordered_map<std::string, Texture> m_textures;
-    std::unordered_map<std::string, Mesh> m_meshes;
+    std::unordered_map<std::string, MeshData> m_meshes;
     std::unordered_map<std::string, MaterialData> m_materials;
     std::mutex m_textureMutex;
     std::mutex m_meshMutex;

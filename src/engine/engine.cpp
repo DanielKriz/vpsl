@@ -1,3 +1,4 @@
+#include <vp/graphics/draw_modes.hpp>
 #include <vp/engine/engine.hpp>
 
 #include <spdlog/spdlog.h>
@@ -61,7 +62,19 @@ void Engine::handleExecutionSequence(const std::vector<desc::ProgramDescription>
         auto &currentNode = m_executionSequence.emplace_back();
         currentNode.setOptions(desc.getOptions());
         auto &currentProgram = currentNode.getProgram();
-        currentProgram.setDrawCommand(desc.getDrawCommand());
+        if (desc.hasMesh()) {
+            auto command = DrawCommand {
+                .mode = DrawMode::Triangles,
+                .count = static_cast<u64>(desc.getMeshDescription().getVertexCount()) 
+            };
+            currentProgram.setDrawCommand(command);
+            currentProgram.initMesh(
+                desc.getMeshDescription().getVertices(),
+                desc.getAttributeDescription()
+            );
+        } else {
+            currentProgram.setDrawCommand(desc.getDrawCommand());
+        }
         std::vector<Shader> attachedShaders;
 
         for (auto *shaderCode : desc.getShaderCodes()) {

@@ -21,6 +21,11 @@ ProgramDescription::getBufferDescriptions() const noexcept {
     return m_buffers;
 }
 
+const AttributeDescription &
+ProgramDescription::getAttributeDescription() const noexcept {
+    return m_attributeDesc;
+}
+
 const std::vector<ShaderCode *> &ProgramDescription::getShaderCodes() const noexcept {
     return m_shaderCodes;
 }
@@ -44,7 +49,7 @@ const FrameBufferDescription &ProgramDescription::getFrameBufferDescription() co
     return *m_pFrameBuffer;
 }
 
-const MeshDescription &ProgramDescription::getMeshDescription() const {
+const MeshData &ProgramDescription::getMeshDescription() const {
     if (m_pMesh == nullptr) {
         throw std::runtime_error("This program description does not have a mesh");
     }

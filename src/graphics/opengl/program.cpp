@@ -52,12 +52,24 @@ void Program::setDrawCommand(const DrawCommand &command) {
     m_drawCommand = command;
 }
 
+void Program::initMesh(
+    const std::vector<Vertex> &vertices,
+    const desc::AttributeDescription &desc
+) {
+    m_pMesh = std::make_shared<Mesh>(vertices, desc);
+}
+
 void Program::draw() const {
 
     for (u32 i = 0u; i < m_textures.size(); ++i) {
         glBindTextureUnit(m_textures[i].getLocation(), m_textures[i].getDescriptor());
         auto uniform = Uniform("", m_textures[i].getLocation());
         uniform.set<i32>(m_textures[i].getDescriptor());
+    }
+
+    if (m_pMesh != nullptr) {
+        m_pMesh->draw();
+        return;
     }
 
     // IF MESH

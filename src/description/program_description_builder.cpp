@@ -58,6 +58,18 @@ ProgramDescriptionBuilder &ProgramDescriptionBuilder::addShaderCode(ShaderCode &
     return *this;
 }
 
+ProgramDescriptionBuilder &ProgramDescriptionBuilder::addAttributeToMesh(
+    AttributeType type,
+    u32 location
+) {
+    if (not m_programDesc.hasMesh()) {
+        throw std::runtime_error("Adding attributes to program description without mesh");
+    }
+    m_programDesc.m_attributeDesc.addAttribute(type, location);
+
+    return *this;
+}
+
 ProgramDescriptionBuilder &ProgramDescriptionBuilder::setOptions(const Options &opts) {
     m_programDesc.m_options = opts;
     return *this;
@@ -139,7 +151,7 @@ ProgramDescriptionBuilder &ProgramDescriptionBuilder::addMaterial(
 }
 
 ProgramDescriptionBuilder &ProgramDescriptionBuilder::setMesh(
-    MeshDescription &desc
+    MeshData &desc
 ) {
     m_programDesc.m_pMesh = &desc;
     return *this;

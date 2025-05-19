@@ -161,6 +161,16 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
                     );
                 }
                 programBuilder.setDrawCommand(*drawMode, static_cast<u64>(count));
+            } else {
+                const auto meshName = *meshParam;
+
+                if (not ResourceStore::getInstance().containsMesh(meshName)) {
+                    throw std::runtime_error("Provided mesh for program is never loaded!");
+                }
+
+                programBuilder.setMesh(ResourceStore::getInstance().getMesh(meshName));
+
+                meshPtr = &ResourceStore::getInstance().getMesh(meshName);
             }
 
         } else if (directiveKind == DirectiveKind::Load) {

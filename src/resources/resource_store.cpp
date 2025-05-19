@@ -33,7 +33,7 @@ bool ResourceStore::containsMaterial(const std::string &name) const noexcept {
     return m_presentMaterials.contains(name);
 }
 
-Mesh &ResourceStore::getMesh(const std::string &name) {
+MeshData &ResourceStore::getMesh(const std::string &name) {
     auto mesh = m_meshes.find(name);
     if (mesh == m_meshes.end()) {
         throw std::runtime_error(
@@ -151,9 +151,14 @@ void ResourceStore::clear() {
     m_searchPaths.emplace(".");
 }
 
-void ResourceStore::storeMesh(const std::string &name, Mesh &&mesh) {
+void ResourceStore::storeMesh(const std::string &name, MeshData &&mesh) {
     spdlog::debug("Storing mesh with name: '{}'", name);
-
+    auto entry = m_meshes.find(name);
+    if (entry != m_meshes.end()) {
+        entry->second.setVertices(mesh.getVertices());
+    } else {
+        m_meshes.emplace(name, mesh);
+    }
 }
 
 void ResourceStore::storeMaterial(const std::string &name, MaterialData &&material) {

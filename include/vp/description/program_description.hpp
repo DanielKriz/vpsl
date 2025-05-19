@@ -13,8 +13,8 @@
 #include <vp/description/texture_description.hpp>
 #include <vp/graphics/context_options.hpp>
 #include <vp/graphics/draw_modes.hpp>
-#include <vp/resources/mesh_description.hpp>
 #include <vp/resources/material_data.hpp>
+#include <vp/resources/mesh_data.hpp>
 #include <vp/resources/texture.hpp>
 #include <vp/types.hpp>
 
@@ -47,6 +47,9 @@ public:
     /// @brief Getter for the name of a program.
     /// @returns A name of the program.
     [[nodiscard]] const std::vector<ShaderCode *> &getShaderCodes() const noexcept;
+
+
+    [[nodiscard]] const AttributeDescription &getAttributeDescription() const noexcept;
     /// @brief Getter for the name of a program.
     /// @returns A name of the program.
     [[nodiscard]] const Options &getOptions() const;
@@ -61,7 +64,7 @@ public:
     [[nodiscard]] const FrameBufferDescription &getFrameBufferDescription() const;
     /// @brief Getter for the name of a program.
     /// @returns A name of the program.
-    [[nodiscard]] const MeshDescription &getMeshDescription() const;
+    [[nodiscard]] const MeshData &getMeshDescription() const;
 
     [[nodiscard]] const DrawCommand &getDrawCommand() const;
     [[nodiscard]] bool hasDrawCommand() const noexcept;
@@ -78,11 +81,13 @@ private:
     /// @brief A vector of pointers to shader codes that shall be stored in shader code store
     std::vector<ShaderCode *> m_shaderCodes;
     /// @brief A pointer to framebuffer that shall be stored in framebuffer store
-    FrameBufferDescription *m_pFrameBuffer;
+    FrameBufferDescription *m_pFrameBuffer { nullptr };
     /// @brief A pointer to mesh that shall be stored in mesh store
-    MeshDescription *m_pMesh;
+    MeshData *m_pMesh { nullptr };
     /// @brief Options that shall be applied to this program.
     Options m_options;
+
+    AttributeDescription m_attributeDesc;
 
     std::optional<DrawCommand> m_drawCommand;
 };
@@ -131,7 +136,9 @@ public:
     /// @brief Sets a mesh to the program
     /// @param desc Mesh description that should be added to the program
     /// @returns A reference to this builder.
-    ProgramDescriptionBuilder &setMesh(MeshDescription &desc);
+    ProgramDescriptionBuilder &setMesh(MeshData &desc);
+
+    ProgramDescriptionBuilder &addAttributeToMesh(AttributeType type, u32 location);
 
     /// @brief Adds a shader code to the program.
     /// @param code shader code that should be added to the program

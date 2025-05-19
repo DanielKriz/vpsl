@@ -13,6 +13,7 @@
 #include <vp/graphics/opengl/object.hpp>
 #include <vp/graphics/opengl/utils.hpp>
 #include <vp/graphics/opengl/shader.hpp>
+#include <vp/graphics/opengl/mesh.hpp>
 #include <vp/graphics/opengl/uniform.hpp>
 #include <vp/graphics/opengl/texture.hpp>
 #include <vp/graphics/draw_modes.hpp>
@@ -63,6 +64,7 @@ public:
     void populateAttributes();
     void populateUniforms();
 
+    void initMesh(const std::vector<Vertex> &vertices, const desc::AttributeDescription &desc);
     void addTextureFromDescription(const desc::TextureDescription &desc);
     void addTexture(Texture &texture);
 
@@ -72,6 +74,7 @@ private:
     std::unordered_map<std::string, Uniform> m_uniformCache;
     std::vector<Texture> m_textures;
     std::optional<DrawCommand> m_drawCommand;
+    std::shared_ptr<Mesh> m_pMesh { nullptr };
 };
 
 } // namespace vp::gl::opengl

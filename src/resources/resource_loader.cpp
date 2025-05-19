@@ -24,6 +24,9 @@ void ResourceLoader::loadMaterial(const std::string &name, const std::filesystem
 }
 
 void ResourceLoader::loadMesh(const std::string &name, const std::filesystem::path &path) {
+    m_threadPool.enqueueJob([path, name]() {
+        loadMeshJob(name, path);
+    });
 }
 
 void ResourceLoader::waitForFinish() {
@@ -72,16 +75,16 @@ void ResourceLoader::loadMeshJob(
     const std::string &name,
     const std::filesystem::path &path
 ) {
-    std::cout << "LOADING MESH LIKE CRAZY" << std::endl;
-    std::cout << "FROM PATH " << path << std::endl;
+    spdlog::debug("Loading mesh '{}' found at {}", name, path.c_str());
 
-    const auto *pScene = assimp::importSceneFromFile(path);
+    assimp::Processor processor;
+    processor.importSceneFromFile(path);
 
-    if (pScene->mRootNode->mNumMeshes <= 0) {
-        throw std::runtime_error("Scene does not contain any meshes");
+    auto vertices = processor.processMesh();
+
     }
 
-    assimp::processMesh(pScene->mMeshes[pScene->mRootNode->mMeshes[0]], pScene);
+    ResourceStore::getInstance().storeMesh(name, MeshData(vertices));
 }
 
 } // namespace vp
