@@ -3,6 +3,7 @@
 namespace vp::desc {
 
 std::ostream &operator<<(std::ostream &os, const BufferDescription &desc) {
+    return os;
 }
 
 } // namespace vp::desc
