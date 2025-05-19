@@ -18,8 +18,8 @@ void ResourceLoader::loadTexture(const std::string &name, const std::filesystem:
 }
 
 void ResourceLoader::loadMaterial(const std::string &name, const std::filesystem::path &path) {
-    m_threadPool.enqueueJob([this, &path, &name]() {
-        loadMeshJob(name, path);
+    m_threadPool.enqueueJob([path, name]() {
+        loadMaterialJob(name, path);
     });
 }
 
