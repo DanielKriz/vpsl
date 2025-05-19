@@ -44,8 +44,8 @@ int main(i32 argc, char *argv[]) try {
 
     spdlog::info("Starting the engine phase");
     auto engine = vp::Engine();
-    engine.handleExecutionSequence(execeutionSequenceDescription);
     vp::ResourceStore::getInstance().waitForFinish();
+    engine.handleExecutionSequence(execeutionSequenceDescription);
     engine.run();
 
     spdlog::info("Exiting correctly");
