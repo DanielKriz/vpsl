@@ -74,7 +74,18 @@ void ResourceStore::addResource(
         const auto filepath = searchPath / path;
         if (std::filesystem::exists(filepath)) {
             if (isLazy) {
-                m_textures[name];
+                if (kind == Texture) {
+                    m_presentTextures.insert(name);
+                    m_textures[name];
+                } else if (kind == Mesh) {
+                    m_presentMeshes.insert(name);
+                    m_meshes[name];
+                } else if (kind == Material) {
+                    m_presentMaterials.insert(name);
+                    m_materials[name];
+                } else {
+                    throw std::runtime_error("Unknown resource kind to add to the store");
+                }
                 m_cachedRequests.emplace(kind, name, filepath);
                 spdlog::debug("enquing a job for '{}' at {}", name, filepath.c_str());
                 return;
