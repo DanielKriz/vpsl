@@ -91,6 +91,8 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
 
     bool isLastDirectiveShader = false;
 
+    MeshData *meshPtr;
+
     while (std::getline(*m_pInputStream, line)) {
         if (Lexer::isContinuous(line)) {
             std::string tmp;
