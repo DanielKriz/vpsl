@@ -1,0 +1,2 @@
+#pragma vp load mesh name(cube_mesh) path(tests/examples/cube.obj)
+#pragma vp load mesh name(sphere_mesh) path(tests/examples/sphere.obj)
