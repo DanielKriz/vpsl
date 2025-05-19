@@ -10,6 +10,10 @@ Directive::Directive(const Directive &other)
         m_clauses.insert(Directive::createEntry(clauseKind));
     }
 
+    for (const auto clauseKind : other.m_required) {
+        m_required.insert(clauseKind);
+    }
+
     for (const auto subcommandKind : other.getSubCommandTokens()) {
         m_subCommandTokens.insert(subcommandKind);
     }
