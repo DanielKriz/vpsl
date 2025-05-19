@@ -202,7 +202,7 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
             spdlog::debug("found texture, bruh");
 
             static auto textureUniformRe = utils::compileRegularExpression(
-                R"(\s*layout\(\a*binding\s*=\s*(\d+)\a*\))"
+                R"(\s*layout\s*\(\a*binding\s*=\s*(\d+)\a*\))"
             );
 
             u32 location {};
