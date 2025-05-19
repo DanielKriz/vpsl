@@ -132,7 +132,7 @@ ProgramDescriptionBuilder &ProgramDescriptionBuilder::setFrameBuffer(
 }
 
 ProgramDescriptionBuilder &ProgramDescriptionBuilder::addMaterial(
-    MaterialDescription &desc
+    MaterialData &desc
 ) {
     m_programDesc.m_materials.push_back(&desc);
     return *this;

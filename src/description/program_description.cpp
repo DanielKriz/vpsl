@@ -11,7 +11,7 @@ ProgramDescription::getTextures() const noexcept {
     return m_textures;
 }
 
-const std::vector<MaterialDescription *> &
+const std::vector<MaterialData *> &
 ProgramDescription::getMaterialDescriptions() const noexcept {
     return m_materials;
 }

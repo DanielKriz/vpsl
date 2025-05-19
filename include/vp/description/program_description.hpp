@@ -13,8 +13,8 @@
 #include <vp/description/texture_description.hpp>
 #include <vp/graphics/context_options.hpp>
 #include <vp/graphics/draw_modes.hpp>
-#include <vp/resources/material_description.hpp>
 #include <vp/resources/mesh_description.hpp>
+#include <vp/resources/material_data.hpp>
 #include <vp/resources/texture.hpp>
 #include <vp/types.hpp>
 
@@ -40,7 +40,7 @@ public:
     [[nodiscard]] const std::vector<TextureDescription> &getTextures() const noexcept;
     /// @brief Getter for the name of a program.
     /// @returns A name of the program.
-    [[nodiscard]] const std::vector<MaterialDescription *> &getMaterialDescriptions() const noexcept;
+    [[nodiscard]] const std::vector<MaterialData *> &getMaterialDescriptions() const noexcept;
     /// @brief Getter for the name of a program.
     /// @returns A name of the program.
     [[nodiscard]] const std::vector<BufferDescription *> &getBufferDescriptions() const noexcept;
@@ -72,7 +72,7 @@ private:
     /// @brief A vector of pointer to textures that shall be stored in texture store
     std::vector<TextureDescription> m_textures;
     /// @brief A vector of pointers to materials that shall be stored in material store
-    std::vector<MaterialDescription *> m_materials;
+    std::vector<MaterialData *> m_materials;
     /// @brief A vector of pointers to buffers that shall be stored in buffer store
     std::vector<BufferDescription *> m_buffers;
     /// @brief A vector of pointers to shader codes that shall be stored in shader code store
@@ -126,7 +126,7 @@ public:
     /// @brief Adds a material to the program.
     /// @param desc Material description that should be added to the program
     /// @returns A reference to this builder.
-    ProgramDescriptionBuilder &addMaterial(MaterialDescription &desc);
+    ProgramDescriptionBuilder &addMaterial(MaterialData &desc);
 
     /// @brief Sets a mesh to the program
     /// @param desc Mesh description that should be added to the program

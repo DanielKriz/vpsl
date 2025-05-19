@@ -53,7 +53,7 @@ Texture &ResourceStore::getTexture(const std::string &name) {
     return texture->second;
 }
 
-Material &ResourceStore::getMaterial(const std::string &name) {
+MaterialData &ResourceStore::getMaterial(const std::string &name) {
     auto material = m_materials.find(name);
     if (material == m_materials.end()) {
         throw std::runtime_error(
@@ -156,7 +156,7 @@ void ResourceStore::storeMesh(const std::string &name, Mesh &&mesh) {
 
 }
 
-void ResourceStore::storeMaterial(const std::string &name, Material &&material) {
+void ResourceStore::storeMaterial(const std::string &name, MaterialData &&material) {
     spdlog::debug("Storing material with name: '{}'", name);
 
 }

@@ -4,8 +4,8 @@
 #include <vp/description/buffer_description.hpp>
 #include <vp/description/frame_buffer_description.hpp>
 #include <vp/description/shader_code.hpp>
+#include <vp/resources/material_data.hpp>
 #include <vp/resources/texture.hpp>
-#include <vp/resources/material_description.hpp>
 #include <vp/resources/mesh_description.hpp>
 
 using namespace vp;
@@ -81,7 +81,7 @@ TEST_CASE("Adding textures") {
 
 TEST_CASE("Adding Materials") {
     auto builder = ProgramDescriptionBuilder{};
-    auto desc = MaterialDescription{};
+    auto desc = MaterialData{};
     CHECK_NOTHROW(builder.addMaterial(desc));
     auto programDesc = builder.build();
     CHECK(programDesc.getMaterialDescriptions()[0] == &desc);

@@ -4,6 +4,7 @@
 #include <vp/resources/resource_kind.hpp>
 #include <vp/singleton.hpp>
 #include <vp/resources/load_request.hpp>
+#include <vp/resources/material_data.hpp>
 #include <vp/resources/texture.hpp>
 
 #include <mutex>
@@ -15,7 +16,6 @@
 namespace vp {
 
 class Mesh{};
-class Material{};
 
 class ResourceLoader;
 
@@ -43,7 +43,7 @@ public:
 
     Mesh &getMesh(const std::string &name);
     Texture &getTexture(const std::string &name);
-    Material &getMaterial(const std::string &name);
+    MaterialData &getMaterial(const std::string &name);
 
     void addSearchPath(const std::filesystem::path &path);
     [[nodiscard]] const std::set<std::filesystem::path> &getSearchPaths() const noexcept;
@@ -56,12 +56,12 @@ private:
     ResourceStore();
 
     void storeMesh(const std::string &name, Mesh &&mesh);
-    void storeMaterial(const std::string &name, Material &&material);
+    void storeMaterial(const std::string &name, MaterialData &&material);
     void storeTexture(const std::string &name, Texture &&texture);
 
     std::unordered_map<std::string, Texture> m_textures;
     std::unordered_map<std::string, Mesh> m_meshes;
-    std::unordered_map<std::string, Material> m_materials;
+    std::unordered_map<std::string, MaterialData> m_materials;
     std::mutex m_textureMutex;
     std::mutex m_meshMutex;
     std::mutex m_materialMutex;
