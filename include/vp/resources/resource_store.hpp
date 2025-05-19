@@ -1,18 +1,18 @@
 #ifndef VP_RESOURCES_RESOURCE_STORE_HPP
 #define VP_RESOURCES_RESOURCE_STORE_HPP
 
-#include <vp/resources/resource_kind.hpp>
-#include <vp/singleton.hpp>
 #include <vp/resources/load_request.hpp>
 #include <vp/resources/material_data.hpp>
 #include <vp/resources/mesh_data.hpp>
+#include <vp/resources/resource_kind.hpp>
 #include <vp/resources/texture.hpp>
+#include <vp/singleton.hpp>
 
 #include <mutex>
+#include <queue>
+#include <set>
 #include <unordered_map>
 #include <unordered_set>
-#include <set>
-#include <queue>
 
 namespace vp {
 
