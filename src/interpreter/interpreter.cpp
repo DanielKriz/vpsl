@@ -254,6 +254,45 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
                 throw std::runtime_error("Cannot use copyin directive outside of shader scope");
             }
 
+            if (pCurrentShaderCode->getKind() != ShaderCodeKind::Vertex) {
+                throw std::runtime_error("CopyIn directive can be used only in Vertex shaders!");
+            }
+
+            const auto name = *directive->getParameter<ClauseKind::Name>();
+            const auto value = *directive->getParameter<ClauseKind::Value>();
+
+            spdlog::debug("Got copyin directive for {} with value {}", name, value);
+
+            const auto attr = utils::mapStringToEnumKind<AttributeType>(value);
+
+            if (not attr.has_value()) {
+                throw std::runtime_error("Invalid value for copyin directive");
+            }
+
+            u32 location {};
+            static auto attrLocationRe = utils::compileRegularExpression(
+                R"(\s*layout\s*\(\a*location\s*=\s*(\d+))"
+            );
+
+            std::getline(*m_pInputStream, line);
+            if (RE2::PartialMatch(line, *attrLocationRe, &location)) {
+                spdlog::debug("Got attribute location: {}", location);
+                programBuilder.addAttributeToMesh(*attr, location);
+            } else {
+                throw std::runtime_error(
+                    "Location has to specified for attributes using the copyin directive"
+                );
+            }
+
+            // line has to be then added to the correct shader
+            if (parser.peekScope() == ParserScope::Global) {
+                globalShaderCode.addLine(line);
+            } else if (parser.peekScope() == ParserScope::Program) {
+                throw std::runtime_error("There cannot be a lone statement in program scope");
+            } else {
+                pCurrentShaderCode->addLine(line);
+            }
+
         } else if (directiveKind == DirectiveKind::Option) {
             if (parser.peekScope() == ParserScope::Shader) {
                 throw std::runtime_error("Cannot use option directive inside of shader scope");

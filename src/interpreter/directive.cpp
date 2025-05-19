@@ -239,7 +239,14 @@ Directive Directive::create<DirectiveKind::ResourceStore>() {
 
 template <>
 Directive Directive::create<DirectiveKind::CopyIn>() {
-    return { DirectiveKind::CopyIn };
+    static DirectiveBuilder builder;
+    if (not builder.isFinished()) {
+        builder.setDirectiveKind(DirectiveKind::CopyIn)
+               .addClause(ClauseKind::Name, true)
+               .addClause(ClauseKind::Value, true);
+        return builder.buildAndCopy();
+    }
+    return builder.copy();
 }
 
 template <>
