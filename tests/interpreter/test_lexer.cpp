@@ -5,10 +5,10 @@
 
 using namespace vp;
 
-TEST_SUITE_BEGIN("Lexer");
+TEST_SUITE("Lexer") {
 
 TEST_CASE("it is possible to create an empty lexer") {
-    Lexer();
+    CHECK_NOTHROW(Lexer());
 }
 
 TEST_CASE("checking whether line is a directive") {
@@ -156,4 +156,40 @@ TEST_CASE("it should be possible to tokenize all keywords") {
     }
 }
 
-TEST_SUITE_END();
+TEST_CASE("The pragma and namespace do not contribute to the stream of tokens") {
+    auto lexer = Lexer{};
+
+    auto tokens = lexer.scan("#pragma vp begin");
+    CHECK(tokens->size() == 1);
+}
+
+TEST_CASE("Lexer ignore tokens after the //") {
+    auto lexer = Lexer{};
+
+    auto tokens = lexer.scan("#pragma vp begin // begin begin");
+    CHECK(tokens->size() == 1);
+}
+
+TEST_CASE("Lexing an empty line returns empty token stream") {
+    auto lexer = Lexer{};
+    auto tokens = lexer.scan("");
+    CHECK(tokens->empty());
+}
+
+TEST_CASE("Lexer is able to tokenize scopese") {
+    auto lexer = Lexer{};
+
+    auto tokens = lexer.scan(
+R"(#pragma vp begin
+{
+}
+)"
+);
+    CHECK(tokens->size() == 3);
+    auto &tokensUnwrapped = *tokens;
+    CHECK(tokensUnwrapped[0].getTokenKind() == TokenKind::BeginDirective);
+    CHECK(tokensUnwrapped[1].getTokenKind() == TokenKind::LeftBracket);
+    CHECK(tokensUnwrapped[2].getTokenKind() == TokenKind::RightBracket);
+}
+
+}
