@@ -19,14 +19,10 @@ std::ostream &operator<<(std::ostream &os, const AttributeType &type) {
 }
 
 u64 Attribute::elementCountFromType(AttributeType type) {
-#if 0
     if (type == AttributeType::UV) {
         return 2;
     }
     return 3;
-#else
-    return sizeof(gl::Vertex);
-#endif
 }
 
 u64 Attribute::offsetFromType(AttributeType type) {
