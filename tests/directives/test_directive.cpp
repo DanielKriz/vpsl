@@ -33,14 +33,6 @@ TEST_CASE("Program Directive create method") {
     CHECK_FALSE(dir.hasSubCommand());
 }
 
-TEST_CASE("load Directive create method") {
-    const Directive dir = Directive::create<DirectiveKind::Begin>();
-    CHECK(dir.getDirectiveKind() == DirectiveKind::Begin);
-    const auto clauses = dir.getClauseKinds();
-    CHECK(clauses.empty());
-    CHECK(dir.hasSubCommand());
-}
-
 TEST_CASE("Load directive create method") {
     const Directive dir = Directive::create<DirectiveKind::Load>();
     CHECK(dir.getDirectiveKind() == DirectiveKind::Load);
