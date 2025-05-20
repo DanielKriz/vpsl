@@ -1,5 +1,9 @@
 #include <vp/resources/material_data.hpp>
 
+#include <iostream>
+
+#include <fmt/core.h>
+
 namespace vp {
 MaterialData::MaterialData(
     glm::vec3 ambient,
@@ -48,6 +52,21 @@ const glm::vec3 &MaterialData::getDiffuse() const noexcept {
 
 f32 MaterialData::getShininess() const noexcept {
     return m_shininess;
+}
+
+std::ostream &operator<<(std::ostream &os, const MaterialData &data) {
+    os << "Material(";
+    const auto &ambient = data.getAmbient();
+    os << fmt::format("Ambient({}, {}, {}), ", ambient.x, ambient.y, ambient.z);
+    const auto &specular = data.getSpecular();
+    os << fmt::format("Specular({}, {}, {}), ", specular.x, specular.y, specular.z);
+    const auto &diffuse = data.getDiffuse();
+    os << fmt::format("Diffuse({}, {}, {}), ", diffuse.x, diffuse.y, diffuse.z);
+    const auto &emissive = data.getEmissive();
+    os << fmt::format("Emissive({}, {}, {}), ", emissive.x, emissive.y, emissive.z);
+    const auto shininess = data.getShininess();
+    os << fmt::format("Shininess({})", shininess);
+    return os << ")";
 }
 
 } // namespace vp
