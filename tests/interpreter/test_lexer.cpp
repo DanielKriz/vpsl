@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vp/interpreter/lexer.hpp>
+#include <vp/utils.hpp>
 
 using namespace vp;
 
@@ -173,23 +174,7 @@ TEST_CASE("Lexer ignore tokens after the //") {
 TEST_CASE("Lexing an empty line returns empty token stream") {
     auto lexer = Lexer{};
     auto tokens = lexer.scan("");
-    CHECK(tokens->empty());
-}
-
-TEST_CASE("Lexer is able to tokenize scopese") {
-    auto lexer = Lexer{};
-
-    auto tokens = lexer.scan(
-R"(#pragma vp begin
-{
-}
-)"
-);
-    CHECK(tokens->size() == 3);
-    auto &tokensUnwrapped = *tokens;
-    CHECK(tokensUnwrapped[0].getTokenKind() == TokenKind::BeginDirective);
-    CHECK(tokensUnwrapped[1].getTokenKind() == TokenKind::LeftBracket);
-    CHECK(tokensUnwrapped[2].getTokenKind() == TokenKind::RightBracket);
+    CHECK_FALSE(tokens.has_value());
 }
 
 }

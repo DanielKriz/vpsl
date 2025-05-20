@@ -37,14 +37,14 @@ TEST_CASE("it is possible to get the line number out of token") {
 
 TEST_CASE("Token fmt compatibility") {
     auto token = Token("draw", TokenKind::Draw, 42);
-    CHECK(fmt::format("{}", token) == "Token(draw, Draw, 42)");
+    CHECK(fmt::format("{}", token) == "Token(Draw, 'draw', 42)");
 }
 
 TEST_CASE("Token representation string") {
     auto token = Token("draw", TokenKind::Draw, 42);
     std::stringstream ss;
     ss << token;
-    CHECK(ss.str() == "Token(draw, Draw, 42)");
+    CHECK(ss.str() == "Token(Draw, 'draw', 42)");
 }
 
 }

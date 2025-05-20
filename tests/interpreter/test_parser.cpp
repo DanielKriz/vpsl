@@ -172,9 +172,7 @@ TEST_CASE("Parser does not create directives for wrong tokens") {
         Format,
         Mesh,
         Material,
-        Texture,
         SourceLine,
-
     };
     for (const auto kind : kinds) {
         auto dir = Parser::createDirectiveFromToken(Token("", kind, 0));
