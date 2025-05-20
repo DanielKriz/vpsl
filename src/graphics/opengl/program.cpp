@@ -72,8 +72,6 @@ void Program::draw() const {
         return;
     }
 
-    // IF MESH
-    // IF DRAW
     const auto &command = *m_drawCommand;
     const i32 count = static_cast<i32>(command.count);
     using enum DrawMode;
