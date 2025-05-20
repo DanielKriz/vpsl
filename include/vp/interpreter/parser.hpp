@@ -26,10 +26,8 @@ public:
 
     void pushScope();
     void pushGlobalShaderScope();
-    void pushScope(ParserScope stage);
     void popScope();
     ParserScope peekScope() const;
-    bool isScopeEmpty() const noexcept;
 
     Parser(const Parser &other) = delete;
     Parser &operator=(const Parser &other) = delete;

@@ -54,9 +54,6 @@ void Parser::pushScope() {
     }
 }
 
-void Parser::pushScope(ParserScope stage) {
-}
-
 void Parser::popScope() {
     using enum ParserScope;
     switch (m_stage) {
@@ -76,10 +73,6 @@ void Parser::popScope() {
 
 ParserScope Parser::peekScope() const {
     return m_stage;
-}
-
-bool Parser::isScopeEmpty() const noexcept {
-    return {};
 }
 
 void Parser::addProgramDescription(desc::ProgramDescription &desc) {
