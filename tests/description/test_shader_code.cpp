@@ -219,4 +219,69 @@ TEST_CASE("if shader dependencies are not composed, when composing, then they wi
     CHECK(obj3.isComposed());
 }
 
+TEST_CASE("Composed Shader is immediatelly returned") {
+    ShaderCode code{};
+    code.compose();
+    CHECK(code.isComposed());
+    CHECK_NOTHROW(code.compose());
+    CHECK(code.isComposed());
+}
+
+TEST_CASE("Setting a compute shader kind results in compute shader kind") {
+    ShaderCode code{};
+    code.setKind(ShaderCodeKind::Compute);
+    CHECK(code.getKind() == ShaderCodeKind::Compute);
+}
+
+TEST_CASE("Setting a fragment shader kind results in fragment shader kind") {
+    ShaderCode code{};
+    code.setKind(ShaderCodeKind::Fragment);
+    CHECK(code.getKind() == ShaderCodeKind::Fragment);
+}
+
+TEST_CASE("Setting a vertex shader kind results in vertex shader kind") {
+    ShaderCode code{};
+    code.setKind(ShaderCodeKind::Vertex);
+    CHECK(code.getKind() == ShaderCodeKind::Vertex);
+}
+
+TEST_CASE(
+    "Setting a tessellation control shader kind results in tessellation control shader kind"
+) {
+    ShaderCode code{};
+    code.setKind(ShaderCodeKind::TesselationControl);
+    CHECK(code.getKind() == ShaderCodeKind::TesselationControl);
+}
+
+TEST_CASE(
+    "Setting a tessellation evaluation shader kind results in tessellation evaluation shader kind"
+) {
+    ShaderCode code{};
+    code.setKind(ShaderCodeKind::TesselationEvaluation);
+    CHECK(code.getKind() == ShaderCodeKind::TesselationEvaluation);
+}
+
+TEST_CASE("Setting a generic shader kind results in generic shader kind") {
+    ShaderCode code{};
+    code.setKind(ShaderCodeKind::Generic);
+    CHECK(code.getKind() == ShaderCodeKind::Generic);
+}
+
+TEST_CASE("Setting a geometry shader kind results in geometry shader kind") {
+    ShaderCode code{};
+    code.setKind(ShaderCodeKind::Geometry);
+    CHECK(code.getKind() == ShaderCodeKind::Geometry);
+}
+
+TEST_CASE("Setting a Unknown shader kind results in unknown shader kind") {
+    ShaderCode code{};
+    code.setKind(ShaderCodeKind::Unkown);
+    CHECK(code.getKind() == ShaderCodeKind::Unkown);
+}
+
+TEST_CASE("Shader code's kind is implicitly unknown") {
+    ShaderCode code{};
+    CHECK(code.getKind() == ShaderCodeKind::Unkown);
+}
+
 }
