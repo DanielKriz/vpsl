@@ -25,7 +25,6 @@ TEST_CASE("It does support copy assignment") {
     ProgramDescription other = desc;
     CHECK(desc.getName() == other.getName());
     CHECK(desc.getOptions() == other.getOptions());
-    // Other attributes are empty
 }
 
 TEST_CASE("It does support move assignment") {
@@ -55,6 +54,17 @@ TEST_CASE("After construction the materials attribute is empty") {
 TEST_CASE("After construction the buffers attribute is empty") {
     const auto desc = ProgramDescription{};
     CHECK(desc.getBufferDescriptions().empty());
+}
+
+TEST_CASE("It is possible to get attribute description from program description") {
+    const auto desc = ProgramDescription{};
+    CHECK_NOTHROW(std::ignore = desc.getAttributeDescription());
+}
+
+TEST_CASE("After construction the it does not have any draw command") {
+    const auto desc = ProgramDescription{};
+    CHECK_FALSE(desc.hasDrawCommand());
+    CHECK_THROWS(std::ignore = desc.getDrawCommand());
 }
 
 TEST_CASE("After construction the shader codes attribute is empty") {
