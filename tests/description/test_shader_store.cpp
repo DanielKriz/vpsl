@@ -117,4 +117,57 @@ TEST_CASE_FIXTURE(
     CHECK(store.emplace("shader") == code);
 }
 
+TEST_CASE_FIXTURE(
+    ShaderCodeStoreFixture,
+    "Addition of dependencies to an empty shader does nothing"
+) {
+    store.addDependencies("", {"other"});
+    CHECK_FALSE(store.contains("other"));
+}
+
+TEST_CASE_FIXTURE(
+    ShaderCodeStoreFixture,
+    "It is possible to emplace unnamed shaders"
+) {
+    auto *code = store.emplaceUnnamed();
+    CHECK(std::is_same_v<decltype(code), vp::ShaderCode *>);
+}
+
+TEST_CASE_FIXTURE(
+    ShaderCodeStoreFixture,
+    "it is possible to compose all shaders"
+) {
+    auto *named = store.emplace("shader");
+    auto *unnamed = store.emplaceUnnamed();
+    CHECK_FALSE(named->isComposed());
+    CHECK_FALSE(unnamed->isComposed());
+    store.composeAllShaders();
+    CHECK(named->isComposed());
+    CHECK(unnamed->isComposed());
+}
+
+TEST_CASE_FIXTURE(
+    ShaderCodeStoreFixture,
+    "Composition of shaders fails if there are cyclic dependencies"
+) {
+    store.addDependencies("A", {"B"});
+    store.addDependencies("B", {"A"});
+    CHECK_THROWS(store.composeAllShaders());
+}
+
+TEST_CASE_FIXTURE(
+    ShaderCodeStoreFixture,
+    "Getting a shader that is not in the store throws"
+) {
+    CHECK_THROWS(store.getShaderCode("unknown"));
+}
+
+TEST_CASE_FIXTURE(
+    ShaderCodeStoreFixture,
+    "Getting a shader that is not in the const store throws"
+) {
+    const auto &constStore = store;
+    CHECK_THROWS(constStore.getShaderCode("unknown"));
+}
+
 }
