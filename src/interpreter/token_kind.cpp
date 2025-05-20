@@ -11,7 +11,7 @@ std::ostream &operator<<(std::ostream &os, const TokenKind &kind) {
             case RightBracket: return "RightBracket";
             case LeftParen: return "LeftParen";
             case RightParen: return "RightParen";
-            case Comma: return "Comman";
+            case Comma: return "Comma";
             case Pragma: return "Pragma";
             case Namespace: return "Namespace";
             case Identifier: return "Identifier";
@@ -40,6 +40,8 @@ std::ostream &operator<<(std::ostream &os, const TokenKind &kind) {
             case BeginDirective: return "BeginDirective";
             case EndDirective: return "EndDirective";
             case SourceLine: return "SourceLine";
+            case Value: return "Value";
+            case ResourceStoreDirective: return "ResourceStoreDirective";
             default:
                  throw std::runtime_error("Encountered Unknown Token!");
         }
