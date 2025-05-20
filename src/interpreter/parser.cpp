@@ -76,6 +76,7 @@ ParserScope Parser::peekScope() const {
 }
 
 void Parser::addProgramDescription(desc::ProgramDescription &desc) {
+    m_programDescriptions.push_back(desc);
 }
 
 void Parser::addProgramDescription(desc::ProgramDescription &&desc) {
