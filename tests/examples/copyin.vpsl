@@ -1,0 +1,41 @@
+#pragma vp load mesh name(cube_mesh) path(tests/examples/cube.obj)
+
+#version 450 core
+
+#pragma vp program name(main) mesh(cube_mesh)
+#pragma vp begin
+
+#pragma vp option type(face_culling) enable(true)
+#pragma vp option type(depth_test) enable(true)
+#pragma vp option type(depth_function) value(leq)
+
+#pragma vp shader name(main_vs) type(vertex)
+#pragma vp begin
+
+#pragma vp copyin name(cube_mesh) value(xyz)
+layout (location = 0) in vec3 u_position;
+
+layout (location = 1) out VS_OUT {
+    vec4 color;
+} vs_out;
+
+void main() {
+    gl_Position = vec4(u_position, 1.0f);
+    vs_out.color = vec4(u_position, 1.0f) + vec4(0.5, 0.5, 0.5, 0.0);
+}
+
+#pragma vp end // main_vs
+
+#pragma vp shader name(main_fs) type(fragment)
+#pragma vp begin
+
+layout (location = 0) in VS_OUT {
+    vec4 color;
+} fs_in;
+
+layout (location = 1) out vec4 color;
+
+void main() { color = fs_in.color; }
+
+#pragma vp end // main_fs
+#pragma vp end // main
