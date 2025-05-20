@@ -34,7 +34,6 @@ void ShaderCodeStore::addDependencies(const std::string &nameOfShader, const std
 }
 
 void ShaderCodeStore::composeAllShaders() {
-    m_dependecies.debugPrint();
     if (not m_dependecies.isAcyclic()) {
         throw std::runtime_error("There is a cyclic dependency between shaders!");
     }
