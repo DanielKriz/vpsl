@@ -150,6 +150,8 @@ TEST_CASE_FIXTURE(
     ShaderCodeStoreFixture,
     "Composition of shaders fails if there are cyclic dependencies"
 ) {
+    store.emplace("A");
+    store.emplace("B");
     store.addDependencies("A", {"B"});
     store.addDependencies("B", {"A"});
     CHECK_THROWS(store.composeAllShaders());
