@@ -24,10 +24,10 @@ const std::string &Token::getLexeme() const noexcept {
 
 std::ostream &operator<<(std::ostream &os, const vp::Token &token) {
     const auto repr = fmt::format(
-        "Token({}, {}, '{}')",
-        token.m_line,
+        "Token({}, '{}', {})",
         token.m_tokenKind,
-        token.m_lexeme
+        token.m_lexeme,
+        token.m_line
     );
     return os << repr;
 }
