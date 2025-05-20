@@ -33,8 +33,6 @@ public:
     [[nodiscard]] const glm::vec3 &getDiffuse() const noexcept;
     [[nodiscard]] f32 getShininess() const noexcept;
 
-    friend std::ostream &operator<<(std::ostream &os, const MaterialData &data);
-
 private:
     glm::vec3 m_ambient { glm::zero<glm::vec3>() };
     glm::vec3 m_specular { glm::zero<glm::vec3>() };
@@ -42,6 +40,8 @@ private:
     glm::vec3 m_emmisive { glm::zero<glm::vec3>() };
     f32 m_shininess { 0.0f };
 };
+
+std::ostream &operator<<(std::ostream &os, const MaterialData &data);
 
 } // namespace vp
 
