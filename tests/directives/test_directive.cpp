@@ -63,7 +63,7 @@ TEST_CASE("Include Directive create method") {
     CHECK(dir.getDirectiveKind() == DirectiveKind::Include);
     const auto clauses = dir.getClauseKinds();
     CHECK(clauses.size() == 1);
-    CHECK(clauses.contains(ClauseKind::Name));
+    CHECK(clauses.contains(ClauseKind::Path));
     CHECK_FALSE(dir.hasSubCommand());
 }
 
