@@ -1,12 +1,12 @@
 #include <doctest/doctest.h>
 
-#include <vp/description/program_description.hpp>
 #include <vp/description/buffer_description.hpp>
 #include <vp/description/frame_buffer_description.hpp>
+#include <vp/description/program_description.hpp>
 #include <vp/description/shader_code.hpp>
 #include <vp/resources/material_data.hpp>
+#include <vp/resources/mesh_data.hpp>
 #include <vp/resources/texture.hpp>
-#include <vp/resources/mesh_description.hpp>
 
 using namespace vp;
 using namespace vp::desc;
@@ -28,6 +28,7 @@ TEST_CASE("It is possible to build program description with the builder") {
     CHECK(programDesc.getOptions() == defaultOpts);
     CHECK_FALSE(programDesc.hasFrameBuffer());
     CHECK_FALSE(programDesc.hasMesh());
+    CHECK_FALSE(programDesc.hasDrawCommand());
 }
 
 TEST_CASE("Creating a shader name without program names throws") {
@@ -105,10 +106,20 @@ TEST_CASE("Adding Shader Codes") {
 
 TEST_CASE("Setting of a mesh") {
     auto builder = ProgramDescriptionBuilder{};
-    auto desc = MeshDescription{};
+    auto desc = MeshData{};
     CHECK_NOTHROW(builder.setMesh(desc));
     auto programDesc = builder.build();
-    // TODO: add some meaningfull check
+    CHECK(programDesc.hasMesh());
+    CHECK_NOTHROW(std::ignore = programDesc.getMeshDescription());
+}
+
+TEST_CASE("Setting a draw command") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.setDrawCommand(DrawMode::Lines, 42));
+    auto programDesc = builder.build();
+    auto cmd = programDesc.getDrawCommand();
+    CHECK(cmd.mode == DrawMode::Lines);
+    CHECK(cmd.count == 42);
 }
 
 TEST_CASE("Setting of a frame buffer") {
@@ -116,7 +127,123 @@ TEST_CASE("Setting of a frame buffer") {
     auto desc = FrameBufferDescription{};
     CHECK_NOTHROW(builder.setFrameBuffer(desc));
     auto programDesc = builder.build();
-    // TODO: add some meaningfull check
+    CHECK(programDesc.hasFrameBuffer());
+    CHECK_NOTHROW(std::ignore = programDesc.getFrameBufferDescription());
+}
+
+TEST_CASE("It is not possible to add attributes to a program that does not have a mesh assigned") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_THROWS(builder.addAttributeToMesh(AttributeType::Position, 0));
+}
+
+TEST_CASE("Setting mesh attribute") {
+    auto builder = ProgramDescriptionBuilder{};
+    auto desc = MeshData{};
+    builder.setMesh(desc);
+    CHECK_NOTHROW(builder.addAttributeToMesh(AttributeType::Position, 42));
+    auto programDesc = builder.build();
+
+    const auto &mesh = programDesc.getMeshDescription();
+    const auto &attrs = mesh.getAttributeDescription();
+    CHECK(attrs.getAttributes()[0].type == AttributeType::Position);
+    CHECK(attrs.getAttributes()[0].location == 42);
+}
+
+TEST_CASE("Setting options") {
+    auto builder = ProgramDescriptionBuilder{};
+    auto opts = Options{};
+    opts.isBlendingEnabled = true;
+    CHECK_NOTHROW(builder.setOptions(opts));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().isBlendingEnabled == true);
+}
+
+TEST_CASE("Setting polygon mode") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.setOption(gl::PolygonMode::Fill));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().frontFacePolygonMode == gl::PolygonMode::Fill);
+    CHECK(desc.getOptions().backFacePolygonMode == gl::PolygonMode::Fill);
+}
+
+TEST_CASE("Setting front face polygon mode") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.setOption(gl::Face::Front, gl::PolygonMode::Point));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().frontFacePolygonMode == gl::PolygonMode::Point);
+    CHECK(desc.getOptions().backFacePolygonMode == gl::PolygonMode::Fill);
+}
+
+TEST_CASE("Setting back face polygon mode") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.setOption(gl::Face::Back, gl::PolygonMode::Point));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().frontFacePolygonMode == gl::PolygonMode::Fill);
+    CHECK(desc.getOptions().backFacePolygonMode == gl::PolygonMode::Point);
+}
+
+TEST_CASE("Setting culling mode") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.setOption(gl::CullingMode::Front));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().cullingMode == gl::CullingMode::Front);
+}
+
+TEST_CASE("Setting culling mode") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.setOption(gl::FrontFaceMode::CW));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().frontFaceMode == gl::FrontFaceMode::CW);
+}
+
+TEST_CASE("Setting source blending factor") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.setOption(gl::BlendingFactor::SourceColor, true));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().srcBlendFactor == gl::BlendingFactor::SourceColor);
+    CHECK(desc.getOptions().dstBlendFactor == gl::BlendingFactor::Zero);
+}
+
+
+TEST_CASE("Setting source blending factor") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.setOption(gl::BlendingFactor::SourceColor, false));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().srcBlendFactor == gl::BlendingFactor::One);
+    CHECK(desc.getOptions().dstBlendFactor == gl::BlendingFactor::SourceColor);
+}
+
+TEST_CASE("Setting the Depth function") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.setOption(gl::DepthFunction::Never));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().depthFunction == gl::DepthFunction::Never);
+}
+
+TEST_CASE("Setting the enabling depth test") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.enableDepthTest(true));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().isDepthTestEnabled == true);
+}
+
+TEST_CASE("Setting the enabling blending") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.enableBlending(true));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().isBlendingEnabled == true);
+}
+
+TEST_CASE("Setting the enabling face culling") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.enableFaceCulling(true));
+    auto desc = builder.build();
+    CHECK(desc.getOptions().isFaceCullingEnabled == true);
+}
+
+TEST_CASE("Resetting the builder") {
+    auto builder = ProgramDescriptionBuilder{};
+    CHECK_NOTHROW(builder.reset());
 }
 
 }
