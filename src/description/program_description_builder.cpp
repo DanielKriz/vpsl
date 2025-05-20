@@ -164,6 +164,9 @@ ProgramDescriptionBuilder &ProgramDescriptionBuilder::reset() {
 
 ProgramDescription &&ProgramDescriptionBuilder::build() {
     m_isNameSet = false;
+    if (m_programDesc.hasMesh()) {
+        m_programDesc.m_pMesh->setAttributeDescription(m_programDesc.m_attributeDesc);
+    }
     return std::move(m_programDesc);
 }
 
