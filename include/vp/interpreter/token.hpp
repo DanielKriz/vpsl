@@ -15,6 +15,7 @@ namespace vp {
 class Token final {
 public:
     Token() = default;
+    Token(TokenKind kind);
     Token(std::string lexeme, TokenKind kind, u64 line);
 
     [[nodiscard]] TokenKind getTokenKind() const noexcept;

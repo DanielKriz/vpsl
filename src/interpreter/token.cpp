@@ -8,6 +8,8 @@ namespace vp {
 Token::Token(std::string lexeme, TokenKind kind, u64 line)
     : m_lexeme(std::move(lexeme)), m_tokenKind(kind), m_line(line) {};
 
+Token::Token(TokenKind kind) : Token("", kind, 0) {};
+
 TokenKind Token::getTokenKind() const noexcept {
     return m_tokenKind;
 }
