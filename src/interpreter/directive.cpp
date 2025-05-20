@@ -31,13 +31,6 @@ std::unordered_set<ClauseKind> Directive::getClauseKinds() const noexcept {
     return clauseKinds;
 }
 
-const std::unordered_set<ClauseKind> &Directive::getPopulatedClauses() const noexcept {
-}
-
-bool Directive::areClausesCorrect(const std::vector<Token> &tokens) const noexcept {
-    return {};
-}
-
 bool Directive::hasSubCommand() const noexcept {
     return m_hasSubCommand;
 }

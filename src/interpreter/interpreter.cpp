@@ -56,8 +56,6 @@ void Interpreter::resolveIncludes() {
             break;
         }
 
-        directive->areClausesCorrect(clauseTokens);
-
         directive->populateClauses(clauseTokens);
         auto pathValue = directive->getParameter<ClauseKind::Path>();
         if (not pathValue.has_value()) {

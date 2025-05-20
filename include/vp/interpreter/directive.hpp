@@ -45,10 +45,6 @@ public:
     [[nodiscard]] DirectiveKind getDirectiveKind() const noexcept;
     /// @brief Getter for kinds of clauses that compose the directive.
     [[nodiscard]] std::unordered_set<ClauseKind> getClauseKinds() const noexcept;
-    /// @brief Getter for reference to populated clauses.
-    [[nodiscard]] const std::unordered_set<ClauseKind> &getPopulatedClauses() const noexcept;
-    /// @brief Checks whether a stream of tokens is a valid set of clauses for this directive.
-    bool areClausesCorrect(const std::vector<Token> &tokens) const noexcept;
     /// @brief Populates held clauses with data from token stream.
     void populateClauses(const std::vector<Token> &tokens);
     /// @brief Clone method that provides unified interface over the copy ctor.
