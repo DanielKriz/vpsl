@@ -2,8 +2,7 @@
 
 namespace vp {
 
-MeshData::MeshData(const std::vector<gl::Vertex> &vertices)
-{
+MeshData::MeshData(const std::vector<gl::Vertex> &vertices) {
     *m_pVertices = vertices;
 }
 
