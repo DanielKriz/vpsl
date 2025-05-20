@@ -1,9 +1,29 @@
 #include <vp/interpreter/parser.hpp>
+#include <vp/description/shader_code_store.hpp>
+#include <vp/interpreter/lexer.hpp>
 
 #include <doctest/doctest.h>
 
 using namespace vp;
+using namespace vp::desc;
 
+class ParserFixture {
+protected:
+    ShaderCodeStore &store;
+    Parser parser;
+    Directive shaderDirective;
+public:
+    ParserFixture() 
+        : store(ShaderCodeStore::getInstance()),
+        shaderDirective(*Parser::createDirectiveFromToken(Token(TokenKind::ShaderDirective)))
+    {
+        Lexer lexer;
+        auto tokens = *lexer.scan("#pragma vp shader name(shd) type(vertex) prepend(shd1) append(shd2)");
+        tokens.erase(tokens.begin());
+        shaderDirective.populateClauses(tokens);
+    }
+    ~ParserFixture() { store.clear(); }
+};
 
 TEST_SUITE("Parser") {
 
@@ -160,6 +180,32 @@ TEST_CASE("Parser does not create directives for wrong tokens") {
         auto dir = Parser::createDirectiveFromToken(Token("", kind, 0));
         CHECK_FALSE(dir.has_value());
     }
+}
+
+TEST_CASE("Adding a copy of description to the parser") {
+    Parser parser;
+    desc::ProgramDescription desc;
+    CHECK_NOTHROW(parser.addProgramDescription(desc));
+}
+
+TEST_CASE("Adding a description to the parser") {
+    Parser parser;
+    desc::ProgramDescription desc;
+    CHECK_NOTHROW(parser.addProgramDescription(std::move(desc)));
+}
+
+TEST_CASE("At the beginning the execution sequence is empty") {
+    Parser parser;
+    auto seq = parser.createExecutionSequenceDescription();
+    CHECK(seq.empty());
+}
+
+TEST_CASE_FIXTURE(
+    ParserFixture,
+    "Creation of shader code"
+) {
+    ProgramDescriptionBuilder builder;
+    parser.shaderCodeFromDirective(shaderDirective, builder);
 }
 
 }
