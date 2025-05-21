@@ -81,9 +81,6 @@ void ResourceLoader::loadMeshJob(
     processor.importSceneFromFile(path);
 
     auto vertices = processor.processMesh();
-
-    }
-
     ResourceStore::getInstance().storeMesh(name, MeshData(vertices));
 }
 
