@@ -3,6 +3,10 @@
 This is the repository of `vpsl` -- a high-level directive-based extension of
 already existing shading languages.
 
+
+https://github.com/user-attachments/assets/f4cb03e4-e465-4749-9bef-54c2f1c17064
+
+
 # Build
 
 Project is build with `cmake`, our preferred build system is `Ninja`, but it is
