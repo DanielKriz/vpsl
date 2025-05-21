@@ -1,0 +1,59 @@
+// The basic idea of this code comes from: https://github.com/openglsuperbible/sb7code/blob/master/src/tessellatedtri/tessellatedtri.cpp
+#version 450 core
+
+#pragma vp option type(polygon_mode) value(line)
+
+#pragma vp program name(main) draw(patches, 3)
+#pragma vp begin
+
+#pragma vp shader name(main_vs) type(vertex)
+#pragma vp begin
+void main() {
+    const vec4 vertices[3] = vec4[3](
+        vec4(-0.5f, -0.5f, 0.5f, 1.0f),
+        vec4( 0.5f, -0.5f, 0.5f, 1.0f),
+        vec4( 0.0f,  0.5f, 0.5f, 1.0f)
+    );
+    gl_Position = vertices[gl_VertexID];
+}
+
+#pragma vp end // main_vs
+
+#pragma vp shader name(main_tcs) type(tesselation_control)
+#pragma vp begin
+
+layout (vertices = 3) out;
+
+void main() {
+    if (gl_InvocationID == 0) {
+        gl_TessLevelInner[0] = 5.0f;
+        gl_TessLevelOuter[0] = 5.0f;
+        gl_TessLevelOuter[1] = 5.0f;
+        gl_TessLevelOuter[2] = 5.0f;
+    }
+    gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
+}
+
+#pragma vp end // main_tcs
+
+#pragma vp shader name(main_tes) type(tesselation_evaluation)
+#pragma vp begin
+
+layout (triangles, equal_spacing, cw) in;
+
+void main() {
+    gl_Position = (gl_TessCoord.x * gl_in[0].gl_Position)
+                + (gl_TessCoord.y * gl_in[1].gl_Position)
+                + (gl_TessCoord.z * gl_in[2].gl_Position);
+}
+
+#pragma vp end // main_tes
+
+#pragma vp shader name(main_fs) type(fragment)
+#pragma vp begin
+layout (location = 0) out vec4 color;
+
+void main() { color = vec4(1.0f, 0.0f, 0.0f, 1.0f); }
+
+#pragma vp end // main_fs
+#pragma vp end // main
