@@ -56,7 +56,7 @@ file(GLOB_RECURSE hdr_files include/*.hpp/ include/**/*.hpp)
 
 add_executable(${main_target} ${src_files} ${hdr_files})
 target_link_libraries(
-    ${main_target} PUBLIC 
+    ${main_target} PRIVATE 
     SDL2::SDL2
     glad::glad
     glslang::glslang
@@ -64,10 +64,8 @@ target_link_libraries(
     assimp::assimp
     glm::glm
     fmt::fmt
-    SPIRV-Tools
-    SPIRV-Tools-opt
-    glslang
-    glslang-default-resource-limits
+    glslang::glslang
+    glslang::glslang-default-resource-limits
     SDL2_image::SDL2_image
     spdlog::spdlog
 )

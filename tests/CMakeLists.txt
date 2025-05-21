@@ -52,11 +52,9 @@ target_link_libraries(
     glm::glm
     fmt::fmt
     re2::re2
-    assimp
-    SPIRV-Tools
-    SPIRV-Tools-opt
-    glslang
-    glslang-default-resource-limits
+    assimp::assimp
+    glslang::glslang
+    glslang::glslang-default-resource-limits
     SDL2_image::SDL2_image
     SDL2::SDL2
     spdlog::spdlog
