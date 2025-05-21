@@ -1,0 +1,2 @@
+#pragma vp include path(tests/examples/include_example/code.vpsl)
+#pragma vp include path(tests/examples/include_example/another.vpsl)
