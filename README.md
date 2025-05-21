@@ -1,35 +1,29 @@
-# Virtualization Prototyping Tool
+# Virtualization Prototyping Shading Language
+
+This is the repository of `vpsl` -- a high-level directive-based extension of
+already existing shading languages.
 
 # Build
 
-Project is build with `cmake`, our prefered build system is `Ninja`, but it is
-also possible to classic `make`. You are required to have installed these
-dependencies:
-
-* `SDL2`
-* `SDL2_image`
-* `GLFW3`
-* `fmt`
-* `spdlog`
-* `glm`
-
-In addition to that you have to have `git` and `glad` installed, as the `cmake`
-scripts is going to download `ImGui` and generate `glad` libraries for you.
+Project is build with `cmake`, our preferred build system is `Ninja`, but it is
+also possible to classic `make`. The project is primarily build using the
+`vpckg` package manager. There are several build workflows present and to build
+you can use this command:
 
 ```bash
-cmake -Bbuild -GNinja -DCMAKE_RELEASE_TYPE=Release .
-cmake --build build
+cmake --workflow --preset Release
 ```
 
-Additionaly, it is possible to switch to debug build using
-`-DCMAKE_RELEASE_TYPE=Debug` instead of `Release`.
+There is also support for `Debug` workflow, that is used for development and the
+`Test` workflow, which is basically the same as debug workflow, but it also runs
+the tests after a successful build.
 
-> [!TIP]
-> `Release` is the default release type, thus if your target is only the release
-> build, then you can omit the `CMAKE_RELEASE_TYPE` option entirely.
+The provided CMake script is going to download a fresh installation of `vpckg`.
 
-It is also possible to build the project with tests executable and source
-documentation using additional option flags:
-* `BUILD_TESTS` - builds test runtime executable as `<BUILDDIR>/bin/run_tests`
-* `BUILD_DOCUMENTATION` - builds doxygen documentation which is going to be
-  available in `<BUILDDIR>/Doxygen`
+# Prerequisites
+
+* [CMake](https://cmake.org/)
+* [Ninja](https://ninja-build.org/)
+* C++ compiler with C++23 support
+
+Rest of the dependencies is going to be downloaded with the `vpckg`.
