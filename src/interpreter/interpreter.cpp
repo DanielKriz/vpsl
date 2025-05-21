@@ -234,7 +234,7 @@ std::vector<desc::ProgramDescription> Interpreter::interpret() {
             }
 
         } else if (directiveKind == DirectiveKind::Include) {
-            throw std::runtime_error("Include directive can exist only at the beggingin of the file");
+            // Do nothing
 
         } else if (directiveKind == DirectiveKind::FrameBuffer) {
             if (parser.peekScope() == ParserScope::Shader) {
