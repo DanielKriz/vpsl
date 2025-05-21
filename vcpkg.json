@@ -7,6 +7,11 @@
     "assimp",
     "glm",
     "glad",
+    "sdl2",
+    {
+      "name": "sdl2-image",
+      "features" : [ "libjpeg-turbo" ]
+    },
     {
       "name": "glslang",
       "features" : [ "opt" ]
