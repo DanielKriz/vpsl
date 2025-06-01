@@ -31,14 +31,15 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const desc::AttributeDescription
         const auto count = static_cast<i32>(Attribute::elementCountFromType(attribute.type));
         const auto offset = Attribute::offsetFromType(attribute.type);
         glVertexArrayAttribFormat(vao, i, count, GL_FLOAT, GL_FALSE, offset);
+        glVertexArrayAttribBinding(vao, i, 0);
     }
     glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(Vertex));
 }
 
 void Mesh::draw() const {
+    glBindBuffer(GL_ARRAY_BUFFER, *m_pVBO);
     glBindVertexArray(*m_pVAO);
     glDrawArrays(GL_TRIANGLES, 0, m_pVertices->size());
-
 }
 
 } // namespace vp::gl::opengl
