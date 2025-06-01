@@ -110,6 +110,8 @@ void Engine::render([[maybe_unused]] f32 deltaTime) {
     glViewport(0, 0, static_cast<i32>(window.getWidth()), static_cast<i32>(window.getHeight()));
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    glClearBufferfi(GL_DEPTH_STENCIL, 0, 1.0f, 0);
+
     for (auto &node : m_executionSequence) {
         node.applyContext();
         node.getProgram().use();
