@@ -12,18 +12,36 @@
 namespace vp {
 
 void ResourceLoader::loadTexture(const std::string &name, const std::filesystem::path &path) {
+    if (not isTextureFileType(path.extension().c_str())) {
+        throw std::runtime_error(
+            fmt::format("Texture '{}' is not valid file type", path.c_str())
+        );
+    }
+
     m_threadPool.enqueueJob([path, name]() {
         loadTextureJob(name, path);
     });
 }
 
 void ResourceLoader::loadMaterial(const std::string &name, const std::filesystem::path &path) {
+    if (not isMaterialFileType(path.extension().c_str())) {
+        throw std::runtime_error(
+            fmt::format("Material '{}' is not valid file type", path.c_str())
+        );
+    }
+
     m_threadPool.enqueueJob([path, name]() {
         loadMaterialJob(name, path);
     });
 }
 
 void ResourceLoader::loadMesh(const std::string &name, const std::filesystem::path &path) {
+    if (not isMeshFileType(path.extension().c_str())) {
+        throw std::runtime_error(
+            fmt::format("Mesh '{}' is not valid file type", path.c_str())
+        );
+    }
+
     m_threadPool.enqueueJob([path, name]() {
         loadMeshJob(name, path);
     });
@@ -65,12 +83,6 @@ void ResourceLoader::loadTextureJob(
     const std::string &name,
     const std::filesystem::path &path
 ) {
-    if (not isTextureFileType(path.extension().c_str())) {
-        throw std::runtime_error(
-            fmt::format("Texture '{}' is not valid file type", path.c_str())
-        );
-    }
-
     spdlog::debug("Loading texture '{}' found at {}", name, path.c_str());
 
     auto &store = ResourceStore::getInstance();
@@ -87,11 +99,6 @@ void ResourceLoader::loadMaterialJob(
     const std::string &name,
     const std::filesystem::path &path
 ) {
-    if (not isMaterialFileType(path.extension().c_str())) {
-        throw std::runtime_error(
-            fmt::format("Material '{}' is not valid file type", path.c_str())
-        );
-    }
     spdlog::debug("Loading Material '{}' found at {}", name, path.c_str());
 }
 
@@ -99,12 +106,6 @@ void ResourceLoader::loadMeshJob(
     const std::string &name,
     const std::filesystem::path &path
 ) {
-    if (not isMeshFileType(path.extension().c_str())) {
-        throw std::runtime_error(
-            fmt::format("Mesh '{}' is not valid file type", path.c_str())
-        );
-    }
-
     spdlog::debug("Loading mesh '{}' found at {}", name, path.c_str());
 
     assimp::Processor processor;
