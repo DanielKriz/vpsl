@@ -1,5 +1,5 @@
-#include <vp/graphics/draw_modes.hpp>
 #include <vp/engine/engine.hpp>
+#include <vp/graphics/draw_modes.hpp>
 
 #include <spdlog/spdlog.h>
 
