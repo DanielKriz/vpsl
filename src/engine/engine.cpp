@@ -74,6 +74,7 @@ void Engine::handleExecutionSequence(const std::vector<desc::ProgramDescription>
             );
         } else {
             currentProgram.setDrawCommand(desc.getDrawCommand());
+            currentProgram.initVertexArray();
         }
         std::vector<Shader> attachedShaders;
 
@@ -119,11 +120,8 @@ void Engine::render(f32 deltaTime) {
 void Engine::run() {
     spdlog::info("starting engine runtime");
 
-    u32 vao;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
     f32 elapsedTime = 0.0f;
+
     do {
         handleEvents();
 
@@ -133,8 +131,6 @@ void Engine::run() {
 
         m_device.getWindow().swapWindow();
     } while (m_isRunning);
-
-    glDeleteVertexArrays(1, &vao);
 }
 
 } // namespace vp

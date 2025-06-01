@@ -69,12 +69,14 @@ public:
     void addTexture(Texture &texture);
 
     void setDrawCommand(const DrawCommand &command);
+    void initVertexArray();
 
 private:
     std::unordered_map<std::string, Uniform> m_uniformCache;
     std::vector<Texture> m_textures;
     std::optional<DrawCommand> m_drawCommand;
     std::shared_ptr<Mesh> m_pMesh { nullptr };
+    std::optional<u32> m_vao;
 };
 
 } // namespace vp::gl::opengl

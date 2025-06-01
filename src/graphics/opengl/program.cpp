@@ -11,6 +11,9 @@ Program::Program() : Object() {
 
 Program::~Program() {
     glDeleteProgram(m_descriptor);
+    if (m_vao.has_value()) {
+        glDeleteVertexArrays(1, &(*m_vao));
+    }
 }
 
 Program& Program::link() {
@@ -38,6 +41,15 @@ void Program::populateAttributes() {
 
 void Program::populateUniforms() {
 
+}
+
+void Program::initVertexArray() {
+    if (not m_drawCommand.has_value()) {
+        throw std::runtime_error("Cannot initialize vertex array with not draw command");
+    }
+
+    m_vao = 0;
+    glGenVertexArrays(1, &(*m_vao));
 }
 
 void Program::addTextureFromDescription(const desc::TextureDescription &desc) {
@@ -71,6 +83,11 @@ void Program::draw() const {
         m_pMesh->draw();
         return;
     }
+
+    if (not m_vao.has_value()) {
+        throw std::runtime_error("Vertex array is not setup for drawing");
+    }
+    glBindVertexArray(*m_vao);
 
     const auto &command = *m_drawCommand;
     const i32 count = static_cast<i32>(command.count);
