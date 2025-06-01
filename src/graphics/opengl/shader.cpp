@@ -106,14 +106,6 @@ Shader::Shader(ShaderKind kind, const std::string &source, ShaderLanguageKind la
             fmt::format("Shader compilation was no successful: ({})", msg)
         );
     }
-
-    GLint maxLength = 0;
-    glGetShaderiv(getDescriptor(), GL_INFO_LOG_LENGTH, &maxLength);
-
-    // The maxLength includes the NULL character
-    std::vector<GLchar> infoLog(maxLength);
-    glGetShaderInfoLog(getDescriptor(), maxLength, &maxLength, &infoLog[0]);
-    std::string infoLogStr{infoLog.begin(), infoLog.end()};
 }
 
 Shader Shader::initFromShaderCode(const ShaderCode &code) {
