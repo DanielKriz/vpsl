@@ -38,22 +38,41 @@ void ResourceLoader::terminateLoading() {
 }
 
 bool ResourceLoader::isTextureFileType(std::string_view extension) noexcept {
-    return {};
+    static const std::unordered_set<std::string_view> validExtensions = {
+        ".png",
+        ".jpg",
+        ".jpeg",
+    };
+    return validExtensions.contains(extension);
 }
 
 bool ResourceLoader::isMaterialFileType(std::string_view extension) noexcept {
-    return {};
+    static const std::unordered_set<std::string_view> validExtensions = {
+        ".mtl",
+    };
+    return validExtensions.contains(extension);
 }
 
 bool ResourceLoader::isMeshFileType(std::string_view extension) noexcept {
-    return {};
+    std::cout << extension << std::endl;
+    static const std::unordered_set<std::string_view> validExtensions = {
+        ".obj",
+    };
+    return validExtensions.contains(extension);
 }
 
 void ResourceLoader::loadTextureJob(
     const std::string &name,
     const std::filesystem::path &path
 ) {
+    if (not isTextureFileType(path.extension().c_str())) {
+        throw std::runtime_error(
+            fmt::format("Texture '{}' is not valid file type", path.c_str())
+        );
+    }
+
     spdlog::debug("Loading texture '{}' found at {}", name, path.c_str());
+
     auto &store = ResourceStore::getInstance();
     SDL_Surface *pSurf = IMG_Load(path.c_str());
     if (pSurf == nullptr) {
@@ -68,6 +87,11 @@ void ResourceLoader::loadMaterialJob(
     const std::string &name,
     const std::filesystem::path &path
 ) {
+    if (not isMaterialFileType(path.extension().c_str())) {
+        throw std::runtime_error(
+            fmt::format("Material '{}' is not valid file type", path.c_str())
+        );
+    }
     spdlog::debug("Loading Material '{}' found at {}", name, path.c_str());
 }
 
@@ -75,6 +99,12 @@ void ResourceLoader::loadMeshJob(
     const std::string &name,
     const std::filesystem::path &path
 ) {
+    if (not isMeshFileType(path.extension().c_str())) {
+        throw std::runtime_error(
+            fmt::format("Mesh '{}' is not valid file type", path.c_str())
+        );
+    }
+
     spdlog::debug("Loading mesh '{}' found at {}", name, path.c_str());
 
     assimp::Processor processor;
