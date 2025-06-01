@@ -72,11 +72,10 @@ void Program::initMesh(
 }
 
 void Program::draw() const {
-
-    for (u32 i = 0u; i < m_textures.size(); ++i) {
-        glBindTextureUnit(m_textures[i].getLocation(), m_textures[i].getDescriptor());
-        auto uniform = Uniform("", m_textures[i].getLocation());
-        uniform.set<i32>(m_textures[i].getDescriptor());
+    for (const auto &texture : m_textures) {
+        glBindTextureUnit(texture.getLocation(), texture.getDescriptor());
+        auto uniform = Uniform("", static_cast<i32>(texture.getLocation()));
+        uniform.set<i32>(static_cast<i32>(texture.getDescriptor()));
     }
 
     if (m_pMesh != nullptr) {
