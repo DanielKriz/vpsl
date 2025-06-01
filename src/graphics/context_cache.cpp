@@ -155,11 +155,11 @@ void ContextCache::setDepthFunction(DepthFunction func) noexcept {
     m_pCurrentOptions->depthFunction = func;
 }
 
-void ContextCache::setSrcBlendFactor(BlendingFactor factor) noexcept {
+void ContextCache::setSrcBlendFactor([[maybe_unused]] BlendingFactor factor) noexcept {
     // TODO
 }
 
-void ContextCache::setDstBlendFactor(BlendingFactor factor) noexcept {
+void ContextCache::setDstBlendFactor([[maybe_unused]] BlendingFactor factor) noexcept {
     // TODO
 }
 
