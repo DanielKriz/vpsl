@@ -163,6 +163,7 @@ void ResourceStore::clear() {
 }
 
 void ResourceStore::storeMesh(const std::string &name, MeshData &&mesh) {
+    std::scoped_lock<std::mutex> lock { m_meshMutex };
     spdlog::debug("Storing mesh with name: '{}'", name);
     auto entry = m_meshes.find(name);
     if (entry != m_meshes.end()) {
