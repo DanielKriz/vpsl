@@ -105,7 +105,7 @@ void Engine::handleEvents() {
     }
 }
 
-void Engine::render(f32 deltaTime) {
+void Engine::render([[maybe_unused]] f32 deltaTime) {
     const auto &window = m_device.getWindow();
     glViewport(0, 0, static_cast<i32>(window.getWidth()), static_cast<i32>(window.getHeight()));
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
