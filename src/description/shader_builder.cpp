@@ -2,7 +2,7 @@
 
 namespace vp::desc {
 
-ShaderBuilder &ShaderBuilder::addLine(const std::string &line) noexcept {
+ShaderBuilder &ShaderBuilder::addLine([[maybe_unused]] const std::string &line) noexcept {
     return *this;
 }
 
