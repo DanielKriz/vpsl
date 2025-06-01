@@ -50,7 +50,6 @@ u64 Attribute::offsetFromType(AttributeType type) {
 namespace vp::desc {
 
 void AttributeDescription::addAttribute(AttributeType type, u32 location) {
-    fmt::println("emplacing {} to location {}", type, location);
     m_attributes.emplace_back(type, location);
 }
 

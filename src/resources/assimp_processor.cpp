@@ -9,8 +9,6 @@
 namespace vp::assimp {
 
 void Processor::importSceneFromFile(const std::filesystem::path &path) {
-    fmt::println("importing scene from file: '{}'", path.c_str());
-
     m_pScene = m_importer.ReadFile(
         path,
         aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace
@@ -20,10 +18,6 @@ void Processor::importSceneFromFile(const std::filesystem::path &path) {
 
     const bool isSceneComplete = not static_cast<bool>(m_pScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE);
     const bool hasRootNode = m_pScene->mRootNode != nullptr;
-
-    const bool isSceneIncomplete = static_cast<bool>(m_pScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE);
-    fmt::println("Is scene incomplete: {}", isSceneIncomplete);
-
     if (m_pScene == nullptr or not isSceneComplete or not hasRootNode) {
         throw std::runtime_error(
             fmt::format("reading model failed with message: '{}'", m_importer.GetErrorString())
