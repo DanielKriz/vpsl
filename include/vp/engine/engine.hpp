@@ -3,7 +3,6 @@
 
 #include <functional>
 #include <map>
-#include <memory>
 #include <vector>
 
 #include <SDL2/SDL.h>
@@ -15,14 +14,12 @@
 #endif
 #include <fmt/core.h>
 
-#include <vp/types.hpp>
 #include <vp/description/program_description.hpp>
-#include <vp/graphics/opengl/program.hpp>
-#include <vp/graphics/device.hpp>
 #include <vp/engine/execution_node.hpp>
+#include <vp/graphics/device.hpp>
+#include <vp/graphics/opengl/program.hpp>
 #include <vp/graphics/opengl/shader.hpp>
-
-#include <iostream>
+#include <vp/types.hpp>
 
 namespace vp {
 struct Position {
