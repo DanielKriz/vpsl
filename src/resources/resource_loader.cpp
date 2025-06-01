@@ -1,11 +1,11 @@
-#include <vp/resources/resource_loader.hpp>
 #include <vp/resources/assimp_processor.hpp>
+#include <vp/resources/resource_loader.hpp>
 
-#include <spdlog/spdlog.h>
-#include <fmt/core.h>
-#include <glm/glm.hpp>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <fmt/core.h>
+#include <glm/glm.hpp>
+#include <spdlog/spdlog.h>
 
 #include <iostream>
 
