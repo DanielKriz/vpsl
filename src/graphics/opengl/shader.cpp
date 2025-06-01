@@ -8,7 +8,7 @@
 namespace vp::gl::opengl {
 
 std::ostream &operator<<(std::ostream &os, const ShaderKind kind) {
-    std::string_view shaderRepr = [&kind]() {
+    const std::string_view shaderRepr = [&kind]() {
         using enum ShaderKind;
         switch (kind) {
         case Fragment: return "Fragment";
