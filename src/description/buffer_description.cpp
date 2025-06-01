@@ -3,7 +3,7 @@
 namespace vp::desc {
 
 std::ostream &operator<<(std::ostream &os, const BufferDescription &desc) {
-    return os;
+    return os << "Buffer(" << desc.m_size << ", " << desc.m_bindingPoint << ")";
 }
 
 } // namespace vp::desc
