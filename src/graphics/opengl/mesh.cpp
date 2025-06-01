@@ -1,8 +1,5 @@
 #include <vp/graphics/opengl/mesh.hpp>
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/string_cast.hpp>
-
 namespace vp::gl::opengl {
 
 Mesh::Mesh(const std::vector<Vertex> &vertices, const desc::AttributeDescription &desc)
@@ -27,13 +24,10 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const desc::AttributeDescription
 
     glNamedBufferData(vao, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
-
     const auto &attributes = desc.getAttributes();
     for (u32 i = 0u; i < attributes.size(); ++i) {
         const auto &attribute = attributes[i];
-        fmt::println("Setting up Attribute {} -> {}", attribute.type, attribute.location);
         glEnableVertexArrayAttrib(vao, i);
-        glVertexArrayAttribBinding(vao, i, 0);
         const auto count = static_cast<i32>(Attribute::elementCountFromType(attribute.type));
         const auto offset = Attribute::offsetFromType(attribute.type);
         glVertexArrayAttribFormat(vao, i, count, GL_FLOAT, GL_FALSE, offset);
