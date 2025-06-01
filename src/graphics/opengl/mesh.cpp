@@ -22,7 +22,8 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const desc::AttributeDescription
     auto &vao = *m_pVAO;
     auto &vbo = *m_pVBO;
 
-    glNamedBufferData(vao, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+    const auto bufferSizeInBytes = static_cast<sptr>(sizeof(Vertex) * vertices.size());
+    glNamedBufferData(vao, bufferSizeInBytes, vertices.data(), GL_STATIC_DRAW);
 
     const auto &attributes = desc.getAttributes();
     for (u32 i = 0u; i < attributes.size(); ++i) {
@@ -30,7 +31,7 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const desc::AttributeDescription
         glEnableVertexArrayAttrib(vao, i);
         const auto count = static_cast<i32>(Attribute::elementCountFromType(attribute.type));
         const auto offset = Attribute::offsetFromType(attribute.type);
-        glVertexArrayAttribFormat(vao, i, count, GL_FLOAT, GL_FALSE, offset);
+        glVertexArrayAttribFormat(vao, i, count, GL_FLOAT, GL_FALSE, static_cast<u32>(offset));
         glVertexArrayAttribBinding(vao, i, 0);
     }
     glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(Vertex));
@@ -39,7 +40,7 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const desc::AttributeDescription
 void Mesh::draw() const {
     glBindBuffer(GL_ARRAY_BUFFER, *m_pVBO);
     glBindVertexArray(*m_pVAO);
-    glDrawArrays(GL_TRIANGLES, 0, m_pVertices->size());
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<size>(m_pVertices->size()));
 }
 
 } // namespace vp::gl::opengl
