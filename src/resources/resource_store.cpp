@@ -174,8 +174,14 @@ void ResourceStore::storeMesh(const std::string &name, MeshData &&mesh) {
 }
 
 void ResourceStore::storeMaterial(const std::string &name, MaterialData &&material) {
+    std::scoped_lock<std::mutex> lock { m_materialMutex };
     spdlog::debug("Storing material with name: '{}'", name);
-
+    auto entry = m_materials.find(name);
+    if (entry != m_materials.end()) {
+        entry->second = material;
+    } else {
+        m_materials.emplace(name, material);
+    }
 }
 
 void ResourceStore::storeTexture(const std::string &name, Texture &&texture) {
