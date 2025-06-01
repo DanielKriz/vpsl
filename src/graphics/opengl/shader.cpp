@@ -48,8 +48,11 @@ Shader::Shader(ShaderKind kind, const std::string &source) : Shader(kind) {
     }
 }
 
-Shader::Shader(ShaderKind kind, const std::string &source, ShaderLanguageKind langKind)
-    : Shader(kind) {
+Shader::Shader(
+    ShaderKind kind,
+    const std::string &source,
+    [[maybe_unused]] ShaderLanguageKind langKind
+) : Shader(kind) {
     glslang::InitializeProcess();
     const EShLanguage stage = [kind]() {
         using enum ShaderKind;
