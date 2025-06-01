@@ -72,7 +72,6 @@ bool ResourceLoader::isMaterialFileType(std::string_view extension) noexcept {
 }
 
 bool ResourceLoader::isMeshFileType(std::string_view extension) noexcept {
-    std::cout << extension << std::endl;
     static const std::unordered_set<std::string_view> validExtensions = {
         ".obj",
     };
