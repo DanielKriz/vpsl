@@ -1,0 +1,1 @@
+#pragma vp load mesh name(something) path(tests/examples/wall.jpg)

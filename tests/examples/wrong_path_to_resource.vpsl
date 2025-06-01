@@ -1,0 +1,1 @@
+#pragma vp load texture name(something) path(some/wrong/path/that/doesnt/exist)

@@ -1,0 +1,1 @@
+#pragma vp load material name(something) path(tests/examples/cube.obj)
