@@ -17,6 +17,8 @@ std::ostream &operator<<(std::ostream &os, const ShaderKind kind) {
         case TesselationEvaluation: return "Tessellation Evaluation";
         case Geometry: return "Geometry";
         case Compute: return "Compute";
+        default:
+            throw std::runtime_error("Unknown Shader Kind for representation");
         }
     }();
     return os << shaderRepr;
