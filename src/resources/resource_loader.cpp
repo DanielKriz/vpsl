@@ -109,11 +109,7 @@ void ResourceLoader::loadMeshJob(
 
     assimp::Processor processor;
     processor.importSceneFromFile(path);
-
     auto vertices = processor.processMesh();
-
-    }
-
     ResourceStore::getInstance().storeMesh(name, MeshData(vertices));
 }
 
