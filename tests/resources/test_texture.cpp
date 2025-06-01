@@ -2,9 +2,89 @@
 
 #include <doctest/doctest.h>
 
+#include <sstream>
+
 using namespace vp;
 
 TEST_SUITE("Texture") {
+
+TEST_CASE("String representation of kind unknown") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureKind::Unknown);
+    CHECK(ss.str() == "Unknown");
+}
+
+TEST_CASE("String representation of kind 1D") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureKind::_1D);
+    CHECK(ss.str() == "1D");
+}
+
+TEST_CASE("String representation of kind 2D") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureKind::_2D);
+    CHECK(ss.str() == "2D");
+}
+
+TEST_CASE("String representation of kind 3D") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureKind::_3D);
+    CHECK(ss.str() == "3D");
+}
+
+TEST_CASE("String representation of kind Rectangle") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureKind::Rectangle);
+    CHECK(ss.str() == "Rectangle");
+}
+
+TEST_CASE("String representation of kind CubeMap") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureKind::CubeMap);
+    CHECK(ss.str() == "CubeMap");
+}
+
+TEST_CASE("String representation of kind Array1D") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureKind::Array1D);
+    CHECK(ss.str() == "Array1D");
+}
+
+TEST_CASE("String representation of kind Array2D") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureKind::Array2D);
+    CHECK(ss.str() == "Array2D");
+}
+
+TEST_CASE("String representation of kind CubeMapArray") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureKind::CubeMapArray);
+    CHECK(ss.str() == "CubeMapArray");
+}
+
+TEST_CASE("String representation of kind Multisample2D") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureKind::Multisample2D);
+    CHECK(ss.str() == "Multisample2D");
+}
+
+TEST_CASE("String representation of kind MultisampleArray2D") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureKind::MultisampleArray2D);
+    CHECK(ss.str() == "MultisampleArray2D");
+}
+
+TEST_CASE("String representation of format Unknown") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureFormat::Unknown);
+    CHECK(ss.str() == "Unknown");
+}
+
+TEST_CASE("String representation of format RGBA") {
+    std::stringstream ss;
+    CHECK_NOTHROW(ss << TextureFormat::RGBA);
+    CHECK(ss.str() == "RGBA");
+}
 
 TEST_CASE("Simple Constructor") {
     SDL_Surface *pSurf = nullptr;
