@@ -38,6 +38,10 @@ u64 Attribute::offsetFromType(AttributeType type) {
         return offsetof(gl::Vertex, tangent);
     case Bitangent:
         return offsetof(gl::Vertex, bitangent);
+    default:
+        throw std::runtime_error(
+            fmt::format("Unknown Attribute type: '{}'", type)
+        );
     }
 }
 
